@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, KeyboardAvoidingView } from "react-native";
 import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
 
@@ -11,9 +11,7 @@ function TasksScreen() {
                 <Task>Task2</Task>
                 <Task>Task3</Task>
             </View>
-            <View>
-                <CustomTextInput />
-            </View>
+            <CustomTextInput />
         </View>
     );
 }

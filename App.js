@@ -1,20 +1,77 @@
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { FontAwesome } from '@expo/vector-icons'
 
-export default function App() {
+import TasksScreen from './screens/TasksScreen';
+import SettingsScreen from './screens/SettingsScreen';
+
+
+const Stack = createNativeStackNavigator();
+const BottomTabs = createBottomTabNavigator();
+
+
+function TasksOverview() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <BottomTabs.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarActiveTintColor: '#1F58EB',
+        tabBarStyle: {
+          height: 65
+        }
+      }}>
+      <BottomTabs.Screen
+        name='Tasks'
+        component={TasksScreen}
+        options={{
+          tabBarLabel: 'Tasks',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name='check' size={32} color={color} />
+          ),
+          tabBarLabelStyle: {
+            fontSize: 13,
+          },
+        }}
+      />
+      <BottomTabs.Screen
+        name='Settings'
+        component={SettingsScreen}
+        options={{
+          tabBarLabel: 'Settings',
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name='gear' size={32} color={color} />
+          ),
+          tabBarLabelStyle: {
+            fontSize: 13,
+          },
+        }}
+      />
+    </BottomTabs.Navigator>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+
+
+export default function App() {
+  return (
+    <>
+      <StatusBar style='dark' />
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name='TasksOverview'
+            component={TasksOverview}
+            options={{
+              headerShown: false,
+            }}
+          />
+
+        </Stack.Navigator>
+      </NavigationContainer>
+    </>
+  );
+}
+
+

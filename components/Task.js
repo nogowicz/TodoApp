@@ -1,17 +1,29 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { FontAwesome } from '@expo/vector-icons'
 
-function Task({ children }) {
+
+function Task({ children, onPress, done }) {
     return (
-        <View style={styles.item}>
+        <View style={[styles.item, done && styles.pressed]}>
             <View style={styles.itemLeft}>
-                <TouchableOpacity style={styles.square}></TouchableOpacity>
-                <Text style={styles.itemText}>{children}</Text>
+                <TouchableOpacity style={styles.square} onPress={onPress}>
+                    {done && <FontAwesome name='check' size={25} color='#1F58EB' />}
+                </TouchableOpacity>
+                <Text style={[styles.itemText, done && styles.pressedText]}>{children}</Text>
             </View>
             <View>
-                <FontAwesome name='edit' size={32} color='black' />
+                {!done &&
+                    <TouchableOpacity>
+                        <FontAwesome name='edit' size={25} color='black' />
+                    </TouchableOpacity>}
+                {done &&
+                    <TouchableOpacity>
+                        <FontAwesome name="close" size={25} color='black' />
+                    </TouchableOpacity>}
             </View>
+
         </View>
+
     );
 
 }
@@ -28,6 +40,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
+        borderWidth: 2,
+        borderColor: '#1F58EB',
+        minHeight: 60,
     },
     itemLeft: {
         flexDirection: 'row',
@@ -45,5 +60,12 @@ const styles = StyleSheet.create({
     itemText: {
         maxWidth: '80%',
     },
+    pressedText: {
+        textDecorationLine: 'line-through',
+        color: '#949292',
+    },
+    pressed: {
+        borderColor: '#949292',
+    }
 
 });

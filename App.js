@@ -13,7 +13,6 @@ import { useState, useEffect } from 'react';
 
 /**
  * TODO
- * -zrobić taskCompletion
  * -zrobić ekran edycji task'a, np szufladę wyciąganą z dołu
  * -zrobić ekran ustawień
  * -zrobić kolor akcentu 

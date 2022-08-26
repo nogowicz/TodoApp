@@ -1,25 +1,26 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
 
 
-function Task({ children, onPress, done }) {
+
+function Task({ task, onDone, done, onEdit, onDelete }) {
     return (
         <View style={[styles.item, done && styles.pressed]}>
             <View style={styles.itemLeft}>
-                <TouchableOpacity style={styles.square} onPress={onPress}>
-                    {done && <FontAwesome name='check' size={25} color='#1F58EB' />}
+                <TouchableOpacity style={styles.square} onPress={onDone}>
+                    {done ? <FontAwesome name='check' size={25} color='#1F58EB' /> : null}
                 </TouchableOpacity>
-                <Text style={[styles.itemText, done && styles.pressedText]}>{children}</Text>
+                <Text style={[styles.itemText, done && styles.pressedText]}>{task}</Text>
             </View>
             <View>
-                {!done &&
-                    <TouchableOpacity>
+                {!done ?
+                    <TouchableOpacity onPress={onEdit}>
                         <FontAwesome name='edit' size={25} color='black' />
-                    </TouchableOpacity>}
-                {done &&
-                    <TouchableOpacity>
-                        <FontAwesome name="close" size={25} color='black' />
-                    </TouchableOpacity>}
+                    </TouchableOpacity> : null}
+                {done ?
+                    <TouchableOpacity onPress={onDelete}>
+                        <FontAwesome5 name="trash-alt" size={25} color='black' />
+                    </TouchableOpacity> : null}
             </View>
 
         </View>

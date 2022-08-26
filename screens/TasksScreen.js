@@ -1,31 +1,25 @@
-import { ScrollView, StyleSheet, Text, View, Keyboard, TouchableOpacity, FlatList } from "react-native";
+import { StyleSheet, Text, View, Keyboard, FlatList } from "react-native";
 import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
 import { useEffect, useState } from "react";
-import { fetchTasks, insertTask } from '../util/database';
+import { fetchTasks, insertTask, deleteTask, updateCompletion } from '../util/database';
 import { Todo } from "../models/todo";
-import { useIsFocused } from '@react-navigation/native';
-
-
+import { useNavigation } from '@react-navigation/native';
 
 function TasksScreen() {
     const [task, setTask] = useState();
-    const [completion, setCompletion] = useState(false);
     const [loadedData, setLoadedData] = useState([]);
 
-    const isFocused = useIsFocused();
 
     async function loadTasks() {
         const fetchedTasks = await fetchTasks();
         setLoadedData(fetchedTasks);
+
     }
 
     useEffect(() => {
-
-        if (isFocused) {
-            loadTasks();
-        }
-    }, [isFocused]);
+        loadTasks();
+    }, []);
 
 
 
@@ -37,43 +31,50 @@ function TasksScreen() {
         setTask(null);
     }
 
-    function editTask() {
+    const navigation = useNavigation();
 
+
+    function editTaskHandler(id) {
+        navigation.navigate('TaskDetails', {
+            taskId: id,
+        });
     }
 
-    function deleteTask() {
-
+    async function completeTaskHandler(id, completed) {
+        if (completed === 0) {
+            completed = 1;
+        } else if (completed === 1) {
+            completed = 0;
+        }
+        await updateCompletion(id, completed);
+        loadTasks();
     }
 
-    function completeTask() {
-        setCompletion(!completion);
+    async function deleteTaskHandler(id) {
+        await deleteTask(id);
+        loadTasks();
     }
+
 
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Your Tasks</Text>
 
-            <ScrollView
-                contentContainerStyle={{
-                    flexGrow: 2,
-                }}
-                style={styles.taskList}
-                keyboardShouldPersistTaps='handled'
-                scrollEnabled={false}
-            >
-                <View style={styles.items}>
-
-                    {
-                        loadedData.map((item, index) => {
-                            return (
-                                <Task key={index} onPress={completeTask} done={completion}>{item.title}</Task>
-
-                            );
-                        })
-                    }
-                </View>
-            </ScrollView>
-
+            <View style={styles.items}>
+                <FlatList
+                    data={loadedData}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                        <Task
+                            task={item.title}
+                            onDone={() => completeTaskHandler(item.id, item.completed)}
+                            onDelete={() => deleteTaskHandler(item.id)}
+                            onEdit={editTaskHandler}
+                            done={item.completed}
+                        />
+                    )}
+                />
+            </View>
 
             <CustomTextInput
                 value={task}
@@ -101,8 +102,7 @@ const styles = StyleSheet.create({
     },
     items: {
         marginTop: 30,
+        marginBottom: 180,
     },
-    taskList: {
-        marginBottom: 83,
-    },
+
 });

@@ -7,7 +7,16 @@ const database = SQLite.openDatabase('tasks.db');
 export function deleteTable() {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
-            tx.executeSql(`DROP TABLE tasks`), [], () => { resolve(); }, (_, error) => reject(error);
+            tx.executeSql(
+                `DROP TABLE tasks`
+            ),
+                [],
+                () => {
+                    resolve();
+                },
+                (_, error) => {
+                    reject(error);
+                }
         });
         return promise;
     })
@@ -19,7 +28,8 @@ export function init() {
             tx.executeSql(
                 `CREATE TABLE IF NOT EXISTS tasks (
                     id INTEGER PRIMARY KEY NOT NULL,
-                    title TEXT NOT NULL
+                    title TEXT NOT NULL,
+                    completed INTEGER DEFAULT 0
                 )`,
                 [],
                 () => {
@@ -70,12 +80,52 @@ export function fetchTasks() {
                         tasks.push(
                             new Todo(
                                 dp.title,
-                                dp.id
+                                dp.id,
+                                dp.completed
                             )
                         );
                     }
                     resolve(tasks);
 
+                },
+                (_, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+    return promise;
+}
+
+export function deleteTask(id) {
+    const promise = new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `DELETE FROM tasks WHERE id = ?`,
+                [id],
+                (_, result) => {
+                    resolve(result);
+                },
+                (_, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+
+    return promise;
+}
+
+export function updateCompletion(id, completed) {
+    const promise = new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `UPDATE tasks 
+                 SET completed = ${completed}
+                 WHERE id = ?`,
+                [id],
+                (_, result) => {
+                    resolve(result);
                 },
                 (_, error) => {
                     reject(error);

@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, Keyboard, FlatList, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, Text, View, Keyboard, TouchableOpacity } from "react-native";
 import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { Todo } from "../models/todo";
 import { FontAwesome5 } from '@expo/vector-icons';
-import { darkBaseColors } from "../constants/colors";
+import { Colors } from "../constants/colors";
 import {
     fetchTasks,
     insertTask,
@@ -13,6 +13,9 @@ import {
     deleteAllCompletedTasks,
     addToImportant
 } from '../util/database';
+import { SwipeListView } from 'react-native-swipe-list-view';
+
+
 
 function TasksScreen({ navigation }) {
     const [task, setTask] = useState();
@@ -35,7 +38,7 @@ function TasksScreen({ navigation }) {
                 <FontAwesome5
                     name='trash-alt'
                     size={25}
-                    color={darkBaseColors.accentColor}
+                    color={Colors.accentColor}
                     style={{ marginRight: 25 }}
                     onPress={deleteCompletedTasks}
                 />
@@ -102,14 +105,56 @@ function TasksScreen({ navigation }) {
     }
 
 
+
     return (
+
         <View style={styles.container}>
             <Text style={styles.title}>Your Tasks</Text>
 
             <View style={styles.items}>
+                <SwipeListView
+                    data={loadedData}
+                    keyExtractor={(item) => item.id}
+                    renderItem={(data) => {
+                        return (
+                            <Task
+                                task={data.item.title}
+                                done={data.item.completed}
+                                important={data.item.important}
+                                onDone={() => completeTaskHandler(data.item.id, data.item.completed)}
+                                onDelete={() => deleteTaskHandler(data.item.id)}
+                                toggleImportant={() => toggleImportant(data.item.id, data.item.important)}
+                            />);
+                    }}
+                    renderHiddenItem={(data) => {
+                        return (
+                            <TouchableOpacity onPress={() => deleteTaskHandler(data.item.id)}>
+                                <View style={styles.hiddenItemContainer}>
+                                    <FontAwesome5
+                                        name='trash-alt'
+                                        size={25}
+                                        color={'white'}
+                                        style={styles.hiddenItemIcon}
+                                        onPress={deleteCompletedTasks}
+                                    />
+                                    <Text style={styles.hiddenItemText}>Delete</Text>
 
+                                </View>
+                            </TouchableOpacity>
+                        );
+                    }}
+                    leftOpenValue={80}
+                    rightOpenValue={-90}
+                    previewRowKey={'1'}
+                    previewOpenValue={180}
+                    previewOpenDelay={3000}
+                    disableRightSwipe={true}
+                    showsVerticalScrollIndicator={false}
+                // rightActionValue={-500}
 
-                <FlatList
+                />
+
+                {/* <FlatList
                     data={loadedData}
                     keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
@@ -122,7 +167,7 @@ function TasksScreen({ navigation }) {
                             toggleImportant={() => toggleImportant(item.id, item.important)}
                         />
                     )}
-                />
+                /> */}
             </View>
 
             <CustomTextInput
@@ -139,15 +184,14 @@ export default TasksScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: darkBaseColors.backgroundColor,
+        backgroundColor: Colors.backgroundColor,
 
     },
     title: {
-        marginTop: 50,
         marginLeft: 25,
         fontWeight: 'bold',
         fontSize: 32,
-        color: darkBaseColors.textColor
+        color: Colors.textColor
 
     },
     items: {
@@ -159,32 +203,22 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         fontSize: 15,
-        marginTop: '50%'
+        marginTop: '50%',
+        color: Colors.textColor,
     },
-    rowBack: {
+    hiddenItemContainer: {
+        backgroundColor: '#d13838',
         height: 60,
-    },
-    backBtn: {
-        position: "absolute",
-        bottom: 0,
-        top: 0,
-        justifyContent: 0,
-        right: 0,
-        backgroundColor: 'red'
-    },
-    backBtnInner: {
-        alignItems: 'center',
-    },
-    backBtnText: {
-        color: 'white',
-        marginTop: 2,
-    },
-    rowFront: {
-        alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'white',
-        borderBottomColor: 'grey',
-        borderBottomWidth: 1
-    }
-
+        marginHorizontal: 25,
+        borderRadius: 5,
+        paddingHorizontal: 25,
+        alignItems: 'flex-end'
+    },
+    hiddenItemText: {
+        color: 'white',
+    },
+    hiddenItemIcon: {
+        paddingHorizontal: 9,
+    },
 });

@@ -1,6 +1,6 @@
 import { KeyboardAvoidingView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
-import { darkBaseColors } from '../constants/colors';
+import { Colors } from '../constants/colors';
 
 function CustomTextInput({ value, onChangeText, addTask }) {
     return (
@@ -11,13 +11,13 @@ function CustomTextInput({ value, onChangeText, addTask }) {
             <TextInput
                 style={styles.input}
                 placeholder='Add new task'
-                placeholderTextColor={darkBaseColors.textColor}
+                placeholderTextColor={Colors.textColor}
                 value={value}
                 onChangeText={onChangeText}
             />
             <TouchableOpacity onPress={addTask}>
                 <View style={styles.button}>
-                    <FontAwesome name='angle-up' size={24} color={darkBaseColors.backgroundColor} />
+                    <FontAwesome name='angle-up' size={24} color={Colors.textColor} />
                 </View>
             </TouchableOpacity>
         </KeyboardAvoidingView>
@@ -28,8 +28,8 @@ export default CustomTextInput;
 
 const styles = StyleSheet.create({
     inputContainer: {
-        borderColor: darkBaseColors.accentColor,
-        backgroundColor: darkBaseColors.primaryLighterColor,
+        borderColor: Colors.accentColor,
+        backgroundColor: Colors.primaryLighterColor,
         borderWidth: 2,
         marginHorizontal: 20,
         borderRadius: 12,
@@ -49,13 +49,13 @@ const styles = StyleSheet.create({
         height: 50,
         flex: 1,
         paddingHorizontal: 10,
-        color: darkBaseColors.textColor
+        color: Colors.textColor
     },
 
     button: {
         height: 30,
         width: 30,
-        backgroundColor: darkBaseColors.accentColor,
+        backgroundColor: Colors.accentColor,
         borderRadius: 6,
         justifyContent: 'center',
         alignItems: 'center',

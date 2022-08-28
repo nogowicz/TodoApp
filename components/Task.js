@@ -1,27 +1,26 @@
-import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text, Dimensions } from "react-native";
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
-import { darkBaseColors } from "../constants/colors";
-
-
+import { Colors } from "../constants/colors";
 
 function Task({ task, onDone, done, important, toggleImportant, onDelete }) {
+
     return (
         <View style={[styles.item, done && styles.pressed, important && styles.itemImportant]}>
             <View style={styles.itemLeft}>
                 <TouchableOpacity style={[styles.square, done && styles.pressedSquare]} onPress={onDone}>
-                    {done ? <FontAwesome name='check' size={25} color={darkBaseColors.accentColor} /> : null}
+                    {done ? <FontAwesome name='check' size={25} color={Colors.accentColor} /> : null}
                 </TouchableOpacity>
                 <Text style={[styles.itemText, done && styles.pressedText]}>{task}</Text>
             </View>
             <View>
                 {done ?
                     <TouchableOpacity onPress={onDelete}>
-                        <FontAwesome5 name="trash-alt" size={25} color={darkBaseColors.accentColor} />
+                        <FontAwesome5 name="trash-alt" size={25} color={Colors.accentColor} />
                     </TouchableOpacity> :
                     <TouchableOpacity onPress={toggleImportant}>
                         {important ?
-                            <FontAwesome name='star' size={25} color={darkBaseColors.accentColor} /> :
-                            <FontAwesome name='star-o' size={25} color={darkBaseColors.accentColor} />
+                            <FontAwesome name='star' size={25} color={Colors.accentColor} /> :
+                            <FontAwesome name='star-o' size={25} color={Colors.accentColor} />
                         }
 
                     </TouchableOpacity>}
@@ -37,7 +36,7 @@ export default Task;
 
 const styles = StyleSheet.create({
     item: {
-        backgroundColor: darkBaseColors.primaryColor,
+        backgroundColor: Colors.primaryColor,
         padding: 15,
         borderRadius: 4,
         marginBottom: 20,
@@ -49,7 +48,7 @@ const styles = StyleSheet.create({
     },
     itemImportant: {
         borderWidth: 2,
-        borderColor: darkBaseColors.accentColor,
+        borderColor: Colors.accentColor,
         marginHorizontal: 23,
     },
     itemLeft: {
@@ -60,17 +59,17 @@ const styles = StyleSheet.create({
     square: {
         width: 24,
         height: 24,
-        backgroundColor: darkBaseColors.accentColor,
+        backgroundColor: Colors.accentColor,
         borderRadius: 2,
         opacity: 0.7,
         marginRight: 15,
     },
     pressedSquare: {
-        backgroundColor: darkBaseColors.accentDarkerColor,
+        backgroundColor: Colors.accentDarkerColor,
     },
     itemText: {
         maxWidth: '80%',
-        color: 'white'
+        color: Colors.textColor,
     },
     pressedText: {
         textDecorationLine: 'line-through',

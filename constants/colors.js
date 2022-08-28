@@ -1,9 +1,26 @@
-export const darkBaseColors = {
-    backgroundColor: '#211A1A',
-    primaryColor: '#272E24',
-    primaryLighterColor: '#362929',
-    primaryButtonColor: '#D7C2C1',
-    accentColor: '#96D785',
-    accentDarkerColor: '#334a2d',
-    textColor: '#EDE0DF',
+import { Appearance } from "react-native";
+
+const colorScheme = Appearance.getColorScheme();
+
+export let Colors;
+if (colorScheme === 'dark') {
+    Colors = {
+        backgroundColor: '#211A1A',
+        primaryColor: '#272E24',
+        primaryLighterColor: '#362929',
+        primaryButtonColor: '#D7C2C1',
+        accentColor: '#334a2d',
+        accentDarkerColor: '#96D785',
+        textColor: '#EDE0DF',
+    }
+} else {
+    Colors = {
+        backgroundColor: '#FDFDF6',
+        primaryColor: '#C2FFCE',
+        primaryLighterColor: '#E7F1E8',
+        primaryButtonColor: '#DCB6A5',
+        accentColor: '#81cc91',
+        accentDarkerColor: '#D7E7CC',
+        textColor: '#000',
+    }
 }

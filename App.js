@@ -2,10 +2,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { FontAwesome } from '@expo/vector-icons'
+import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { deleteTable, init } from './util/database';
-import { Text } from 'react-native'
-import { darkBaseColors } from './constants/colors';
+import { StyleSheet, Text, View } from 'react-native'
+import { Colors } from './constants/colors';
+
 
 
 import TasksScreen from './screens/TasksScreen';
@@ -18,7 +19,6 @@ import { useState, useEffect } from 'react';
  * -zrobić ekran edycji task'a, np szufladę wyciąganą z dołu
  * -zrobić ekran ustawień
  * -zrobić kolor akcentu 
- * -zrobić hidden Buttons
  * -zrobić listę ukończonych zadań 
  * -zrobić listę movable
  */
@@ -32,36 +32,37 @@ const BottomTabs = createBottomTabNavigator();
 
 
 function TasksOverview() {
+
   return (
     <BottomTabs.Navigator
       screenOptions={{
         headerShown: true,
-        tabBarActiveTintColor: darkBaseColors.accentColor,
+        tabBarActiveTintColor: 'black',
+        tabBarInactiveTintColor: 'black',
         tabBarStyle: {
           height: 65,
-          backgroundColor: darkBaseColors.primaryLighterColor,
+          backgroundColor: Colors.primaryLighterColor,
           borderTopWidth: 0,
         },
         headerStyle: {
-          backgroundColor: darkBaseColors.backgroundColor,
+          backgroundColor: Colors.backgroundColor,
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0, // remove shadow on iOS
           borderBottomWidth: 0,
         },
-        tabBarHideOnKeyboard: true,
         title: null,
-
-
-
       }
+
       }>
       <BottomTabs.Screen
         name='Tasks'
         component={TasksScreen}
         options={{
           tabBarLabel: 'Tasks',
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name='check' size={32} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={focused && styles.activeBackground}>
+              <MaterialCommunityIcons name="checkbox-marked-outline" size={28} color={'black'} />
+            </View>
           ),
           tabBarLabelStyle: {
             fontSize: 13,
@@ -74,8 +75,10 @@ function TasksOverview() {
         component={SettingsScreen}
         options={{
           tabBarLabel: 'Settings',
-          tabBarIcon: ({ color }) => (
-            <FontAwesome name='gear' size={32} color={color} />
+          tabBarIcon: ({ focused }) => (
+            <View style={focused && styles.activeBackground}>
+              <MaterialCommunityIcons name="cog-outline" size={28} color={'black'} />
+            </View>
           ),
           tabBarLabelStyle: {
             fontSize: 13,
@@ -109,7 +112,7 @@ export default function App() {
 
   return (
     <>
-      <StatusBar style='dark' />
+      <StatusBar style='light' />
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
@@ -127,3 +130,14 @@ export default function App() {
 }
 
 
+const styles = StyleSheet.create({
+  activeBackground: {
+    backgroundColor: Colors.accentColor,
+    width: 56,
+    borderRadius: 30,
+    alignItems: 'center'
+  },
+  inactive: {
+    color: 'black'
+  }
+});

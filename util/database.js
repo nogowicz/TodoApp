@@ -29,7 +29,8 @@ export function init() {
                 `CREATE TABLE IF NOT EXISTS tasks (
                     id INTEGER PRIMARY KEY NOT NULL,
                     title TEXT NOT NULL,
-                    completed INTEGER DEFAULT 0
+                    completed INTEGER DEFAULT 0,
+                    important INTEGER DEFAULT 0
                 )`,
                 [],
                 () => {
@@ -71,7 +72,7 @@ export function fetchTasks() {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
-                `SELECT * FROM tasks`,
+                `SELECT * FROM tasks ORDER BY completed ASC, important DESC`,
                 [],
                 (_, result) => {
                     const tasks = [];
@@ -81,7 +82,8 @@ export function fetchTasks() {
                             new Todo(
                                 dp.title,
                                 dp.id,
-                                dp.completed
+                                dp.completed,
+                                dp.important
                             )
                         );
                     }
@@ -116,6 +118,25 @@ export function deleteTask(id) {
     return promise;
 }
 
+export function deleteAllCompletedTasks() {
+    const promise = new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `DELETE FROM tasks WHERE completed = 1`,
+                [],
+                (_, result) => {
+                    resolve(result);
+                },
+                (_, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+
+    return promise;
+}
+
 export function updateCompletion(id, completed) {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
@@ -125,6 +146,27 @@ export function updateCompletion(id, completed) {
                  WHERE id = ?`,
                 [id],
                 (_, result) => {
+                    resolve(result);
+                },
+                (_, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+    return promise;
+}
+
+export function addToImportant(id, important) {
+    const promise = new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `UPDATE tasks 
+                 SET important = ${important}
+                 WHERE id = ?`,
+                [id],
+                (_, result) => {
+                    // console.log(important)
                     resolve(result);
                 },
                 (_, error) => {

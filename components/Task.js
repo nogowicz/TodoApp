@@ -1,26 +1,30 @@
 import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
+import { darkBaseColors } from "../constants/colors";
 
 
 
-function Task({ task, onDone, done, onEdit, onDelete }) {
+function Task({ task, onDone, done, important, toggleImportant, onDelete }) {
     return (
-        <View style={[styles.item, done && styles.pressed]}>
+        <View style={[styles.item, done && styles.pressed, important && styles.itemImportant]}>
             <View style={styles.itemLeft}>
-                <TouchableOpacity style={styles.square} onPress={onDone}>
-                    {done ? <FontAwesome name='check' size={25} color='#1F58EB' /> : null}
+                <TouchableOpacity style={[styles.square, done && styles.pressedSquare]} onPress={onDone}>
+                    {done ? <FontAwesome name='check' size={25} color={darkBaseColors.accentColor} /> : null}
                 </TouchableOpacity>
                 <Text style={[styles.itemText, done && styles.pressedText]}>{task}</Text>
             </View>
             <View>
-                {!done ?
-                    <TouchableOpacity onPress={onEdit}>
-                        <FontAwesome name='edit' size={25} color='black' />
-                    </TouchableOpacity> : null}
                 {done ?
                     <TouchableOpacity onPress={onDelete}>
-                        <FontAwesome5 name="trash-alt" size={25} color='black' />
-                    </TouchableOpacity> : null}
+                        <FontAwesome5 name="trash-alt" size={25} color={darkBaseColors.accentColor} />
+                    </TouchableOpacity> :
+                    <TouchableOpacity onPress={toggleImportant}>
+                        {important ?
+                            <FontAwesome name='star' size={25} color={darkBaseColors.accentColor} /> :
+                            <FontAwesome name='star-o' size={25} color={darkBaseColors.accentColor} />
+                        }
+
+                    </TouchableOpacity>}
             </View>
 
         </View>
@@ -33,7 +37,7 @@ export default Task;
 
 const styles = StyleSheet.create({
     item: {
-        backgroundColor: '#fff',
+        backgroundColor: darkBaseColors.primaryColor,
         padding: 15,
         borderRadius: 4,
         marginBottom: 20,
@@ -41,9 +45,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderWidth: 2,
-        borderColor: '#1F58EB',
         minHeight: 60,
+    },
+    itemImportant: {
+        borderWidth: 2,
+        borderColor: darkBaseColors.accentColor,
+        marginHorizontal: 23,
     },
     itemLeft: {
         flexDirection: 'row',
@@ -53,13 +60,17 @@ const styles = StyleSheet.create({
     square: {
         width: 24,
         height: 24,
-        backgroundColor: '#D9D9D9',
+        backgroundColor: darkBaseColors.accentColor,
         borderRadius: 2,
         opacity: 0.7,
         marginRight: 15,
     },
+    pressedSquare: {
+        backgroundColor: darkBaseColors.accentDarkerColor,
+    },
     itemText: {
         maxWidth: '80%',
+        color: 'white'
     },
     pressedText: {
         textDecorationLine: 'line-through',

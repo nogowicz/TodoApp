@@ -4,7 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome } from '@expo/vector-icons'
 import { deleteTable, init } from './util/database';
-import AppLoading from 'expo-app-loading';
+import { Text } from 'react-native'
+import { darkBaseColors } from './constants/colors';
+
 
 import TasksScreen from './screens/TasksScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -34,12 +36,14 @@ function TasksOverview() {
     <BottomTabs.Navigator
       screenOptions={{
         headerShown: true,
-        tabBarActiveTintColor: '#1F58EB',
+        tabBarActiveTintColor: darkBaseColors.accentColor,
         tabBarStyle: {
           height: 65,
+          backgroundColor: darkBaseColors.primaryLighterColor,
+          borderTopWidth: 0,
         },
         headerStyle: {
-          backgroundColor: '#D9D9D9',
+          backgroundColor: darkBaseColors.backgroundColor,
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0, // remove shadow on iOS
           borderBottomWidth: 0,
@@ -99,7 +103,7 @@ export default function App() {
   }, []);
 
   if (!dbInitialized) {
-    return <AppLoading />;
+    return <Text>An error has occurred, please try again</Text>;
   }
 
 

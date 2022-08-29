@@ -15,12 +15,12 @@ if (colorScheme === 'dark') {
     }
 } else {
     Colors = {
-        backgroundColor: '#FDFDF6',
+        backgroundColor: '#f6ffff',
         primaryColor: '#C2FFCE',
         primaryLighterColor: '#E7F1E8',
         primaryButtonColor: '#DCB6A5',
         accentColor: '#81cc91',
-        accentDarkerColor: '#D7E7CC',
+        accentDarkerColor: '#519b63',
         textColor: '#000',
     }
 }

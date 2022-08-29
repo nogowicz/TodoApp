@@ -14,6 +14,7 @@ function CustomTextInput({ value, onChangeText, addTask }) {
                 placeholderTextColor={Colors.textColor}
                 value={value}
                 onChangeText={onChangeText}
+                maxLength={120}
             />
             <TouchableOpacity onPress={addTask}>
                 <View style={styles.button}>

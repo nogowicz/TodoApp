@@ -8,7 +8,7 @@ function Task({ task, onDone, done, important, toggleImportant, onDelete }) {
         <View style={[styles.item, done && styles.pressed, important && styles.itemImportant]}>
             <View style={styles.itemLeft}>
                 <TouchableOpacity style={[styles.square, done && styles.pressedSquare]} onPress={onDone}>
-                    {done ? <FontAwesome name='check' size={25} color={Colors.accentColor} /> : null}
+                    {done ? <FontAwesome name='check' size={25} color={Colors.textColor} /> : null}
                 </TouchableOpacity>
                 <Text style={[styles.itemText, done && styles.pressedText]}>{task}</Text>
             </View>

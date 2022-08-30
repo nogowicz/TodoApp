@@ -11,15 +11,19 @@ import {
     deleteTask,
     updateCompletion,
     deleteAllCompletedTasks,
-    addToImportant
+    addToImportant,
+    fetchCompletedTasks
 } from '../util/database';
 import { SwipeListView } from 'react-native-swipe-list-view';
+import CompletedLine from "../components/CompletedLine";
 
 
 
 function TasksScreen({ navigation }) {
     const [task, setTask] = useState();
     const [loadedData, setLoadedData] = useState([]);
+    const [loadedCompletedData, setLoadedCompletedData] = useState([]);
+    const [completedOpen, setCompletedOpen] = useState(false);
 
 
     async function loadTasks() {
@@ -28,13 +32,19 @@ function TasksScreen({ navigation }) {
 
     }
 
+    async function loadCompletedTasks() {
+        const fetchedCompletedTasks = await fetchCompletedTasks();
+        setLoadedCompletedData(fetchedCompletedTasks);
+    }
+
     useEffect(() => {
         loadTasks();
+        loadCompletedTasks();
     }, []);
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerRight: ({ tintColor }) => (
+            headerRight: () => (
                 <FontAwesome5
                     name='trash-alt'
                     size={25}
@@ -51,6 +61,7 @@ function TasksScreen({ navigation }) {
         const taskData = new Todo(task);
         await insertTask(taskData);
         loadTasks();
+        loadCompletedTasks();
         Keyboard.dismiss();
         setTask(null);
     }
@@ -64,6 +75,7 @@ function TasksScreen({ navigation }) {
         }
         await addToImportant(id, important);
         loadTasks();
+        loadCompletedTasks();
     }
 
     async function completeTaskHandler(id, completed) {
@@ -74,16 +86,23 @@ function TasksScreen({ navigation }) {
         }
         await updateCompletion(id, completed);
         loadTasks();
+        loadCompletedTasks();
     }
 
     async function deleteTaskHandler(id) {
         await deleteTask(id);
         loadTasks();
+        loadCompletedTasks();
     }
 
     async function deleteCompletedTasks() {
         await deleteAllCompletedTasks();
         loadTasks();
+        loadCompletedTasks();
+    }
+
+    function onCompleteAvailable() {
+        setCompletedOpen(!completedOpen);
     }
 
 
@@ -153,21 +172,56 @@ function TasksScreen({ navigation }) {
                 // rightActionValue={-500}
 
                 />
+                {loadedCompletedData.length > 0 &&
 
-                {/* <FlatList
-                    data={loadedData}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({ item }) => (
-                        <Task
-                            task={item.title}
-                            done={item.completed}
-                            important={item.important}
-                            onDone={() => completeTaskHandler(item.id, item.completed)}
-                            onDelete={() => deleteTaskHandler(item.id)}
-                            toggleImportant={() => toggleImportant(item.id, item.important)}
-                        />
-                    )}
-                /> */}
+                    <View>
+                        <CompletedLine completedActive={completedOpen} toggleCompleted={onCompleteAvailable} />
+                        {completedOpen &&
+                            <SwipeListView
+                                data={loadedCompletedData}
+                                keyExtractor={(item) => item.id}
+                                renderItem={(data) => {
+                                    return (
+                                        <Task
+                                            task={data.item.title}
+                                            done={data.item.completed}
+                                            important={data.item.important}
+                                            onDone={() => completeTaskHandler(data.item.id, data.item.completed)}
+                                            onDelete={() => deleteTaskHandler(data.item.id)}
+                                            toggleImportant={() => toggleImportant(data.item.id, data.item.important)}
+                                        />);
+                                }}
+                                renderHiddenItem={(data) => {
+                                    return (
+                                        <TouchableOpacity onPress={() => deleteTaskHandler(data.item.id)}>
+                                            <View style={styles.hiddenItemContainer}>
+                                                <FontAwesome5
+                                                    name='trash-alt'
+                                                    size={25}
+                                                    color={'white'}
+                                                    style={styles.hiddenItemIcon}
+                                                    onPress={deleteCompletedTasks}
+                                                />
+                                                <Text style={styles.hiddenItemText}>Delete</Text>
+
+                                            </View>
+                                        </TouchableOpacity>
+                                    );
+                                }}
+                                leftOpenValue={80}
+                                rightOpenValue={-90}
+                                previewRowKey={'1'}
+                                previewOpenValue={180}
+                                previewOpenDelay={3000}
+                                disableRightSwipe={true}
+                                showsVerticalScrollIndicator={false}
+                            // rightActionValue={-500}
+
+                            />
+                        }
+                    </View>
+
+                }
             </View>
 
             <CustomTextInput

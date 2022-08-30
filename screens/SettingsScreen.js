@@ -1,11 +1,29 @@
-import { Text, View, StyleSheet } from "react-native";
+import { useState } from "react";
+import { Text, View, StyleSheet, FlatList } from "react-native";
+import ColorButton from "../components/ColorButton";
 import OutlinedButton from "../components/OutlinedButton";
 import { Colors } from "../constants/colors";
 
 function SettingsScreen() {
-    function onSelectedThemeHandler() {
+    const [theme, setTheme] = useState('defaultTheme');
+
+    function onSelectedDefaultThemeHandler() {
+        setTheme('defaultTheme');
+    }
+
+    function onSelectedLightThemeHandler() {
+        setTheme('lightTheme');
+    }
+
+    function onSelectedDarkThemeHandler() {
+        setTheme('darkTheme');
+    }
+
+    function onColorSelectHandler() {
 
     }
+
+
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Settings</Text>
@@ -13,9 +31,25 @@ function SettingsScreen() {
                 <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Theme</Text>
                     <View style={styles.sectionInnerContainer}>
-                        <OutlinedButton onPress={onSelectedThemeHandler} title='Default' selected={true} />
-                        <OutlinedButton onPress={onSelectedThemeHandler} title='Light Theme' selected={false} />
-                        <OutlinedButton onPress={onSelectedThemeHandler} title='Dark Theme' selected={false} />
+                        <OutlinedButton onPress={onSelectedDefaultThemeHandler} title='Default' selected={theme === 'defaultTheme'} />
+                        <OutlinedButton onPress={onSelectedLightThemeHandler} title='Light Theme' selected={theme === 'lightTheme'} />
+                        <OutlinedButton onPress={onSelectedDarkThemeHandler} title='Dark Theme' selected={theme === 'darkTheme'} />
+                    </View>
+                </View>
+                <View style={styles.section}>
+                    <Text style={styles.sectionTitle}>Color</Text>
+                    <View style={styles.sectionInnerContainer}>
+                        <FlatList
+                            renderItem={
+                                <ColorButton
+                                    color={'blue'}
+                                    onSelect={onColorSelectHandler}
+                                    selected={true}
+                                />
+                            }
+                            horizontal
+                        />
+
                     </View>
                 </View>
             </View>
@@ -49,6 +83,7 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: "space-around",
+        marginBottom: 30,
 
     }
 })

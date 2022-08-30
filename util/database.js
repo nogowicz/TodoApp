@@ -72,7 +72,38 @@ export function fetchTasks() {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
-                `SELECT * FROM tasks ORDER BY completed ASC, important DESC`,
+                `SELECT * FROM tasks WHERE completed = 0 ORDER BY important DESC`,
+                [],
+                (_, result) => {
+                    const tasks = [];
+
+                    for (const dp of result.rows._array) {
+                        tasks.push(
+                            new Todo(
+                                dp.title,
+                                dp.id,
+                                dp.completed,
+                                dp.important
+                            )
+                        );
+                    }
+                    resolve(tasks);
+
+                },
+                (_, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+    return promise;
+}
+
+export function fetchCompletedTasks() {
+    const promise = new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `SELECT * FROM tasks WHERE completed = 1 ORDER BY important DESC`,
                 [],
                 (_, result) => {
                     const tasks = [];

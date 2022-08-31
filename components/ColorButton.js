@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
-import { Colors } from '../constants/colors'
+
 
 function ColorButton({ onSelect, selected, color }) {
     return (

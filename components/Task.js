@@ -1,26 +1,31 @@
 import { StyleSheet, TouchableOpacity, View, Text, Dimensions } from "react-native";
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
-import { Colors } from "../constants/colors";
+import { useContext } from 'react';
+import { ThemeContext } from '../contexts/ThemeContext'
+import { themes } from '../constants/themes.json';
 
 function Task({ task, onDone, done, important, toggleImportant, onDelete }) {
-
+    const themeCtx = useContext(ThemeContext)
+    const { isDarkMode } = themeCtx;
     return (
-        <View style={[styles.item, done && styles.pressed, important && styles.itemImportant]}>
+        <View style={[styles.item, { backgroundColor: isDarkMode ? themes.darkGreen.primaryColor : themes.lightGreen.primaryColor },
+        done && styles.pressed,
+        important && [styles.itemImportant, { borderColor: isDarkMode ? themes.darkGreen.accentDarkerColor : themes.lightGreen.accentDarkerColor }]]}>
             <View style={styles.itemLeft}>
-                <TouchableOpacity style={[styles.square, done && styles.pressedSquare]} onPress={onDone}>
-                    {done ? <FontAwesome name='check' size={25} color={Colors.textColor} /> : null}
+                <TouchableOpacity style={[styles.square, { backgroundColor: isDarkMode ? themes.darkGreen.accentDarkerColor : themes.lightGreen.accentDarkerColor }, done && { backgroundColor: isDarkMode ? themes.darkGreen.accentColor : themes.lightGreen.accentColor }]} onPress={onDone}>
+                    {done ? <FontAwesome name='check' size={25} color={isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor} /> : null}
                 </TouchableOpacity>
-                <Text style={[styles.itemText, done && styles.pressedText]}>{task}</Text>
+                <Text style={[styles.itemText, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }, done && styles.pressedText]}>{task}</Text>
             </View>
             <View>
                 {done ?
                     <TouchableOpacity onPress={onDelete}>
-                        <FontAwesome5 name="trash-alt" size={25} color={Colors.accentColor} />
+                        <FontAwesome5 name="trash-alt" size={25} color={isDarkMode ? themes.darkGreen.accentDarkerColor : themes.lightGreen.accentDarkerColor} />
                     </TouchableOpacity> :
                     <TouchableOpacity onPress={toggleImportant}>
                         {important ?
-                            <FontAwesome name='star' size={25} color={Colors.accentColor} /> :
-                            <FontAwesome name='star-o' size={25} color={Colors.accentColor} />
+                            <FontAwesome name='star' size={25} color={isDarkMode ? themes.darkGreen.accentDarkerColor : themes.lightGreen.accentDarkerColor} /> :
+                            <FontAwesome name='star-o' size={25} color={isDarkMode ? themes.darkGreen.accentDarkerColor : themes.lightGreen.accentDarkerColor} />
                         }
 
                     </TouchableOpacity>}
@@ -36,7 +41,6 @@ export default Task;
 
 const styles = StyleSheet.create({
     item: {
-        backgroundColor: Colors.primaryColor,
         padding: 15,
         borderRadius: 4,
         marginBottom: 20,
@@ -48,7 +52,6 @@ const styles = StyleSheet.create({
     },
     itemImportant: {
         borderWidth: 2,
-        borderColor: Colors.accentColor,
         marginHorizontal: 23,
     },
     itemLeft: {
@@ -59,17 +62,13 @@ const styles = StyleSheet.create({
     square: {
         width: 24,
         height: 24,
-        backgroundColor: Colors.accentColor,
         borderRadius: 2,
         opacity: 0.7,
         marginRight: 15,
     },
-    pressedSquare: {
-        backgroundColor: Colors.accentDarkerColor,
-    },
+
     itemText: {
         maxWidth: '80%',
-        color: Colors.textColor,
     },
     pressedText: {
         textDecorationLine: 'line-through',

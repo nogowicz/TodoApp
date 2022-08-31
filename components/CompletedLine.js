@@ -30,4 +30,5 @@ const styles = StyleSheet.create({
         color: 'grey',
         paddingRight: 10,
     },
+
 });

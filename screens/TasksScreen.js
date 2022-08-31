@@ -1,10 +1,9 @@
 import { StyleSheet, Text, View, Keyboard, TouchableOpacity } from "react-native";
 import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState, useContext } from "react";
 import { Todo } from "../models/todo";
 import { FontAwesome5 } from '@expo/vector-icons';
-import { Colors } from "../constants/colors";
 import {
     fetchTasks,
     insertTask,
@@ -16,6 +15,10 @@ import {
 } from '../util/database';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import CompletedLine from "../components/CompletedLine";
+import { ThemeContext } from '../contexts/ThemeContext'
+import { themes } from '../constants/themes.json';
+import OutlinedButton from "../components/OutlinedButton";
+
 
 
 
@@ -24,7 +27,8 @@ function TasksScreen({ navigation }) {
     const [loadedData, setLoadedData] = useState([]);
     const [loadedCompletedData, setLoadedCompletedData] = useState([]);
     const [completedOpen, setCompletedOpen] = useState(false);
-
+    const themeCtx = useContext(ThemeContext)
+    const { isDarkMode } = themeCtx;
 
     async function loadTasks() {
         const fetchedTasks = await fetchTasks();
@@ -45,15 +49,17 @@ function TasksScreen({ navigation }) {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
+
                 <FontAwesome5
                     name='trash-alt'
                     size={25}
-                    color={Colors.accentColor}
+                    color={isDarkMode ? themes.darkGreen.accentColor : themes.lightGreen.accentColor}
                     style={{ marginRight: 25 }}
                     onPress={deleteCompletedTasks}
                 />
             )
         });
+
     }, [navigation]);
 
 
@@ -106,13 +112,13 @@ function TasksScreen({ navigation }) {
     }
 
 
-    if (!loadedData || loadedData.length === 0) {
+    if ((!loadedData.length) && (!loadedCompletedData.length)) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.title}>Your Tasks</Text>
+            <View style={[styles.container, { backgroundColor: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>
+                <Text style={[styles.title, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>Your Tasks</Text>
 
                 <View style={styles.items}>
-                    <Text style={styles.fallbackText}>You don't have tasks yet, start by adding some!</Text>
+                    <Text style={[styles.fallbackText, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>You don't have tasks yet, start by adding some!</Text>
                 </View>
                 <CustomTextInput
                     value={task}
@@ -127,8 +133,8 @@ function TasksScreen({ navigation }) {
 
     return (
 
-        <View style={styles.container}>
-            <Text style={styles.title}>Your Tasks</Text>
+        <View style={[styles.container, { backgroundColor: isDarkMode ? themes.darkGreen.backgroundColor : themes.lightGreen.backgroundColor }]}>
+            <Text style={[styles.title, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>Your Tasks</Text>
 
             <View style={styles.items}>
                 <SwipeListView
@@ -238,14 +244,12 @@ export default TasksScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.backgroundColor,
 
     },
     title: {
         marginLeft: 25,
         fontWeight: 'bold',
         fontSize: 32,
-        color: Colors.textColor
 
     },
     items: {
@@ -258,7 +262,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 15,
         marginTop: '50%',
-        color: Colors.textColor,
     },
     hiddenItemContainer: {
         backgroundColor: '#d13838',

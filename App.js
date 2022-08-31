@@ -5,13 +5,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
 import { deleteTable, init } from './util/database';
 import { StyleSheet, Text, View } from 'react-native'
-import { Colors } from './constants/colors';
+import { ThemeContext } from './contexts/ThemeContext'
+import { themes } from './constants/themes.json';
 
 
 
 import TasksScreen from './screens/TasksScreen';
 import SettingsScreen from './screens/SettingsScreen';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 
 /**
@@ -30,22 +32,22 @@ import { useState, useEffect } from 'react';
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
-
 function TasksOverview() {
-
+  const themeCtx = useContext(ThemeContext)
+  const { isDarkMode } = themeCtx;
   return (
     <BottomTabs.Navigator
       screenOptions={{
         headerShown: true,
-        tabBarActiveTintColor: 'black',
-        tabBarInactiveTintColor: 'black',
+        tabBarActiveTintColor: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor,
+        tabBarInactiveTintColor: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor,
         tabBarStyle: {
           height: 65,
-          backgroundColor: Colors.primaryLighterColor,
+          backgroundColor: isDarkMode ? themes.darkGreen.primaryLighterColor : themes.lightGreen.primaryLighterColor,
           borderTopWidth: 0,
         },
         headerStyle: {
-          backgroundColor: Colors.backgroundColor,
+          backgroundColor: isDarkMode ? themes.darkGreen.backgroundColor : themes.lightGreen.backgroundColor,
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0, // remove shadow on iOS
           borderBottomWidth: 0,
@@ -60,8 +62,8 @@ function TasksOverview() {
         options={{
           tabBarLabel: 'Tasks',
           tabBarIcon: ({ focused }) => (
-            <View style={focused && styles.activeBackground}>
-              <MaterialCommunityIcons name="checkbox-marked-outline" size={28} color={'black'} />
+            <View style={focused && [styles.activeBackground, { backgroundColor: isDarkMode ? themes.darkGreen.accentColor : themes.lightGreen.accentColor }]}>
+              <MaterialCommunityIcons name="checkbox-marked-outline" size={28} color={isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor} />
             </View>
           ),
           tabBarLabelStyle: {
@@ -76,8 +78,8 @@ function TasksOverview() {
         options={{
           tabBarLabel: 'Settings',
           tabBarIcon: ({ focused }) => (
-            <View style={focused && styles.activeBackground}>
-              <MaterialCommunityIcons name="cog-outline" size={28} color={'black'} />
+            <View style={focused && [styles.activeBackground, { backgroundColor: isDarkMode ? themes.darkGreen.accentColor : themes.lightGreen.accentColor }]}>
+              <MaterialCommunityIcons name="cog-outline" size={28} color={isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor} />
             </View>
           ),
           tabBarLabelStyle: {
@@ -93,6 +95,8 @@ function TasksOverview() {
 
 export default function App() {
   const [dbInitialized, setDbInitialized] = useState(false);
+  const themeCtx = useContext(ThemeContext)
+  const { isDarkMode } = themeCtx;
 
   useEffect(() => {
     // deleteTable();
@@ -106,13 +110,13 @@ export default function App() {
   }, []);
 
   if (!dbInitialized) {
-    return <Text>An error has occurred, please try again</Text>;
+    return <Text style={styles.errorText}>An error has occurred, please try again</Text>;
   }
 
 
   return (
-    <>
-      <StatusBar style='light' />
+    <ThemeProvider>
+      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen
@@ -125,19 +129,23 @@ export default function App() {
 
         </Stack.Navigator>
       </NavigationContainer>
-    </>
+    </ThemeProvider>
+
   );
 }
 
 
 const styles = StyleSheet.create({
   activeBackground: {
-    backgroundColor: Colors.accentColor,
     width: 56,
     borderRadius: 30,
     alignItems: 'center'
   },
-  inactive: {
-    color: 'black'
+  errorText: {
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontSize: 15,
+    marginTop: '50%',
   }
 });

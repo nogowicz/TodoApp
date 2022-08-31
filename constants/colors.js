@@ -1,8 +1,10 @@
-import { Appearance } from "react-native";
 
-let colorScheme = Appearance.getColorScheme();
 
 export let Colors;
+let colorScheme = 'light'
+
+
+
 if (colorScheme === 'dark') {
     Colors = {
         backgroundColor: '#211A1A',
@@ -24,3 +26,6 @@ if (colorScheme === 'dark') {
         textColor: '#000',
     }
 }
+
+
+

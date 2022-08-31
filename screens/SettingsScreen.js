@@ -1,42 +1,51 @@
-import { useState } from "react";
-import { Text, View, StyleSheet, FlatList } from "react-native";
+import { useContext, useState } from "react";
+import { Text, View, StyleSheet, FlatList, Appearance } from "react-native";
+
 import ColorButton from "../components/ColorButton";
 import OutlinedButton from "../components/OutlinedButton";
-import { Colors } from "../constants/colors";
+import { ThemeContext } from '../contexts/ThemeContext'
+import { themes } from '../constants/themes.json';
 
 function SettingsScreen() {
-    const [theme, setTheme] = useState('defaultTheme');
+    const themeCtx = useContext(ThemeContext)
+    const { isDarkMode, setThemesDefaultMode, setThemesLightMode, setThemesDarkMode } = themeCtx;
+    const [themeName, setThemeName] = useState('lightTheme');
+
 
     function onSelectedDefaultThemeHandler() {
-        setTheme('defaultTheme');
+        setThemeName('defaultTheme');
+        setThemesDefaultMode();
+
     }
 
     function onSelectedLightThemeHandler() {
-        setTheme('lightTheme');
+        setThemeName('lightTheme');
+        setThemesLightMode();
+
     }
 
     function onSelectedDarkThemeHandler() {
-        setTheme('darkTheme');
-    }
-
-    function onColorSelectHandler() {
+        setThemeName('darkTheme');
+        setThemesDarkMode();
 
     }
+
+
 
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Settings</Text>
+        <View style={[styles.container, { backgroundColor: isDarkMode ? themes.darkGreen.backgroundColor : themes.lightGreen.backgroundColor }]}>
+            <Text style={[styles.title, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>Settings</Text>
             <View style={styles.settingsList}>
                 <View style={styles.section}>
-                    <Text style={styles.sectionTitle}>Theme</Text>
+                    <Text style={[styles.sectionTitle, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>Theme</Text>
                     <View style={styles.sectionInnerContainer}>
-                        <OutlinedButton onPress={onSelectedDefaultThemeHandler} title='Default' selected={theme === 'defaultTheme'} />
-                        <OutlinedButton onPress={onSelectedLightThemeHandler} title='Light Theme' selected={theme === 'lightTheme'} />
-                        <OutlinedButton onPress={onSelectedDarkThemeHandler} title='Dark Theme' selected={theme === 'darkTheme'} />
+                        <OutlinedButton onPress={onSelectedDefaultThemeHandler} title='Default' selected={themeName === 'defaultTheme'} />
+                        <OutlinedButton onPress={onSelectedLightThemeHandler} title='Light Theme' selected={themeName === 'lightTheme'} />
+                        <OutlinedButton onPress={onSelectedDarkThemeHandler} title='Dark Theme' selected={themeName === 'darkTheme'} />
                     </View>
                 </View>
-                <View style={styles.section}>
+                {/* <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Color</Text>
                     <View style={styles.sectionInnerContainer}>
                         <FlatList
@@ -51,7 +60,7 @@ function SettingsScreen() {
                         />
 
                     </View>
-                </View>
+                </View> */}
             </View>
         </View>
     );
@@ -62,19 +71,17 @@ export default SettingsScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: Colors.backgroundColor
+
     },
     title: {
         marginLeft: 25,
         fontWeight: 'bold',
         fontSize: 32,
-        color: Colors.textColor,
     },
     section: {
         margin: 25,
     },
     sectionTitle: {
-        color: Colors.textColor,
         fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 10
@@ -87,3 +94,7 @@ const styles = StyleSheet.create({
 
     }
 })
+
+
+
+

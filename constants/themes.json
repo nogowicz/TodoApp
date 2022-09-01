@@ -9,14 +9,23 @@
             "accentDarkerColor": "#519b63",
             "textColor": "#000"
         },
-        "darkGreen": {
-            "backgroundColor": "#211A1A",
-            "primaryColor": "#272E24",
-            "primaryLighterColor": "#362929",
+        "lightBlue": {
+            "backgroundColor": "#d9faff",
+            "primaryColor": "#a7c7e7",
+            "primaryLighterColor": "#E7F1E8",
             "primaryButtonColor": "#D7C2C1",
-            "accentColor": "#334a2d",
-            "accentDarkerColor": "#96D785",
-            "textColor": "#EDE0DF"
+            "accentColor": "#487db9",
+            "accentDarkerColor": "#005189",
+            "textColor": "#000"
+        },
+        "lightOrange": {
+            "backgroundColor": "#ffe577",
+            "primaryColor": "#ffb347",
+            "primaryLighterColor": "#E7F1E8",
+            "primaryButtonColor": "#D7C2C1",
+            "accentColor": "#ff964f",
+            "accentDarkerColor": "#c76721",
+            "textColor": "#000"
         }
     }
 }

@@ -2,65 +2,92 @@ import { useContext, useState } from "react";
 import { Text, View, StyleSheet, FlatList, Appearance } from "react-native";
 
 import ColorButton from "../components/ColorButton";
-import OutlinedButton from "../components/OutlinedButton";
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
 
 function SettingsScreen() {
     const themeCtx = useContext(ThemeContext)
-    const { isDarkMode, setThemesDefaultMode, setThemesLightMode, setThemesDarkMode } = themeCtx;
-    const [themeName, setThemeName] = useState('lightTheme');
+    const { theme, setGreenTheme, setBlueTheme, setOrangeTheme } = themeCtx;
 
+    let backgroundColor = themes.lightGreen.backgroundColor
+    let primaryColor = themes.lightGreen.primaryColor
+    let primaryLighterColor = themes.lightGreen.primaryLighterColor
+    let primaryButtonColor = themes.lightGreen.primaryButtonColor
+    let accentColor = themes.lightGreen.accentColor
+    let accentDarkerColor = themes.lightGreen.accentDarkerColor
+    let textColor = themes.lightGreen.textColor
+    if (theme === 'green') {
 
-    function onSelectedDefaultThemeHandler() {
-        setThemeName('defaultTheme');
-        setThemesDefaultMode();
+        backgroundColor = themes.lightGreen.backgroundColor
+        primaryColor = themes.lightGreen.primaryColor
+        primaryLighterColor = themes.lightGreen.primaryLighterColor
+        primaryButtonColor = themes.lightGreen.primaryButtonColor
+        accentColor = themes.lightGreen.accentColor
+        accentDarkerColor = themes.lightGreen.accentDarkerColor
+        textColor = themes.lightGreen.textColor
 
+    } else if (theme === 'blue') {
+        backgroundColor = themes.lightBlue.backgroundColor
+        primaryColor = themes.lightBlue.primaryColor
+        primaryLighterColor = themes.lightBlue.primaryLighterColor
+        primaryButtonColor = themes.lightBlue.primaryButtonColor
+        accentColor = themes.lightBlue.accentColor
+        accentDarkerColor = themes.lightBlue.accentDarkerColor
+        textColor = themes.lightBlue.textColor
+    } else if (theme === 'orange') {
+        backgroundColor = themes.lightOrange.backgroundColor
+        primaryColor = themes.lightOrange.primaryColor
+        primaryLighterColor = themes.lightOrange.primaryLighterColor
+        primaryButtonColor = themes.lightOrange.primaryButtonColor
+        accentColor = themes.lightOrange.accentColor
+        accentDarkerColor = themes.lightOrange.accentDarkerColor
+        textColor = themes.lightOrange.textColor
     }
 
-    function onSelectedLightThemeHandler() {
-        setThemeName('lightTheme');
-        setThemesLightMode();
 
+    function onGreenColorSelectHandler() {
+        setGreenTheme();
     }
 
-    function onSelectedDarkThemeHandler() {
-        setThemeName('darkTheme');
-        setThemesDarkMode();
-
+    function onBlueColorSelectHandler() {
+        setBlueTheme();
     }
 
-
+    function onOrangeColorSelectHandler() {
+        setOrangeTheme();
+    }
 
 
     return (
-        <View style={[styles.container, { backgroundColor: isDarkMode ? themes.darkGreen.backgroundColor : themes.lightGreen.backgroundColor }]}>
-            <Text style={[styles.title, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>Settings</Text>
+        <View style={[styles.container, { backgroundColor: backgroundColor }]}>
+            <Text style={[styles.title, { color: textColor }]}>Settings</Text>
             <View style={styles.settingsList}>
+
                 <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>Theme</Text>
-                    <View style={styles.sectionInnerContainer}>
-                        <OutlinedButton onPress={onSelectedDefaultThemeHandler} title='Default' selected={themeName === 'defaultTheme'} />
-                        <OutlinedButton onPress={onSelectedLightThemeHandler} title='Light Theme' selected={themeName === 'lightTheme'} />
-                        <OutlinedButton onPress={onSelectedDarkThemeHandler} title='Dark Theme' selected={themeName === 'darkTheme'} />
-                    </View>
-                </View>
-                {/* <View style={styles.section}>
                     <Text style={styles.sectionTitle}>Color</Text>
                     <View style={styles.sectionInnerContainer}>
-                        <FlatList
-                            renderItem={
-                                <ColorButton
-                                    color={'blue'}
-                                    onSelect={onColorSelectHandler}
-                                    selected={true}
-                                />
-                            }
-                            horizontal
+
+                        <ColorButton
+                            color={themes.lightGreen.accentColor}
+                            onSelect={onGreenColorSelectHandler}
+                            selected={false}
                         />
 
+                        <ColorButton
+                            color={themes.lightBlue.accentColor}
+                            onSelect={onBlueColorSelectHandler}
+                            selected={false}
+                        />
+
+                        <ColorButton
+                            color={themes.lightOrange.accentColor}
+                            onSelect={onOrangeColorSelectHandler}
+                            selected={false}
+                        />
+
+
                     </View>
-                </View> */}
+                </View>
             </View>
         </View>
     );

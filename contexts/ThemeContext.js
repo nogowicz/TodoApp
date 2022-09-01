@@ -1,32 +1,25 @@
 import { createContext, useState } from "react";
-import { Appearance } from "react-native";
-
-export const ThemeContext = createContext(Appearance.getColorScheme());
+export const ThemeContext = createContext();
 
 export function ThemeProvider({ children }) {
-    const [darkMode, setDarkMode] = useState(false);
-    function setThemesDefaultMode() {
-        const colorScheme = Appearance.getColorScheme();
-        if (colorScheme === 'dark') {
-            setDarkMode(false);
-        } else {
-            setDarkMode(true);
-        }
+    const [color, setColor] = useState('green');
 
+    function setThemesGreenMode() {
+        setColor('green');
     }
-    function setThemesLightMode() {
-        setDarkMode(false);
+    function setThemesBlueMode() {
+        setColor('blue');
     }
-    function setThemesDarkMode() {
-        setDarkMode(true);
+    function setThemesOrangeMode() {
+        setColor('orange');
     }
     return (
         <ThemeContext.Provider
             value={{
-                isDarkMode: darkMode,
-                setThemesDefaultMode: setThemesDefaultMode,
-                setThemesLightMode: setThemesLightMode,
-                setThemesDarkMode: setThemesDarkMode
+                theme: color,
+                setGreenTheme: setThemesGreenMode,
+                setBlueTheme: setThemesBlueMode,
+                setOrangeTheme: setThemesOrangeMode,
             }}>
             {children}
         </ThemeContext.Provider>

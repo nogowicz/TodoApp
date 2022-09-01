@@ -17,7 +17,6 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import CompletedLine from "../components/CompletedLine";
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
-import OutlinedButton from "../components/OutlinedButton";
 
 
 
@@ -28,8 +27,42 @@ function TasksScreen({ navigation }) {
     const [loadedCompletedData, setLoadedCompletedData] = useState([]);
     const [completedOpen, setCompletedOpen] = useState(false);
     const themeCtx = useContext(ThemeContext)
-    const { isDarkMode } = themeCtx;
+    const { theme } = themeCtx;
 
+    let backgroundColor = themes.lightGreen.backgroundColor
+    let primaryColor = themes.lightGreen.primaryColor
+    let primaryLighterColor = themes.lightGreen.primaryLighterColor
+    let primaryButtonColor = themes.lightGreen.primaryButtonColor
+    let accentColor = themes.lightGreen.accentColor
+    let accentDarkerColor = themes.lightGreen.accentDarkerColor
+    let textColor = themes.lightGreen.textColor
+    if (theme === 'green') {
+
+        backgroundColor = themes.lightGreen.backgroundColor
+        primaryColor = themes.lightGreen.primaryColor
+        primaryLighterColor = themes.lightGreen.primaryLighterColor
+        primaryButtonColor = themes.lightGreen.primaryButtonColor
+        accentColor = themes.lightGreen.accentColor
+        accentDarkerColor = themes.lightGreen.accentDarkerColor
+        textColor = themes.lightGreen.textColor
+
+    } else if (theme === 'blue') {
+        backgroundColor = themes.lightBlue.backgroundColor
+        primaryColor = themes.lightBlue.primaryColor
+        primaryLighterColor = themes.lightBlue.primaryLighterColor
+        primaryButtonColor = themes.lightBlue.primaryButtonColor
+        accentColor = themes.lightBlue.accentColor
+        accentDarkerColor = themes.lightBlue.accentDarkerColor
+        textColor = themes.lightBlue.textColor
+    } else if (theme === 'orange') {
+        backgroundColor = themes.lightOrange.backgroundColor
+        primaryColor = themes.lightOrange.primaryColor
+        primaryLighterColor = themes.lightOrange.primaryLighterColor
+        primaryButtonColor = themes.lightOrange.primaryButtonColor
+        accentColor = themes.lightOrange.accentColor
+        accentDarkerColor = themes.lightOrange.accentDarkerColor
+        textColor = themes.lightOrange.textColor
+    }
     async function loadTasks() {
         const fetchedTasks = await fetchTasks();
         setLoadedData(fetchedTasks);
@@ -53,7 +86,7 @@ function TasksScreen({ navigation }) {
                 <FontAwesome5
                     name='trash-alt'
                     size={25}
-                    color={isDarkMode ? themes.darkGreen.accentColor : themes.lightGreen.accentColor}
+                    color={accentColor}
                     style={{ marginRight: 25 }}
                     onPress={deleteCompletedTasks}
                 />
@@ -114,11 +147,11 @@ function TasksScreen({ navigation }) {
 
     if ((!loadedData.length) && (!loadedCompletedData.length)) {
         return (
-            <View style={[styles.container, { backgroundColor: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>
-                <Text style={[styles.title, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>Your Tasks</Text>
+            <View style={[styles.container, { backgroundColor: backgroundColor }]}>
+                <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
 
                 <View style={styles.items}>
-                    <Text style={[styles.fallbackText, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>You don't have tasks yet, start by adding some!</Text>
+                    <Text style={[styles.fallbackText, { color: textColor }]}>You don't have tasks yet, start by adding some!</Text>
                 </View>
                 <CustomTextInput
                     value={task}
@@ -133,8 +166,8 @@ function TasksScreen({ navigation }) {
 
     return (
 
-        <View style={[styles.container, { backgroundColor: isDarkMode ? themes.darkGreen.backgroundColor : themes.lightGreen.backgroundColor }]}>
-            <Text style={[styles.title, { color: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor }]}>Your Tasks</Text>
+        <View style={[styles.container, { backgroundColor: backgroundColor }]}>
+            <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
 
             <View style={styles.items}>
                 <SwipeListView

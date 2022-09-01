@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { FontAwesome, MaterialCommunityIcons } from '@expo/vector-icons'
+import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { deleteTable, init } from './util/database';
 import { StyleSheet, Text, View } from 'react-native'
 import { ThemeContext } from './contexts/ThemeContext'
@@ -34,20 +34,56 @@ const BottomTabs = createBottomTabNavigator();
 
 function TasksOverview() {
   const themeCtx = useContext(ThemeContext)
-  const { isDarkMode } = themeCtx;
+  const { theme } = themeCtx;
+
+  let backgroundColor = themes.lightGreen.backgroundColor
+  let primaryColor = themes.lightGreen.primaryColor
+  let primaryLighterColor = themes.lightGreen.primaryLighterColor
+  let primaryButtonColor = themes.lightGreen.primaryButtonColor
+  let accentColor = themes.lightGreen.accentColor
+  let accentDarkerColor = themes.lightGreen.accentDarkerColor
+  let textColor = themes.lightGreen.textColor
+  if (theme === 'green') {
+
+    backgroundColor = themes.lightGreen.backgroundColor
+    primaryColor = themes.lightGreen.primaryColor
+    primaryLighterColor = themes.lightGreen.primaryLighterColor
+    primaryButtonColor = themes.lightGreen.primaryButtonColor
+    accentColor = themes.lightGreen.accentColor
+    accentDarkerColor = themes.lightGreen.accentDarkerColor
+    textColor = themes.lightGreen.textColor
+
+  } else if (theme === 'blue') {
+    backgroundColor = themes.lightBlue.backgroundColor
+    primaryColor = themes.lightBlue.primaryColor
+    primaryLighterColor = themes.lightBlue.primaryLighterColor
+    primaryButtonColor = themes.lightBlue.primaryButtonColor
+    accentColor = themes.lightBlue.accentColor
+    accentDarkerColor = themes.lightBlue.accentDarkerColor
+    textColor = themes.lightBlue.textColor
+  } else if (theme === 'orange') {
+    backgroundColor = themes.lightOrange.backgroundColor
+    primaryColor = themes.lightOrange.primaryColor
+    primaryLighterColor = themes.lightOrange.primaryLighterColor
+    primaryButtonColor = themes.lightOrange.primaryButtonColor
+    accentColor = themes.lightOrange.accentColor
+    accentDarkerColor = themes.lightOrange.accentDarkerColor
+    textColor = themes.lightOrange.textColor
+  }
+
   return (
     <BottomTabs.Navigator
       screenOptions={{
         headerShown: true,
-        tabBarActiveTintColor: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor,
-        tabBarInactiveTintColor: isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor,
+        tabBarActiveTintColor: textColor,
+        tabBarInactiveTintColor: textColor,
         tabBarStyle: {
           height: 65,
-          backgroundColor: isDarkMode ? themes.darkGreen.primaryLighterColor : themes.lightGreen.primaryLighterColor,
+          backgroundColor: primaryLighterColor,
           borderTopWidth: 0,
         },
         headerStyle: {
-          backgroundColor: isDarkMode ? themes.darkGreen.backgroundColor : themes.lightGreen.backgroundColor,
+          backgroundColor: backgroundColor,
           elevation: 0, // remove shadow on Android
           shadowOpacity: 0, // remove shadow on iOS
           borderBottomWidth: 0,
@@ -62,8 +98,8 @@ function TasksOverview() {
         options={{
           tabBarLabel: 'Tasks',
           tabBarIcon: ({ focused }) => (
-            <View style={focused && [styles.activeBackground, { backgroundColor: isDarkMode ? themes.darkGreen.accentColor : themes.lightGreen.accentColor }]}>
-              <MaterialCommunityIcons name="checkbox-marked-outline" size={28} color={isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor} />
+            <View style={focused && [styles.activeBackground, { backgroundColor: accentColor }]}>
+              <MaterialCommunityIcons name="checkbox-marked-outline" size={28} color={textColor} />
             </View>
           ),
           tabBarLabelStyle: {
@@ -78,8 +114,8 @@ function TasksOverview() {
         options={{
           tabBarLabel: 'Settings',
           tabBarIcon: ({ focused }) => (
-            <View style={focused && [styles.activeBackground, { backgroundColor: isDarkMode ? themes.darkGreen.accentColor : themes.lightGreen.accentColor }]}>
-              <MaterialCommunityIcons name="cog-outline" size={28} color={isDarkMode ? themes.darkGreen.textColor : themes.lightGreen.textColor} />
+            <View style={focused && [styles.activeBackground, { backgroundColor: accentColor }]}>
+              <MaterialCommunityIcons name="cog-outline" size={28} color={textColor} />
             </View>
           ),
           tabBarLabelStyle: {
@@ -87,7 +123,7 @@ function TasksOverview() {
           },
         }}
       />
-    </BottomTabs.Navigator>
+    </BottomTabs.Navigator >
   );
 }
 
@@ -95,8 +131,7 @@ function TasksOverview() {
 
 export default function App() {
   const [dbInitialized, setDbInitialized] = useState(false);
-  const themeCtx = useContext(ThemeContext)
-  const { isDarkMode } = themeCtx;
+
 
   useEffect(() => {
     // deleteTable();
@@ -116,7 +151,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <StatusBar style={isDarkMode ? 'light' : 'dark'} />
+      <StatusBar style={'dark'} />
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen

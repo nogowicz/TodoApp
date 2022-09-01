@@ -4,11 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { deleteTable, init } from './util/database';
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
 import { ThemeContext } from './contexts/ThemeContext'
 import { themes } from './constants/themes.json';
-
-
 
 import TasksScreen from './screens/TasksScreen';
 import SettingsScreen from './screens/SettingsScreen';
@@ -21,11 +19,8 @@ import { ThemeProvider } from './contexts/ThemeContext';
  * -zrobić ekran edycji task'a, np szufladę wyciąganą z dołu
  * -zrobić ekran ustawień
  * -zrobić kolor akcentu 
- * -zrobić listę ukończonych zadań 
  * -zrobić listę movable
  */
-
-
 
 
 
@@ -36,19 +31,17 @@ function TasksOverview() {
   const themeCtx = useContext(ThemeContext)
   const { theme } = themeCtx;
 
-  let backgroundColor = themes.lightGreen.backgroundColor
-  let primaryColor = themes.lightGreen.primaryColor
-  let primaryLighterColor = themes.lightGreen.primaryLighterColor
-  let primaryButtonColor = themes.lightGreen.primaryButtonColor
-  let accentColor = themes.lightGreen.accentColor
-  let accentDarkerColor = themes.lightGreen.accentDarkerColor
-  let textColor = themes.lightGreen.textColor
+  let backgroundColor;
+  let primaryColor;
+  let bottomTabsColor;
+  let accentColor;
+  let accentDarkerColor;
+  let textColor;
   if (theme === 'green') {
 
     backgroundColor = themes.lightGreen.backgroundColor
     primaryColor = themes.lightGreen.primaryColor
-    primaryLighterColor = themes.lightGreen.primaryLighterColor
-    primaryButtonColor = themes.lightGreen.primaryButtonColor
+    bottomTabsColor = themes.lightGreen.bottomTabsColor
     accentColor = themes.lightGreen.accentColor
     accentDarkerColor = themes.lightGreen.accentDarkerColor
     textColor = themes.lightGreen.textColor
@@ -56,20 +49,33 @@ function TasksOverview() {
   } else if (theme === 'blue') {
     backgroundColor = themes.lightBlue.backgroundColor
     primaryColor = themes.lightBlue.primaryColor
-    primaryLighterColor = themes.lightBlue.primaryLighterColor
-    primaryButtonColor = themes.lightBlue.primaryButtonColor
+    bottomTabsColor = themes.lightBlue.bottomTabsColor
     accentColor = themes.lightBlue.accentColor
     accentDarkerColor = themes.lightBlue.accentDarkerColor
     textColor = themes.lightBlue.textColor
   } else if (theme === 'orange') {
     backgroundColor = themes.lightOrange.backgroundColor
     primaryColor = themes.lightOrange.primaryColor
-    primaryLighterColor = themes.lightOrange.primaryLighterColor
-    primaryButtonColor = themes.lightOrange.primaryButtonColor
+    bottomTabsColor = themes.lightOrange.bottomTabsColor
     accentColor = themes.lightOrange.accentColor
     accentDarkerColor = themes.lightOrange.accentDarkerColor
     textColor = themes.lightOrange.textColor
+  } else if (theme === 'pink') {
+    backgroundColor = themes.lightPink.backgroundColor
+    primaryColor = themes.lightPink.primaryColor
+    bottomTabsColor = themes.lightPink.bottomTabsColor
+    accentColor = themes.lightPink.accentColor
+    accentDarkerColor = themes.lightPink.accentDarkerColor
+    textColor = themes.lightPink.textColor
+  } else if (theme === 'white') {
+    backgroundColor = themes.white.backgroundColor
+    primaryColor = themes.white.primaryColor
+    bottomTabsColor = themes.white.bottomTabsColor
+    accentColor = themes.white.accentColor
+    accentDarkerColor = themes.white.accentDarkerColor
+    textColor = themes.white.textColor
   }
+
 
   return (
     <BottomTabs.Navigator
@@ -79,7 +85,7 @@ function TasksOverview() {
         tabBarInactiveTintColor: textColor,
         tabBarStyle: {
           height: 65,
-          backgroundColor: primaryLighterColor,
+          backgroundColor: bottomTabsColor,
           borderTopWidth: 0,
         },
         headerStyle: {
@@ -145,7 +151,11 @@ export default function App() {
   }, []);
 
   if (!dbInitialized) {
-    return <Text style={styles.errorText}>An error has occurred, please try again</Text>;
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator style={styles.activityLoader} size='large' color='#487db9' />
+      </View>
+    );
   }
 
 
@@ -176,11 +186,12 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     alignItems: 'center'
   },
-  errorText: {
-    textAlign: 'center',
+  loaderContainer: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  activityLoader: {
     justifyContent: 'center',
     alignItems: 'center',
-    fontSize: 15,
-    marginTop: '50%',
   }
 });

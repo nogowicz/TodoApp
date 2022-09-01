@@ -1,27 +1,34 @@
 import { useContext, useState } from "react";
-import { Text, View, StyleSheet, FlatList, Appearance } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 
 import ColorButton from "../components/ColorButton";
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function SettingsScreen() {
     const themeCtx = useContext(ThemeContext)
-    const { theme, setGreenTheme, setBlueTheme, setOrangeTheme } = themeCtx;
+    const {
+        theme,
+        setGreenTheme,
+        setBlueTheme,
+        setOrangeTheme,
+        setPinkTheme,
+        setWhiteTheme
+    } = themeCtx;
+    const [themeName, setThemeName] = useState(theme);
 
-    let backgroundColor = themes.lightGreen.backgroundColor
-    let primaryColor = themes.lightGreen.primaryColor
-    let primaryLighterColor = themes.lightGreen.primaryLighterColor
-    let primaryButtonColor = themes.lightGreen.primaryButtonColor
-    let accentColor = themes.lightGreen.accentColor
-    let accentDarkerColor = themes.lightGreen.accentDarkerColor
-    let textColor = themes.lightGreen.textColor
+    let backgroundColor;
+    let primaryColor;
+    let bottomTabsColor;
+    let accentColor;
+    let accentDarkerColor;
+    let textColor;
     if (theme === 'green') {
 
         backgroundColor = themes.lightGreen.backgroundColor
         primaryColor = themes.lightGreen.primaryColor
-        primaryLighterColor = themes.lightGreen.primaryLighterColor
-        primaryButtonColor = themes.lightGreen.primaryButtonColor
+        bottomTabsColor = themes.lightGreen.bottomTabsColor
         accentColor = themes.lightGreen.accentColor
         accentDarkerColor = themes.lightGreen.accentDarkerColor
         textColor = themes.lightGreen.textColor
@@ -29,33 +36,72 @@ function SettingsScreen() {
     } else if (theme === 'blue') {
         backgroundColor = themes.lightBlue.backgroundColor
         primaryColor = themes.lightBlue.primaryColor
-        primaryLighterColor = themes.lightBlue.primaryLighterColor
-        primaryButtonColor = themes.lightBlue.primaryButtonColor
+        bottomTabsColor = themes.lightBlue.bottomTabsColor
         accentColor = themes.lightBlue.accentColor
         accentDarkerColor = themes.lightBlue.accentDarkerColor
         textColor = themes.lightBlue.textColor
     } else if (theme === 'orange') {
         backgroundColor = themes.lightOrange.backgroundColor
         primaryColor = themes.lightOrange.primaryColor
-        primaryLighterColor = themes.lightOrange.primaryLighterColor
-        primaryButtonColor = themes.lightOrange.primaryButtonColor
+        bottomTabsColor = themes.lightOrange.bottomTabsColor
         accentColor = themes.lightOrange.accentColor
         accentDarkerColor = themes.lightOrange.accentDarkerColor
         textColor = themes.lightOrange.textColor
+    } else if (theme === 'pink') {
+        backgroundColor = themes.lightPink.backgroundColor
+        primaryColor = themes.lightPink.primaryColor
+        bottomTabsColor = themes.lightPink.bottomTabsColor
+        accentColor = themes.lightPink.accentColor
+        accentDarkerColor = themes.lightPink.accentDarkerColor
+        textColor = themes.lightPink.textColor
+    } else if (theme === 'white') {
+        backgroundColor = themes.white.backgroundColor
+        primaryColor = themes.white.primaryColor
+        bottomTabsColor = themes.white.bottomTabsColor
+        accentColor = themes.white.accentColor
+        accentDarkerColor = themes.white.accentDarkerColor
+        textColor = themes.white.textColor
+    }
+
+    const storeTheme = async (value) => {
+        try {
+            await AsyncStorage.setItem('theme', value)
+        } catch (e) {
+            // saving error
+        }
     }
 
 
-    function onGreenColorSelectHandler() {
+    async function onGreenColorSelectHandler() {
         setGreenTheme();
+        setThemeName('green');
+        storeTheme('green');
     }
 
-    function onBlueColorSelectHandler() {
+    async function onBlueColorSelectHandler() {
         setBlueTheme();
+        setThemeName('blue');
+        storeTheme('blue');
     }
 
-    function onOrangeColorSelectHandler() {
+    async function onOrangeColorSelectHandler() {
         setOrangeTheme();
+        setThemeName('orange');
+        storeTheme('orange');
     }
+
+    async function onPinkColorSelectHandler() {
+        setPinkTheme();
+        setThemeName('pink');
+        storeTheme('pink');
+    }
+
+    async function onWhiteColorSelectHandler() {
+        setWhiteTheme();
+        setThemeName('white');
+        storeTheme('white');
+    }
+
 
 
     return (
@@ -70,20 +116,33 @@ function SettingsScreen() {
                         <ColorButton
                             color={themes.lightGreen.accentColor}
                             onSelect={onGreenColorSelectHandler}
-                            selected={false}
+                            selected={themeName === 'green'}
                         />
 
                         <ColorButton
                             color={themes.lightBlue.accentColor}
                             onSelect={onBlueColorSelectHandler}
-                            selected={false}
+                            selected={themeName === 'blue'}
                         />
 
                         <ColorButton
                             color={themes.lightOrange.accentColor}
                             onSelect={onOrangeColorSelectHandler}
-                            selected={false}
+                            selected={themeName === 'orange'}
                         />
+
+                        <ColorButton
+                            color={themes.lightPink.accentColor}
+                            onSelect={onPinkColorSelectHandler}
+                            selected={themeName === 'pink'}
+                        />
+
+                        <ColorButton
+                            color={themes.white.accentColor}
+                            onSelect={onWhiteColorSelectHandler}
+                            selected={themeName === 'white'}
+                        />
+
 
 
                     </View>

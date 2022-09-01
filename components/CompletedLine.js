@@ -19,7 +19,7 @@ export default CompletedLine;
 
 const styles = StyleSheet.create({
     completed: {
-        borderBottomWidth: 1,
+        borderBottomWidth: 2,
         borderBottomColor: 'gray',
         flexDirection: 'row',
         justifyContent: 'flex-start',

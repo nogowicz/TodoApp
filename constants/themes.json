@@ -1,30 +1,43 @@
 {
     "themes": {
         "lightGreen": {
-            "backgroundColor": "#f6ffff",
+            "backgroundColor": "#EAE3F1",
             "primaryColor": "#C2FFCE",
-            "primaryLighterColor": "#E7F1E8",
-            "primaryButtonColor": "#DCB6A5",
+            "bottomTabsColor": "#F7F2F9",
             "accentColor": "#81cc91",
             "accentDarkerColor": "#519b63",
             "textColor": "#000"
         },
         "lightBlue": {
-            "backgroundColor": "#d9faff",
+            "backgroundColor": "#EAE3F1",
             "primaryColor": "#a7c7e7",
-            "primaryLighterColor": "#E7F1E8",
-            "primaryButtonColor": "#D7C2C1",
+            "bottomTabsColor": "#F7F2F9",
             "accentColor": "#487db9",
             "accentDarkerColor": "#005189",
             "textColor": "#000"
         },
         "lightOrange": {
-            "backgroundColor": "#ffe577",
+            "backgroundColor": "#EAE3F1",
             "primaryColor": "#ffb347",
-            "primaryLighterColor": "#E7F1E8",
-            "primaryButtonColor": "#D7C2C1",
+            "bottomTabsColor": "#F7F2F9",
             "accentColor": "#ff964f",
-            "accentDarkerColor": "#c76721",
+            "accentDarkerColor": "#e38546",
+            "textColor": "#000"
+        },
+        "lightPink": {
+            "backgroundColor": "#EAE3F1",
+            "primaryColor": "#FFD8E4",
+            "bottomTabsColor": "#F7F2F9",
+            "accentColor": "#f59db8",
+            "accentDarkerColor": "#cf869c",
+            "textColor": "#000"
+        },
+        "white": {
+            "backgroundColor": "#EAE3F1",
+            "primaryColor": "#EAE3F1",
+            "bottomTabsColor": "#F7F2F9",
+            "accentColor": "#cccccc",
+            "accentDarkerColor": "#b5b5b5",
             "textColor": "#000"
         }
     }

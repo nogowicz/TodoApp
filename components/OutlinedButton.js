@@ -1,10 +1,11 @@
 import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { FontAwesome5 } from '@expo/vector-icons'
 
 function OutlinedButton({ text, color, onPress }) {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={[styles.outlinedButton, { borderColor: color }]}>
-                <Text style={[styles.outlinedButtonText, { color: color }]}>{text}</Text>
+                <FontAwesome5 name="trash-alt" size={25} color={color} />
             </View>
         </TouchableOpacity>
     );
@@ -18,9 +19,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginHorizontal: 25,
         marginBottom: 20,
+        height: 40,
+        justifyContent: 'center'
+    },
 
-    },
-    outlinedButtonText: {
-        fontSize: 20,
-    },
 });

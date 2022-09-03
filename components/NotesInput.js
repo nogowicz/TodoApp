@@ -1,10 +1,9 @@
-import { KeyboardAvoidingView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import { FontAwesome } from '@expo/vector-icons'
-import { ThemeContext } from '../contexts/ThemeContext'
-import { themes } from '../constants/themes.json';
+import { StyleSheet, TextInput } from "react-native";
 import { useContext } from 'react';
 
-function CustomTextInput({ value, onChangeText, addTask }) {
+import { ThemeContext } from '../contexts/ThemeContext'
+import { themes } from '../constants/themes.json';
+function NotesInput() {
     const themeCtx = useContext(ThemeContext)
     const { theme } = themeCtx;
 
@@ -87,66 +86,33 @@ function CustomTextInput({ value, onChangeText, addTask }) {
         accentDarkerColor = themes.darkPink.accentDarkerColor
         textColor = themes.darkPink.textColor
     }
-
-
-
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={[styles.inputContainer,
-            { backgroundColor: backgroundColor },
-            { borderColor: accentColor }
+        <TextInput
+            style={[
+                styles.input,
+                {
+                    borderColor: accentColor,
+                    color: accentColor,
+                }
             ]}
-
-        >
-            <TextInput
-                style={[styles.input, { color: textColor }]}
-                placeholder='Add new task'
-                placeholderTextColor={textColor}
-                value={value}
-                onChangeText={onChangeText}
-                maxLength={120}
-            />
-            <TouchableOpacity onPress={addTask}>
-                <View style={[styles.button, { backgroundColor: accentColor }]}>
-                    <FontAwesome name='angle-up' size={24} color={textColor} />
-                </View>
-            </TouchableOpacity>
-        </KeyboardAvoidingView>
+            placeholder="Add notes"
+            placeholderTextColor={accentColor}
+        />
     );
 }
 
-export default CustomTextInput;
+export default NotesInput;
 
 const styles = StyleSheet.create({
-    inputContainer: {
-        borderWidth: 2,
-        marginHorizontal: 20,
-        borderRadius: 12,
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 10,
-        position: 'absolute',
-        bottom: 20,
-        minHeight: 50,
-        width: '90%',
-
-
-    },
-
     input: {
-        width: '80%',
-        height: 50,
-        flex: 1,
-        paddingHorizontal: 10,
-    },
-
-    button: {
-        height: 30,
-        width: 30,
+        borderWidth: 1,
+        marginHorizontal: 25,
+        marginTop: 25,
         borderRadius: 6,
-        justifyContent: 'center',
-        alignItems: 'center',
+        minHeight: 200,
+        padding: 15,
+        fontSize: 20,
+        textAlignVertical: 'top',
+
     },
 });

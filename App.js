@@ -4,11 +4,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { deleteTable, init } from './util/database';
-import { StyleSheet, Text, View, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, ActivityIndicator } from 'react-native'
 import { ThemeContext } from './contexts/ThemeContext'
 import { themes } from './constants/themes.json';
 
 import TasksScreen from './screens/TasksScreen';
+import TaskDetails from './screens/TaskDetails';
 import SettingsScreen from './screens/SettingsScreen';
 import { useState, useEffect, useContext } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -16,10 +17,10 @@ import { ThemeProvider } from './contexts/ThemeContext';
 
 /**
  * TODO
- * -zrobić ekran edycji task'a, np szufladę wyciąganą z dołu
+ * -zrobić ekran edycji
  * -zrobić ekran ustawień
- * -zrobić kolor akcentu 
  * -zrobić listę movable
+ * -code cleanup
  */
 
 
@@ -39,34 +40,34 @@ function TasksOverview() {
   let textColor;
   if (theme === 'green') {
 
-    backgroundColor = themes.lightGreen.backgroundColor
-    primaryColor = themes.lightGreen.primaryColor
-    bottomTabsColor = themes.lightGreen.bottomTabsColor
-    accentColor = themes.lightGreen.accentColor
-    accentDarkerColor = themes.lightGreen.accentDarkerColor
-    textColor = themes.lightGreen.textColor
+    backgroundColor = themes.green.backgroundColor
+    primaryColor = themes.green.primaryColor
+    bottomTabsColor = themes.green.bottomTabsColor
+    accentColor = themes.green.accentColor
+    accentDarkerColor = themes.green.accentDarkerColor
+    textColor = themes.green.textColor
 
   } else if (theme === 'blue') {
-    backgroundColor = themes.lightBlue.backgroundColor
-    primaryColor = themes.lightBlue.primaryColor
-    bottomTabsColor = themes.lightBlue.bottomTabsColor
-    accentColor = themes.lightBlue.accentColor
-    accentDarkerColor = themes.lightBlue.accentDarkerColor
-    textColor = themes.lightBlue.textColor
+    backgroundColor = themes.blue.backgroundColor
+    primaryColor = themes.blue.primaryColor
+    bottomTabsColor = themes.blue.bottomTabsColor
+    accentColor = themes.blue.accentColor
+    accentDarkerColor = themes.blue.accentDarkerColor
+    textColor = themes.blue.textColor
   } else if (theme === 'orange') {
-    backgroundColor = themes.lightOrange.backgroundColor
-    primaryColor = themes.lightOrange.primaryColor
-    bottomTabsColor = themes.lightOrange.bottomTabsColor
-    accentColor = themes.lightOrange.accentColor
-    accentDarkerColor = themes.lightOrange.accentDarkerColor
-    textColor = themes.lightOrange.textColor
+    backgroundColor = themes.orange.backgroundColor
+    primaryColor = themes.orange.primaryColor
+    bottomTabsColor = themes.orange.bottomTabsColor
+    accentColor = themes.orange.accentColor
+    accentDarkerColor = themes.orange.accentDarkerColor
+    textColor = themes.orange.textColor
   } else if (theme === 'pink') {
-    backgroundColor = themes.lightPink.backgroundColor
-    primaryColor = themes.lightPink.primaryColor
-    bottomTabsColor = themes.lightPink.bottomTabsColor
-    accentColor = themes.lightPink.accentColor
-    accentDarkerColor = themes.lightPink.accentDarkerColor
-    textColor = themes.lightPink.textColor
+    backgroundColor = themes.pink.backgroundColor
+    primaryColor = themes.pink.primaryColor
+    bottomTabsColor = themes.pink.bottomTabsColor
+    accentColor = themes.pink.accentColor
+    accentDarkerColor = themes.pink.accentDarkerColor
+    textColor = themes.pink.textColor
   } else if (theme === 'white') {
     backgroundColor = themes.white.backgroundColor
     primaryColor = themes.white.primaryColor
@@ -74,6 +75,41 @@ function TasksOverview() {
     accentColor = themes.white.accentColor
     accentDarkerColor = themes.white.accentDarkerColor
     textColor = themes.white.textColor
+  } else if (theme === 'darkGreen') {
+    backgroundColor = themes.darkGreen.backgroundColor
+    primaryColor = themes.darkGreen.primaryColor
+    bottomTabsColor = themes.darkGreen.bottomTabsColor
+    accentColor = themes.darkGreen.accentColor
+    accentDarkerColor = themes.darkGreen.accentDarkerColor
+    textColor = themes.darkGreen.textColor
+  } else if (theme === 'darkRed') {
+    backgroundColor = themes.darkRed.backgroundColor
+    primaryColor = themes.darkRed.primaryColor
+    bottomTabsColor = themes.darkRed.bottomTabsColor
+    accentColor = themes.darkRed.accentColor
+    accentDarkerColor = themes.darkRed.accentDarkerColor
+    textColor = themes.darkRed.textColor
+  } else if (theme === 'darkGrey') {
+    backgroundColor = themes.darkGrey.backgroundColor
+    primaryColor = themes.darkGrey.primaryColor
+    bottomTabsColor = themes.darkGrey.bottomTabsColor
+    accentColor = themes.darkGrey.accentColor
+    accentDarkerColor = themes.darkGrey.accentDarkerColor
+    textColor = themes.darkGrey.textColor
+  } else if (theme === 'darkBlue') {
+    backgroundColor = themes.darkBlue.backgroundColor
+    primaryColor = themes.darkBlue.primaryColor
+    bottomTabsColor = themes.darkBlue.bottomTabsColor
+    accentColor = themes.darkBlue.accentColor
+    accentDarkerColor = themes.darkBlue.accentDarkerColor
+    textColor = themes.darkBlue.textColor
+  } else if (theme === 'darkPink') {
+    backgroundColor = themes.darkPink.backgroundColor
+    primaryColor = themes.darkPink.primaryColor
+    bottomTabsColor = themes.darkPink.bottomTabsColor
+    accentColor = themes.darkPink.accentColor
+    accentDarkerColor = themes.darkPink.accentDarkerColor
+    textColor = themes.darkPink.textColor
   }
 
 
@@ -139,6 +175,7 @@ export default function App() {
   const [dbInitialized, setDbInitialized] = useState(false);
 
 
+
   useEffect(() => {
     // deleteTable();
     init()
@@ -167,6 +204,14 @@ export default function App() {
           <Stack.Screen
             name='TasksOverview'
             component={TasksOverview}
+            options={{
+              headerShown: false,
+            }}
+          />
+
+          <Stack.Screen
+            name='TaskDetails'
+            component={TaskDetails}
             options={{
               headerShown: false,
             }}

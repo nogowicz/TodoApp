@@ -119,7 +119,7 @@ export function fetchCompletedTasks() {
                         );
                     }
                     resolve(tasks);
-
+                    // console.log(result)
                 },
                 (_, error) => {
                     reject(error);
@@ -199,6 +199,27 @@ export function addToImportant(id, important) {
                 (_, result) => {
                     // console.log(important)
                     resolve(result);
+                },
+                (_, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+    return promise;
+}
+
+export function fetchTaskTitle(id) {
+    const promise = new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `SELECT title FROM tasks WHERE id = ?`,
+                [id],
+                (_, result) => {
+                    const title = result.rows._array[0];
+
+                    resolve(title.title);
+
                 },
                 (_, error) => {
                     reject(error);

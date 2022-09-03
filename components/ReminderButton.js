@@ -1,10 +1,11 @@
-import { KeyboardAvoidingView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import { FontAwesome } from '@expo/vector-icons'
-import { ThemeContext } from '../contexts/ThemeContext'
-import { themes } from '../constants/themes.json';
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { useContext } from 'react';
 
-function CustomTextInput({ value, onChangeText, addTask }) {
+import { ThemeContext } from '../contexts/ThemeContext'
+import { themes } from '../constants/themes.json';
+import { Ionicons } from '@expo/vector-icons';
+
+function ReminderButton({ onPress }) {
     const themeCtx = useContext(ThemeContext)
     const { theme } = themeCtx;
 
@@ -88,65 +89,31 @@ function CustomTextInput({ value, onChangeText, addTask }) {
         textColor = themes.darkPink.textColor
     }
 
-
-
     return (
-        <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={[styles.inputContainer,
-            { backgroundColor: backgroundColor },
-            { borderColor: accentColor }
-            ]}
-
-        >
-            <TextInput
-                style={[styles.input, { color: textColor }]}
-                placeholder='Add new task'
-                placeholderTextColor={textColor}
-                value={value}
-                onChangeText={onChangeText}
-                maxLength={120}
-            />
-            <TouchableOpacity onPress={addTask}>
-                <View style={[styles.button, { backgroundColor: accentColor }]}>
-                    <FontAwesome name='angle-up' size={24} color={textColor} />
-                </View>
-            </TouchableOpacity>
-        </KeyboardAvoidingView>
+        <TouchableOpacity onPress={onPress}>
+            <View style={[styles.container, { backgroundColor: accentColor }]}>
+                <Ionicons name="notifications-outline" size={24} color={textColor} />
+                <Text style={[styles.text, { color: textColor }]}>Remind me</Text>
+            </View>
+        </TouchableOpacity >
     );
 }
 
-export default CustomTextInput;
+export default ReminderButton;
 
 const styles = StyleSheet.create({
-    inputContainer: {
-        borderWidth: 2,
-        marginHorizontal: 20,
-        borderRadius: 12,
+    container: {
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        paddingHorizontal: 10,
-        position: 'absolute',
-        bottom: 20,
-        minHeight: 50,
-        width: '90%',
-
-
-    },
-
-    input: {
-        width: '80%',
-        height: 50,
-        flex: 1,
-        paddingHorizontal: 10,
-    },
-
-    button: {
-        height: 30,
-        width: 30,
+        justifyContent: 'flex-start',
+        borderWidth: 1,
         borderRadius: 6,
-        justifyContent: 'center',
-        alignItems: 'center',
+        marginHorizontal: 25,
+        marginTop: 25,
+        padding: 15,
+        justifyContent: "flex-start",
+        alignItems: 'center'
+    },
+    text: {
+        marginLeft: 10,
     },
 });

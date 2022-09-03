@@ -33,6 +33,22 @@ export function ThemeProvider({ children }) {
     function setThemesWhiteMode() {
         setColor('white')
     }
+    function setThemesDarkGreenMode() {
+        setColor('darkGreen')
+    }
+    function setThemesDarkRedMode() {
+        setColor('darkRed')
+    }
+    function setThemesDarkGreyMode() {
+        setColor('darkGrey')
+    }
+    function setThemesDarkBlueMode() {
+        setColor('darkBlue')
+    }
+    function setThemesDarkPinkMode() {
+        setColor('darkPink')
+    }
+
     return (
         <ThemeContext.Provider
             value={{
@@ -41,7 +57,12 @@ export function ThemeProvider({ children }) {
                 setBlueTheme: setThemesBlueMode,
                 setOrangeTheme: setThemesOrangeMode,
                 setPinkTheme: setThemesPinkMode,
-                setWhiteTheme: setThemesWhiteMode
+                setWhiteTheme: setThemesWhiteMode,
+                setDarkGreenTheme: setThemesDarkGreenMode,
+                setDarkRedTheme: setThemesDarkRedMode,
+                setDarkGreyTheme: setThemesDarkGreyMode,
+                setDarkBlueTheme: setThemesDarkBlueMode,
+                setDarkPinkTheme: setThemesDarkPinkMode
             }}>
             {children}
         </ThemeContext.Provider>

@@ -1,8 +1,16 @@
-import { StyleSheet, TouchableOpacity, View, Text, Dimensions, TouchableWithoutFeedback } from "react-native";
+import {
+    StyleSheet,
+    TouchableOpacity,
+    View,
+    Text,
+    TouchableWithoutFeedback,
+    Animated
+} from "react-native";
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
 import { useContext } from 'react';
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
+import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
 
 function Task({ task, onDone, done, important, toggleImportant, onDelete, onPress }) {
     const themeCtx = useContext(ThemeContext)
@@ -89,32 +97,67 @@ function Task({ task, onDone, done, important, toggleImportant, onDelete, onPres
     }
 
 
+    const RenderRight = (progress, dragX) => {
+        const scale = dragX.interpolate({
+            inputRange: [-130, 0.5],
+            outputRange: [1, 0.1]
+        })
+
+        const Style = {
+            transform: [
+                {
+                    scale
+                }
+            ],
+            justifyContent: 'center',
+            alignItems: 'center',
+        }
+
+        return (
+            <TouchableWithoutFeedback onPress={onDelete}>
+                <View style={styles.hiddenItemContainer}>
+                    <Animated.View style={[Style]}>
+                        <FontAwesome5 name="trash-alt" size={25} color='white' />
+                        <Text style={[styles.hiddenItemText]}>Delete</Text>
+                    </Animated.View>
+
+                </View >
+            </TouchableWithoutFeedback>
+        )
+    }
+
+
     return (
         <TouchableWithoutFeedback onPress={onPress}>
-            <View style={[styles.item, { backgroundColor: primaryColor },
-            done && styles.pressed]}>
-                <View style={styles.itemLeft}>
-                    <TouchableOpacity style={[styles.square, { backgroundColor: accentDarkerColor }, done && { backgroundColor: accentDarkerColor }]} onPress={onDone}>
-                        {done ? <FontAwesome name='check' size={25} color={textColor} /> : null}
-                    </TouchableOpacity>
-                    <Text style={[styles.itemText, { color: textColor }, done && styles.pressedText]}>{task}</Text>
-                </View>
-                <View>
-                    {done ?
-                        <TouchableOpacity onPress={onDelete}>
-                            <FontAwesome5 name="trash-alt" size={25} color={accentDarkerColor} />
-                        </TouchableOpacity> :
-                        <TouchableOpacity onPress={toggleImportant}>
-                            {important ?
-                                <FontAwesome name='star' size={25} color={accentDarkerColor} /> :
-                                <FontAwesome name='star-o' size={25} color={accentDarkerColor} />
-                            }
+            <GestureHandlerRootView>
+                <Swipeable overshootRight={false} renderRightActions={RenderRight}>
+                    <View style={[styles.item, { backgroundColor: primaryColor },
+                    done && styles.pressed]}>
+                        <View style={styles.itemLeft}>
+                            <TouchableOpacity style={[styles.square, { backgroundColor: accentDarkerColor }, done && { backgroundColor: accentDarkerColor }]} onPress={onDone}>
+                                {done ? <FontAwesome name='check' size={25} color={textColor} /> : null}
+                            </TouchableOpacity>
+                            <Text style={[styles.itemText, { color: textColor }, done && styles.pressedText]}>{task}</Text>
+                        </View>
+                        <View>
+                            {done ?
+                                <TouchableOpacity onPress={onDelete}>
+                                    <FontAwesome5 name="trash-alt" size={25} color={accentDarkerColor} />
+                                </TouchableOpacity> :
+                                <TouchableOpacity onPress={toggleImportant}>
+                                    {important ?
+                                        <FontAwesome name='star' size={25} color={accentDarkerColor} /> :
+                                        <FontAwesome name='star-o' size={25} color={accentDarkerColor} />
+                                    }
 
-                        </TouchableOpacity>}
-                </View>
+                                </TouchableOpacity>}
+                        </View>
 
-            </View>
+                    </View>
+                </Swipeable>
+            </GestureHandlerRootView>
         </TouchableWithoutFeedback>
+
     );
 
 }
@@ -155,6 +198,18 @@ const styles = StyleSheet.create({
     },
     pressed: {
         borderColor: '#6b6a6a',
-    }
+    },
+    hiddenItemContainer: {
+        backgroundColor: '#d13838',
+        height: 60,
+        justifyContent: 'center',
+        marginHorizontal: 25,
+        borderRadius: 5,
+        paddingHorizontal: 25,
+        alignItems: 'flex-end'
+    },
+    hiddenItemText: {
+        color: 'white',
+    },
 
 });

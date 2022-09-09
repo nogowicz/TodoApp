@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, Keyboard, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Keyboard, ScrollView } from "react-native";
 import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
-import { useEffect, useLayoutEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Todo } from "../models/todo";
 import { FontAwesome5 } from '@expo/vector-icons';
 import {
@@ -13,7 +13,6 @@ import {
     addToImportant,
     fetchCompletedTasks
 } from '../util/database';
-import { SwipeListView } from 'react-native-swipe-list-view';
 import CompletedLine from "../components/CompletedLine";
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
@@ -119,9 +118,13 @@ function TasksScreen({ navigation }) {
         setLoadedCompletedData(fetchedCompletedTasks);
     }
 
-    useEffect(() => {
+    function fetch() {
         loadTasks();
         loadCompletedTasks();
+    }
+
+    useEffect(() => {
+        fetch();
     }, []);
 
 
@@ -129,8 +132,7 @@ function TasksScreen({ navigation }) {
     async function handleAddTask() {
         const taskData = new Todo(task);
         await insertTask(taskData);
-        loadTasks();
-        loadCompletedTasks();
+        fetch();
         Keyboard.dismiss();
         setTask(null);
     }
@@ -143,8 +145,7 @@ function TasksScreen({ navigation }) {
             important = 0;
         }
         await addToImportant(id, important);
-        loadTasks();
-        loadCompletedTasks();
+        fetch();
     }
 
     async function completeTaskHandler(id, completed) {
@@ -154,20 +155,17 @@ function TasksScreen({ navigation }) {
             completed = 0;
         }
         await updateCompletion(id, completed);
-        loadTasks();
-        loadCompletedTasks();
+        fetch();
     }
 
     async function deleteTaskHandler(id) {
         await deleteTask(id);
-        loadTasks();
-        loadCompletedTasks();
+        fetch();
     }
 
     async function deleteCompletedTasks() {
         await deleteAllCompletedTasks();
-        loadTasks();
-        loadCompletedTasks();
+        fetch();
     }
 
     function onCompleteAvailable() {
@@ -204,111 +202,144 @@ function TasksScreen({ navigation }) {
 
         <View style={[styles.container, { backgroundColor: backgroundColor }]}>
             <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
-
-            <View style={styles.items}>
-                <SwipeListView
-                    data={loadedData}
-                    keyExtractor={(item) => item.id}
-                    renderItem={(data) => {
+            <ScrollView style={styles.items}>
+                <View>
+                    {loadedData.map((item) => {
                         return (
                             <Task
-                                task={data.item.title}
-                                done={data.item.completed}
-                                important={data.item.important}
-                                onDone={() => completeTaskHandler(data.item.id, data.item.completed)}
-                                onDelete={() => deleteTaskHandler(data.item.id)}
-                                toggleImportant={() => toggleImportant(data.item.id, data.item.important)}
-                                onPress={() => pressHandler(data.item.id)}
-                            />);
-                    }}
-                    renderHiddenItem={(data) => {
-                        return (
-                            <TouchableOpacity onPress={() => deleteTaskHandler(data.item.id)}>
-                                <View style={styles.hiddenItemContainer}>
-                                    <FontAwesome5
-                                        name='trash-alt'
-                                        size={25}
-                                        color={'white'}
-                                        style={styles.hiddenItemIcon}
-                                        onPress={deleteCompletedTasks}
-                                    />
-                                    <Text style={styles.hiddenItemText}>Delete</Text>
+                                key={item.id}
+                                task={item.title}
+                                done={item.completed}
+                                important={item.important}
+                                onDone={() => completeTaskHandler(item.id, item.completed)}
+                                onDelete={() => deleteTaskHandler(item.id)}
+                                toggleImportant={() => toggleImportant(item.id, item.important)}
+                                onPress={() => pressHandler(item.id)}
+                            />
+                        )
+                    })}
+                    {/* <SwipeListView
+                        data={loadedData}
+                        keyExtractor={(item) => item.id}
+                        scrollEnabled={false}
+                        renderItem={(data) => {
+                            return (
+                                <Task
+                                    task={data.item.title}
+                                    done={data.item.completed}
+                                    important={data.item.important}
+                                    onDone={() => completeTaskHandler(data.item.id, data.item.completed)}
+                                    onDelete={() => deleteTaskHandler(data.item.id)}
+                                    toggleImportant={() => toggleImportant(data.item.id, data.item.important)}
+                                    onPress={() => pressHandler(data.item.id)}
+                                />);
+                        }}
+                        renderHiddenItem={(data) => {
+                            return (
+                                <TouchableOpacity onPress={() => deleteTaskHandler(data.item.id)}>
+                                    <View style={styles.hiddenItemContainer}>
+                                        <FontAwesome5
+                                            name='trash-alt'
+                                            size={25}
+                                            color={'white'}
+                                            style={styles.hiddenItemIcon}
+                                            onPress={deleteCompletedTasks}
+                                        />
+                                        <Text style={styles.hiddenItemText}>Delete</Text>
 
-                                </View>
-                            </TouchableOpacity>
-                        );
-                    }}
-                    leftOpenValue={80}
-                    rightOpenValue={-90}
-                    previewRowKey={'1'}
-                    previewOpenValue={180}
-                    previewOpenDelay={3000}
-                    disableRightSwipe={true}
-                    showsVerticalScrollIndicator={false}
-                // rightActionValue={-500}
+                                    </View>
+                                </TouchableOpacity>
+                            );
+                        }}
+                        leftOpenValue={80}
+                        rightOpenValue={-90}
+                        previewRowKey={'1'}
+                        previewOpenValue={180}
+                        previewOpenDelay={3000}
+                        disableRightSwipe={true}
+                        showsVerticalScrollIndicator={false}
+                    // rightActionValue={-500}
 
-                />
-                {loadedCompletedData.length > 0 &&
+                    /> */}
+                    {loadedCompletedData.length > 0 &&
 
-                    <View>
-                        <CompletedLine completedActive={completedOpen} toggleCompleted={onCompleteAvailable} />
-                        {completedOpen &&
-                            <View>
-                                <OutlinedButton text='Delete All' color={accentDarkerColor} onPress={deleteCompletedTasks} />
-                                <SwipeListView
-                                    data={loadedCompletedData}
-                                    keyExtractor={(item) => item.id}
-                                    renderItem={(data) => {
+                        <View>
+                            <CompletedLine completedActive={completedOpen} toggleCompleted={onCompleteAvailable} />
+                            {completedOpen &&
+                                <View>
+                                    <OutlinedButton text='Delete All' color={accentDarkerColor} onPress={deleteCompletedTasks} />
+                                    {loadedCompletedData.map((item) => {
                                         return (
+
                                             <Task
-                                                task={data.item.title}
-                                                done={data.item.completed}
-                                                important={data.item.important}
-                                                onDone={() => completeTaskHandler(data.item.id, data.item.completed)}
-                                                onDelete={() => deleteTaskHandler(data.item.id)}
-                                                toggleImportant={() => toggleImportant(data.item.id, data.item.important)}
-                                            />);
-                                    }}
-                                    renderHiddenItem={(data) => {
-                                        return (
-                                            <TouchableOpacity onPress={() => deleteTaskHandler(data.item.id)}>
-                                                <View style={styles.hiddenItemContainer}>
-                                                    <FontAwesome5
-                                                        name='trash-alt'
-                                                        size={25}
-                                                        color={'white'}
-                                                        style={styles.hiddenItemIcon}
-                                                        onPress={deleteCompletedTasks}
-                                                    />
-                                                    <Text style={styles.hiddenItemText}>Delete</Text>
+                                                key={item.id}
+                                                task={item.title}
+                                                done={item.completed}
+                                                important={item.important}
+                                                onDone={() => completeTaskHandler(item.id, item.completed)}
+                                                onDelete={() => deleteTaskHandler(item.id)}
+                                                toggleImportant={() => toggleImportant(item.id, item.important)}
+                                                onPress={() => pressHandler(item.id)}
+                                            />
 
-                                                </View>
-                                            </TouchableOpacity>
-                                        );
-                                    }}
-                                    leftOpenValue={80}
-                                    rightOpenValue={-90}
-                                    previewRowKey={'1'}
-                                    previewOpenValue={180}
-                                    previewOpenDelay={3000}
-                                    disableRightSwipe={true}
-                                    showsVerticalScrollIndicator={false}
-                                // rightActionValue={-500}
+                                        )
+                                    })}
 
-                                />
-                            </View>
-                        }
-                    </View>
+                                    {/* <SwipeListView
+                                        data={loadedCompletedData}
+                                        keyExtractor={(item) => item.id}
+                                        scrollEnabled={false}
+                                        renderItem={(data) => {
+                                            return (
+                                                <Task
+                                                    task={data.item.title}
+                                                    done={data.item.completed}
+                                                    important={data.item.important}
+                                                    onDone={() => completeTaskHandler(data.item.id, data.item.completed)}
+                                                    onDelete={() => deleteTaskHandler(data.item.id)}
+                                                    toggleImportant={() => toggleImportant(data.item.id, data.item.important)}
+                                                />);
+                                        }}
+                                        renderHiddenItem={(data) => {
+                                            return (
+                                                <TouchableOpacity onPress={() => deleteTaskHandler(data.item.id)}>
+                                                    <View style={styles.hiddenItemContainer}>
+                                                        <FontAwesome5
+                                                            name='trash-alt'
+                                                            size={25}
+                                                            color={'white'}
+                                                            style={styles.hiddenItemIcon}
+                                                            onPress={deleteCompletedTasks}
+                                                        />
+                                                        <Text style={styles.hiddenItemText}>Delete</Text>
 
-                }
-            </View>
+                                                    </View>
+                                                </TouchableOpacity>
+                                            );
+                                        }}
+                                        leftOpenValue={80}
+                                        rightOpenValue={-90}
+                                        previewRowKey={'1'}
+                                        previewOpenValue={180}
+                                        previewOpenDelay={3000}
+                                        disableRightSwipe={true}
+                                        showsVerticalScrollIndicator={false}
+                                    // rightActionValue={-500}
+
+                                    /> */}
+                                </View>
+                            }
+                        </View>
+                    }
+                </View>
+            </ScrollView>
 
             <CustomTextInput
                 value={task}
                 onChangeText={text => setTask(text)}
                 addTask={handleAddTask}
             />
-        </View>
+        </View >
     );
 }
 
@@ -327,7 +358,7 @@ const styles = StyleSheet.create({
     },
     items: {
         marginTop: 30,
-        marginBottom: 180,
+        marginBottom: 100,
     },
     fallbackText: {
         textAlign: 'center',
@@ -336,19 +367,5 @@ const styles = StyleSheet.create({
         fontSize: 15,
         marginTop: '50%',
     },
-    hiddenItemContainer: {
-        backgroundColor: '#d13838',
-        height: 60,
-        justifyContent: 'center',
-        marginHorizontal: 25,
-        borderRadius: 5,
-        paddingHorizontal: 25,
-        alignItems: 'flex-end'
-    },
-    hiddenItemText: {
-        color: 'white',
-    },
-    hiddenItemIcon: {
-        paddingHorizontal: 9,
-    },
+
 });

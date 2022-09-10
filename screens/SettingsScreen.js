@@ -5,6 +5,7 @@ import ColorButton from "../components/ColorButton";
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import WhatsNewButton from "../components/WhatsNewButton";
 
 function SettingsScreen() {
     const themeCtx = useContext(ThemeContext)
@@ -214,10 +215,6 @@ function SettingsScreen() {
                         />
 
 
-
-
-
-
                     </View>
                 </View>
                 <View style={styles.section}>
@@ -258,6 +255,7 @@ function SettingsScreen() {
 
                     </View>
                 </View>
+                <WhatsNewButton />
             </View>
         </View>
     );

@@ -1,11 +1,15 @@
-import { StyleSheet, TextInput } from "react-native";
-import { useContext } from 'react';
+import { StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
+import { useContext, useState } from 'react';
 
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
-function NotesInput() {
+import { Ionicons } from '@expo/vector-icons';
+import Modal from "react-native-modal";
+
+function WhatsNewButton() {
     const themeCtx = useContext(ThemeContext)
     const { theme } = themeCtx;
+    const [modalVisible, setModalVisible] = useState(false);
 
     let backgroundColor;
     let primaryColor;
@@ -86,33 +90,79 @@ function NotesInput() {
         accentDarkerColor = themes.darkPink.accentDarkerColor
         textColor = themes.darkPink.textColor
     }
+
+    function modalVisibility() {
+        setModalVisible(!modalVisible);
+    }
     return (
-        <TextInput
-            style={[
-                styles.input,
-                {
-                    borderColor: accentColor,
-                    color: accentColor,
-                }
-            ]}
-            placeholder="Add notes"
-            placeholderTextColor={accentColor}
-        />
+        <>
+            <TouchableOpacity onPress={modalVisibility}>
+                <View style={[styles.container, { backgroundColor: accentDarkerColor }]}>
+                    <Ionicons name="md-newspaper-outline" size={24} color={textColor} />
+                    <Text style={[styles.buttonText, { color: textColor }]}>What's new ?</Text>
+                </View>
+            </TouchableOpacity>
+            <View>
+                <Modal
+                    isVisible={modalVisible}
+                    animationInTiming={800}
+                    animationOutTiming={800}
+                >
+                    <View style={[styles.modal, { backgroundColor: 'white' }]}>
+                        <Text style={styles.title}>What's new ?</Text>
+                        <Text style={styles.text}>Dodano 'swipe' w lewo na tasku</Text>
+                        <Text style={styles.text}>Zmiana wyboru kolorów</Text>
+                        <Text style={styles.text}>Zmiana kształtu 'task completion'</Text>
+                        <TouchableWithoutFeedback onPress={modalVisibility}>
+                            <View style={[styles.closeButton, { borderColor: accentDarkerColor }]}>
+                                <Text style={[styles.closeText, { color: accentDarkerColor }]}>Close</Text>
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </View>
+                </Modal>
+            </View>
+        </>
+
     );
 }
 
-export default NotesInput;
+export default WhatsNewButton;
 
 const styles = StyleSheet.create({
-    input: {
+    container: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
         borderWidth: 1,
+        borderRadius: 6,
         marginHorizontal: 25,
         marginTop: 25,
-        borderRadius: 6,
-        minHeight: 200,
         padding: 15,
-        fontSize: 20,
-        textAlignVertical: 'top',
-
+        justifyContent: "flex-start",
+        alignItems: 'center'
     },
+    text: {
+        marginLeft: 10,
+    },
+    modal: {
+        justifyContent: 'center',
+        padding: 15,
+    },
+    title: {
+        fontWeight: 'bold',
+        fontSize: 20,
+    },
+    buttonText: {
+        fontSize: 15,
+        marginLeft: 15,
+    },
+    closeButton: {
+        borderWidth: 2,
+        width: 80,
+        marginLeft: 430,
+    },
+    closeText: {
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 15,
+    }
 });

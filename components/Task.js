@@ -6,7 +6,7 @@ import {
     TouchableWithoutFeedback,
     Animated
 } from "react-native";
-import { FontAwesome, FontAwesome5 } from '@expo/vector-icons'
+import { FontAwesome, FontAwesome5, Ionicons } from '@expo/vector-icons'
 import { useContext } from 'react';
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
@@ -23,14 +23,12 @@ function Task({ task, onDone, done, important, toggleImportant, onDelete, onPres
     let accentDarkerColor;
     let textColor;
     if (theme === 'green') {
-
         backgroundColor = themes.green.backgroundColor
         primaryColor = themes.green.primaryColor
         bottomTabsColor = themes.green.bottomTabsColor
         accentColor = themes.green.accentColor
         accentDarkerColor = themes.green.accentDarkerColor
-        textColor = themes.green.textColor
-
+        textColor = themes.green.textColors
     } else if (theme === 'blue') {
         backgroundColor = themes.blue.backgroundColor
         primaryColor = themes.blue.primaryColor
@@ -96,10 +94,41 @@ function Task({ task, onDone, done, important, toggleImportant, onDelete, onPres
         textColor = themes.darkPink.textColor
     }
 
+    const RenderLeft = (progress, dragX) => {
+
+
+
+        const scale = dragX.interpolate({
+            inputRange: [0.5, 180],
+            outputRange: [0.1, 1]
+        })
+
+        const Style = {
+            transform: [
+                {
+                    scale
+                }
+            ],
+            justifyContent: 'center',
+            alignItems: 'center',
+        }
+
+        return (
+            <View style={[styles.hiddenItemLeftContainer, { backgroundColor: accentDarkerColor }]}>
+                <Animated.View style={[Style]}>
+                    <Ionicons name="checkmark-done-outline" size={25} color={textColor} />
+                    <Text style={{ color: textColor }}>Done</Text>
+                </Animated.View>
+
+            </View >
+
+        )
+
+    }
 
     const RenderRight = (progress, dragX) => {
         const scale = dragX.interpolate({
-            inputRange: [-130, 0.5],
+            inputRange: [-180, 0.5],
             outputRange: [1, 0.1]
         })
 
@@ -115,7 +144,7 @@ function Task({ task, onDone, done, important, toggleImportant, onDelete, onPres
 
         return (
             <TouchableWithoutFeedback onPress={onDelete}>
-                <View style={styles.hiddenItemContainer}>
+                <View style={styles.hiddenItemRightContainer}>
                     <Animated.View style={[Style]}>
                         <FontAwesome5 name="trash-alt" size={25} color='white' />
                         <Text style={[styles.hiddenItemText]}>Delete</Text>
@@ -130,27 +159,23 @@ function Task({ task, onDone, done, important, toggleImportant, onDelete, onPres
     return (
         <TouchableWithoutFeedback onPress={onPress}>
             <GestureHandlerRootView>
-                <Swipeable overshootRight={false} renderRightActions={RenderRight}>
+                <Swipeable
+                    overshootLeft={false}
+                    overshootRight={false}
+                    renderLeftActions={RenderLeft}
+                    renderRightActions={RenderRight}
+                    onSwipeableLeftOpen={onDone}
+
+                >
                     <View style={[styles.item, { backgroundColor: primaryColor },
                     done && styles.pressed]}>
                         <View style={styles.itemLeft}>
-                            <TouchableOpacity style={[styles.square, { backgroundColor: accentDarkerColor }, done && { backgroundColor: accentDarkerColor }]} onPress={onDone}>
-                                {done ? <FontAwesome name='check' size={25} color={textColor} /> : null}
+                            <TouchableOpacity style={{ height: 40, width: 40 }} onPress={onDone}>
+                                <View style={[styles.circle, { backgroundColor: accentDarkerColor }]}>
+                                    {done ? <FontAwesome style={{ marginLeft: 1 }} name='check' size={21} color={textColor} /> : null}
+                                </View>
                             </TouchableOpacity>
                             <Text style={[styles.itemText, { color: textColor }, done && styles.pressedText]}>{task}</Text>
-                        </View>
-                        <View>
-                            {done ?
-                                <TouchableOpacity onPress={onDelete}>
-                                    <FontAwesome5 name="trash-alt" size={25} color={accentDarkerColor} />
-                                </TouchableOpacity> :
-                                <TouchableOpacity onPress={toggleImportant}>
-                                    {important ?
-                                        <FontAwesome name='star' size={25} color={accentDarkerColor} /> :
-                                        <FontAwesome name='star-o' size={25} color={accentDarkerColor} />
-                                    }
-
-                                </TouchableOpacity>}
                         </View>
 
                     </View>
@@ -170,27 +195,31 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         marginBottom: 20,
         marginHorizontal: 25,
+        flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'flex-start',
         minHeight: 60,
+
     },
 
     itemLeft: {
         flexDirection: 'row',
-        alignItems: 'center',
         flexWrap: 'wrap',
+        justifyContent: 'center'
+
     },
-    square: {
+    circle: {
         width: 24,
         height: 24,
-        borderRadius: 2,
+        borderRadius: 60,
         opacity: 0.7,
-        marginRight: 15,
+
     },
 
     itemText: {
         maxWidth: '80%',
+        marginTop: 2,
     },
     pressedText: {
         textDecorationLine: 'line-through',
@@ -199,8 +228,16 @@ const styles = StyleSheet.create({
     pressed: {
         borderColor: '#6b6a6a',
     },
-    hiddenItemContainer: {
+    hiddenItemRightContainer: {
         backgroundColor: '#d13838',
+        height: 60,
+        justifyContent: 'center',
+        marginHorizontal: 25,
+        borderRadius: 5,
+        paddingHorizontal: 25,
+        alignItems: 'flex-end'
+    },
+    hiddenItemLeftContainer: {
         height: 60,
         justifyContent: 'center',
         marginHorizontal: 25,

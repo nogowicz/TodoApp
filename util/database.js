@@ -30,7 +30,10 @@ export function init() {
                     id INTEGER PRIMARY KEY NOT NULL,
                     title TEXT NOT NULL,
                     completed INTEGER DEFAULT 0,
-                    important INTEGER DEFAULT 0
+                    important INTEGER DEFAULT 3,
+                    urgent INTEGER DEFAULT 3,
+                    effort INTEGER DEFAULT 3,
+                    notes TEXT
                 )`,
                 [],
                 () => {
@@ -72,7 +75,7 @@ export function fetchTasks() {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
-                `SELECT * FROM tasks WHERE completed = 0 ORDER BY important DESC`,
+                `SELECT * FROM tasks WHERE completed = 0`,
                 [],
                 (_, result) => {
                     const tasks = [];
@@ -83,7 +86,9 @@ export function fetchTasks() {
                                 dp.title,
                                 dp.id,
                                 dp.completed,
-                                dp.important
+                                dp.important,
+                                dp.urgent,
+                                dp.effort
                             )
                         );
                     }
@@ -103,7 +108,7 @@ export function fetchCompletedTasks() {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
-                `SELECT * FROM tasks WHERE completed = 1 ORDER BY important DESC`,
+                `SELECT * FROM tasks WHERE completed = 1`,
                 [],
                 (_, result) => {
                     const tasks = [];
@@ -114,12 +119,13 @@ export function fetchCompletedTasks() {
                                 dp.title,
                                 dp.id,
                                 dp.completed,
-                                dp.important
+                                dp.important,
+                                dp.urgent,
+                                dp.effort
                             )
                         );
                     }
                     resolve(tasks);
-                    // console.log(result)
                 },
                 (_, error) => {
                     reject(error);
@@ -188,17 +194,17 @@ export function updateCompletion(id, completed) {
     return promise;
 }
 
-export function addToImportant(id, important) {
+
+export function fetchTask(id) {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
-                `UPDATE tasks 
-                 SET important = ${important}
-                 WHERE id = ?`,
+                `SELECT * FROM tasks WHERE id = ?`,
                 [id],
                 (_, result) => {
-                    // console.log(important)
-                    resolve(result);
+                    const task = result.rows._array[0];
+                    resolve(task);
+
                 },
                 (_, error) => {
                     reject(error);
@@ -209,17 +215,17 @@ export function addToImportant(id, important) {
     return promise;
 }
 
-export function fetchTaskTitle(id) {
+export function updateImportant(id, important) {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
-                `SELECT title FROM tasks WHERE id = ?`,
+                `UPDATE tasks 
+                 SET important = ${important}
+                 WHERE id = ?`,
                 [id],
                 (_, result) => {
-                    const title = result.rows._array[0];
-
-                    resolve(title.title);
-
+                    console.log(result)
+                    resolve(result);
                 },
                 (_, error) => {
                     reject(error);

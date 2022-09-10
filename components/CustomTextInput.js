@@ -130,9 +130,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 20,
         minHeight: 50,
-        width: '90%',
-
-
+        width: '90%'
     },
 
     input: {

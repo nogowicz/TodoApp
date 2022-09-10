@@ -3,7 +3,6 @@ import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
 import { useEffect, useState, useContext } from "react";
 import { Todo } from "../models/todo";
-import { FontAwesome5 } from '@expo/vector-icons';
 import {
     fetchTasks,
     insertTask,
@@ -123,6 +122,8 @@ function TasksScreen({ navigation }) {
         loadCompletedTasks();
     }
 
+
+
     useEffect(() => {
         fetch();
     }, []);
@@ -218,49 +219,7 @@ function TasksScreen({ navigation }) {
                             />
                         )
                     })}
-                    {/* <SwipeListView
-                        data={loadedData}
-                        keyExtractor={(item) => item.id}
-                        scrollEnabled={false}
-                        renderItem={(data) => {
-                            return (
-                                <Task
-                                    task={data.item.title}
-                                    done={data.item.completed}
-                                    important={data.item.important}
-                                    onDone={() => completeTaskHandler(data.item.id, data.item.completed)}
-                                    onDelete={() => deleteTaskHandler(data.item.id)}
-                                    toggleImportant={() => toggleImportant(data.item.id, data.item.important)}
-                                    onPress={() => pressHandler(data.item.id)}
-                                />);
-                        }}
-                        renderHiddenItem={(data) => {
-                            return (
-                                <TouchableOpacity onPress={() => deleteTaskHandler(data.item.id)}>
-                                    <View style={styles.hiddenItemContainer}>
-                                        <FontAwesome5
-                                            name='trash-alt'
-                                            size={25}
-                                            color={'white'}
-                                            style={styles.hiddenItemIcon}
-                                            onPress={deleteCompletedTasks}
-                                        />
-                                        <Text style={styles.hiddenItemText}>Delete</Text>
 
-                                    </View>
-                                </TouchableOpacity>
-                            );
-                        }}
-                        leftOpenValue={80}
-                        rightOpenValue={-90}
-                        previewRowKey={'1'}
-                        previewOpenValue={180}
-                        previewOpenDelay={3000}
-                        disableRightSwipe={true}
-                        showsVerticalScrollIndicator={false}
-                    // rightActionValue={-500}
-
-                    /> */}
                     {loadedCompletedData.length > 0 &&
 
                         <View>
@@ -285,48 +244,6 @@ function TasksScreen({ navigation }) {
                                         )
                                     })}
 
-                                    {/* <SwipeListView
-                                        data={loadedCompletedData}
-                                        keyExtractor={(item) => item.id}
-                                        scrollEnabled={false}
-                                        renderItem={(data) => {
-                                            return (
-                                                <Task
-                                                    task={data.item.title}
-                                                    done={data.item.completed}
-                                                    important={data.item.important}
-                                                    onDone={() => completeTaskHandler(data.item.id, data.item.completed)}
-                                                    onDelete={() => deleteTaskHandler(data.item.id)}
-                                                    toggleImportant={() => toggleImportant(data.item.id, data.item.important)}
-                                                />);
-                                        }}
-                                        renderHiddenItem={(data) => {
-                                            return (
-                                                <TouchableOpacity onPress={() => deleteTaskHandler(data.item.id)}>
-                                                    <View style={styles.hiddenItemContainer}>
-                                                        <FontAwesome5
-                                                            name='trash-alt'
-                                                            size={25}
-                                                            color={'white'}
-                                                            style={styles.hiddenItemIcon}
-                                                            onPress={deleteCompletedTasks}
-                                                        />
-                                                        <Text style={styles.hiddenItemText}>Delete</Text>
-
-                                                    </View>
-                                                </TouchableOpacity>
-                                            );
-                                        }}
-                                        leftOpenValue={80}
-                                        rightOpenValue={-90}
-                                        previewRowKey={'1'}
-                                        previewOpenValue={180}
-                                        previewOpenDelay={3000}
-                                        disableRightSwipe={true}
-                                        showsVerticalScrollIndicator={false}
-                                    // rightActionValue={-500}
-
-                                    /> */}
                                 </View>
                             }
                         </View>
@@ -339,6 +256,8 @@ function TasksScreen({ navigation }) {
                 onChangeText={text => setTask(text)}
                 addTask={handleAddTask}
             />
+
+
         </View >
     );
 }

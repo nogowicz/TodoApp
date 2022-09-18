@@ -1,15 +1,12 @@
-import { StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import { useContext, useState } from 'react';
-
+import { StyleSheet, TouchableWithoutFeedback, View, Text } from "react-native";
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
-import Modal from "react-native-modal";
+import { useContext } from 'react';
+import { FontAwesome } from '@expo/vector-icons'
 
-function WhatsNewButton() {
+function QuickActionButton({ text, onPress }) {
     const themeCtx = useContext(ThemeContext)
     const { theme } = themeCtx;
-    const [modalVisible, setModalVisible] = useState(false);
 
     let backgroundColor;
     let primaryColor;
@@ -91,75 +88,35 @@ function WhatsNewButton() {
         textColor = themes.darkPink.textColor
     }
 
-    function modalVisibility() {
-        setModalVisible(!modalVisible);
-    }
+
+
     return (
-        <>
-            <TouchableOpacity onPress={modalVisibility}>
-                <View style={[styles.container, { backgroundColor: accentColor }]}>
-                    <Ionicons name="md-newspaper-outline" size={24} color={textColor} />
-                    <Text style={[styles.buttonText, { color: textColor }]}>What's new ?</Text>
-                </View>
-            </TouchableOpacity>
-            <View>
-                <Modal
-                    isVisible={modalVisible}
-                    animationInTiming={800}
-                    animationOutTiming={800}
-                >
-                    <View style={[styles.modal, { backgroundColor: 'white' }]}>
-                        <View style={styles.titleRow}>
-                            <Text style={styles.title}>What's new ?</Text>
-                            <TouchableWithoutFeedback onPress={modalVisibility}>
-                                <AntDesign name="close" size={24} color={accentDarkerColor} />
-                            </TouchableWithoutFeedback>
-                        </View>
-                        <Text style={styles.text}>Poprawiono wygląd taska</Text>
-                        <Text style={styles.text}>Sortowanie zapisuje się po wyjściu z aplikacji</Text>
-                        <Text style={styles.text}>Poprawiono wygląd filtra sortowania</Text>
-
-
-                    </View>
-                </Modal>
+        <TouchableWithoutFeedback onPress={onPress}>
+            <View style={[styles.button, { borderColor: accentColor }]}>
+                <Text style={[styles.buttonText, { color: textColor }]}>{text}</Text>
+                <FontAwesome name='angle-up' size={20} color={accentColor} />
             </View>
-        </>
-
+        </TouchableWithoutFeedback>
     );
 }
 
-export default WhatsNewButton;
+export default QuickActionButton;
 
 const styles = StyleSheet.create({
-    container: {
+    button: {
+        borderWidth: 2,
+        borderRadius: 10,
+        marginBottom: 10,
+        marginHorizontal: 10,
+        padding: 7,
         flexDirection: 'row',
-        justifyContent: 'flex-start',
-        borderWidth: 1,
-        borderRadius: 6,
-        marginHorizontal: 25,
-        marginTop: 25,
-        padding: 15,
-        justifyContent: "flex-start",
-        alignItems: 'center'
-    },
-    text: {
-        marginLeft: 10,
-    },
-    modal: {
-        justifyContent: 'center',
-        padding: 15,
-    },
-    title: {
-        fontWeight: 'bold',
-        fontSize: 20,
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     buttonText: {
-        fontSize: 15,
-        marginLeft: 15,
+        textAlign: 'center',
+        justifyContent: 'center',
+        marginRight: 5,
     },
-    titleRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    }
 
 });

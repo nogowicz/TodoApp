@@ -1,84 +1,124 @@
 {
     "themes": {
         "green": {
-            "backgroundColor": "#EAE3F1",
-            "primaryColor": "#EAE3F1",
-            "bottomTabsColor": "#F7F2F9",
+            "backgroundColor": "#fff",
+            "primaryColor": "#fff",
+            "bottomTabsColor": "#fff",
             "accentColor": "#63AEA9",
             "accentDarkerColor": "#162E2E",
-            "textColor": "#000"
+            "textColor": "#000",
+            "theMostImportant": "#2F5233",
+            "moreImportant": "#76B947",
+            "important": "#94C973",
+            "notImportant": "#B1D8B7"
         },
         "blue": {
-            "backgroundColor": "#EAE3F1",
-            "primaryColor": "#EAE3F1",
-            "bottomTabsColor": "#F7F2F9",
+            "backgroundColor": "#fff",
+            "primaryColor": "#fff",
+            "bottomTabsColor": "#fff",
             "accentColor": "#487db9",
             "accentDarkerColor": "#005189",
-            "textColor": "#000"
+            "textColor": "#000",
+            "theMostImportant": "#003060",
+            "moreImportant": "#055C9D",
+            "important": "#0E86D4",
+            "notImportant": "#68BBE3"
         },
         "orange": {
-            "backgroundColor": "#EAE3F1",
-            "primaryColor": "#EAE3F1",
-            "bottomTabsColor": "#F7F2F9",
+            "backgroundColor": "#fff",
+            "primaryColor": "#fff",
+            "bottomTabsColor": "#fff",
             "accentColor": "#ff964f",
             "accentDarkerColor": "#e38546",
-            "textColor": "#000"
+            "textColor": "#000",
+            "theMostImportant": "#A82810",
+            "moreImportant": "#F67B50",
+            "important": "#FBAA60",
+            "notImportant": "#FBC490"
         },
         "pink": {
-            "backgroundColor": "#EAE3F1",
-            "primaryColor": "#EAE3F1",
-            "bottomTabsColor": "#F7F2F9",
+            "backgroundColor": "#fff",
+            "primaryColor": "#fff",
+            "bottomTabsColor": "#fff",
             "accentColor": "#f59db8",
             "accentDarkerColor": "#cf869c",
-            "textColor": "#000"
+            "textColor": "#000",
+            "theMostImportant": "#870A30",
+            "moreImportant": "#D43790",
+            "important": "#EC8FD0",
+            "notImportant": "#F2C5E0"
         },
         "white": {
-            "backgroundColor": "#EAE3F1",
-            "primaryColor": "#EAE3F1",
-            "bottomTabsColor": "#F7F2F9",
+            "backgroundColor": "#fff",
+            "primaryColor": "#fff",
+            "bottomTabsColor": "#fff",
             "accentColor": "#cccccc",
             "accentDarkerColor": "#b5b5b5",
-            "textColor": "#000"
+            "textColor": "#000",
+            "theMostImportant": "#8C8C8C",
+            "moreImportant": "#A3A3A3",
+            "important": "#BABABA",
+            "notImportant": "#D1D1D1"
         },
         "darkGreen": {
-            "backgroundColor": "#162E2E",
-            "primaryColor": "#162E2E",
-            "bottomTabsColor": "#162E2E",
+            "backgroundColor": "#000",
+            "primaryColor": "#000",
+            "bottomTabsColor": "#000",
             "accentColor": "#63AEA9",
             "accentDarkerColor": "#166F6B",
-            "textColor": "#ffffff"
+            "textColor": "#ffffff",
+            "theMostImportant": "#5CD85A",
+            "moreImportant": "#107869",
+            "important": "#1A5653",
+            "notImportant": "#08313A"
         },
         "darkPink": {
-            "backgroundColor": "#382328",
-            "primaryColor": "#382328",
-            "bottomTabsColor": "#382328",
+            "backgroundColor": "#000",
+            "primaryColor": "#000",
+            "bottomTabsColor": "#000",
             "accentColor": "#EE7996",
             "accentDarkerColor": "#AE375D",
-            "textColor": "#ffffff"
+            "textColor": "#ffffff",
+            "theMostImportant": "#870A30",
+            "moreImportant": "#EC8FD0",
+            "important": "#D43790",
+            "notImportant": "#F2C5E0"
         },
         "darkGrey": {
-            "backgroundColor": "#687681",
-            "primaryColor": "#687681",
-            "bottomTabsColor": "#687681",
+            "backgroundColor": "#000",
+            "primaryColor": "#000",
+            "bottomTabsColor": "#000",
             "accentColor": "#262A2D",
             "accentDarkerColor": "#262A2D",
-            "textColor": "#ffffff"
+            "textColor": "#ffffff",
+            "theMostImportant": "#3B3B3B",
+            "moreImportant": "#525252",
+            "important": "#696969",
+            "notImportant": "#808080"
         },
         "darkBlue": {
-            "backgroundColor": "#5D70BD",
-            "primaryColor": "#5D70BD",
-            "bottomTabsColor": "#5D70BD",
-            "accentColor": "#212B34",
-            "accentDarkerColor": "#212B34",
-            "textColor": "#ffffff"
+            "backgroundColor": "#000",
+            "primaryColor": "#000",
+            "bottomTabsColor": "#000",
+            "accentColor": "#005189",
+            "accentDarkerColor": "#005189",
+            "textColor": "#ffffff",
+            "theMostImportant": "#050A30",
+            "moreImportant": "#000C66",
+            "important": "#145DA0",
+            "notImportant": "#B1D4E0"
         },
         "darkRed": {
-            "backgroundColor": "#C24F4A",
-            "primaryColor": "#C24F4A",
-            "bottomTabsColor": "#C24F4A",
-            "accentColor": "#F9E8DE",
-            "accentDarkerColor": "#F9E8DE",
-            "textColor": "#000"
+            "backgroundColor": "#000",
+            "primaryColor": "#000",
+            "bottomTabsColor": "#000",
+            "accentColor": "#e38546",
+            "accentDarkerColor": "#e38546",
+            "textColor": "#fff",
+            "theMostImportant": "#A82810",
+            "moreImportant": "#F67B50",
+            "important": "#FBAA60",
+            "notImportant": "#FBC490"
         }
     }
 }

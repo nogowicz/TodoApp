@@ -72,6 +72,13 @@ function CompletedLine({ completedActive, toggleCompleted }) {
         accentColor = themes.darkGrey.accentColor
         accentDarkerColor = themes.darkGrey.accentDarkerColor
         textColor = themes.darkGrey.textColor
+    } else if (theme === 'darkBlue') {
+        backgroundColor = themes.darkBlue.backgroundColor
+        primaryColor = themes.darkBlue.primaryColor
+        bottomTabsColor = themes.darkBlue.bottomTabsColor
+        accentColor = themes.darkBlue.accentColor
+        accentDarkerColor = themes.darkBlue.accentDarkerColor
+        textColor = themes.darkBlue.textColor
     } else if (theme === 'darkPink') {
         backgroundColor = themes.darkPink.backgroundColor
         primaryColor = themes.darkPink.primaryColor
@@ -82,11 +89,11 @@ function CompletedLine({ completedActive, toggleCompleted }) {
     }
     return (
         <TouchableWithoutFeedback onPress={toggleCompleted}>
-            <View style={[styles.completed, { borderBottomColor: accentDarkerColor }]}>
-                <Text style={[styles.completedText, { color: accentDarkerColor }]}>Completed</Text>
+            <View style={[styles.completed, { borderBottomColor: textColor }]}>
+                <Text style={[styles.completedText, { color: textColor }]}>Completed</Text>
                 <View>
-                    {completedActive ? <FontAwesome name='angle-down' size={20} color={accentDarkerColor} /> :
-                        <FontAwesome name='angle-right' size={20} color={accentDarkerColor} />}
+                    {completedActive ? <FontAwesome name='angle-down' size={20} color={textColor} /> :
+                        <FontAwesome name='angle-right' size={20} color={textColor} />}
                 </View>
             </View>
         </TouchableWithoutFeedback >
@@ -100,7 +107,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 2,
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        marginHorizontal: 25,
+        marginHorizontal: 35,
         marginBottom: 20,
     },
     completedText: {

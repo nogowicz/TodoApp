@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     outlinedButton: {
         borderWidth: 2,
         alignItems: 'center',
-        marginHorizontal: 25,
+        marginHorizontal: 35,
         marginBottom: 20,
         height: 40,
         justifyContent: 'center'

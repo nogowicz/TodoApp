@@ -1,15 +1,30 @@
-import { StyleSheet, View, Text, TouchableOpacity, TouchableWithoutFeedback } from "react-native";
-import { useContext, useState } from 'react';
-
+import {
+    Menu,
+    MenuOptions,
+    MenuOption,
+    MenuTrigger,
+} from 'react-native-popup-menu';
+import { View, Text } from 'react-native'
+import { MaterialIcons } from '@expo/vector-icons';
+import { useState, useContext } from 'react';
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
-import { Ionicons, AntDesign } from '@expo/vector-icons';
-import Modal from "react-native-modal";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-function WhatsNewButton() {
-    const themeCtx = useContext(ThemeContext)
-    const { theme } = themeCtx;
-    const [modalVisible, setModalVisible] = useState(false);
+function SortPopupMenu({ color }) {
+    const themeCtx = useContext(ThemeContext);
+    const {
+        theme,
+        sort,
+        setPowerListSorting,
+        setNewestFirstSorting,
+        setOldestFirstSorting,
+        setCustomizedSorting
+
+    } = themeCtx;
+
+    const [sorting, setSorting] = useState(sort);
+
 
     let backgroundColor;
     let primaryColor;
@@ -17,14 +32,17 @@ function WhatsNewButton() {
     let accentColor;
     let accentDarkerColor;
     let textColor;
+    let theMostImportantColor;
+    let moreImportantColor;
+    let importantColors;
+    let notImportantColor;
     if (theme === 'green') {
-
         backgroundColor = themes.green.backgroundColor
         primaryColor = themes.green.primaryColor
         bottomTabsColor = themes.green.bottomTabsColor
         accentColor = themes.green.accentColor
         accentDarkerColor = themes.green.accentDarkerColor
-        textColor = themes.green.textColor
+        textColor = themes.green.textColors
 
     } else if (theme === 'blue') {
         backgroundColor = themes.blue.backgroundColor
@@ -33,6 +51,7 @@ function WhatsNewButton() {
         accentColor = themes.blue.accentColor
         accentDarkerColor = themes.blue.accentDarkerColor
         textColor = themes.blue.textColor
+
     } else if (theme === 'orange') {
         backgroundColor = themes.orange.backgroundColor
         primaryColor = themes.orange.primaryColor
@@ -40,6 +59,7 @@ function WhatsNewButton() {
         accentColor = themes.orange.accentColor
         accentDarkerColor = themes.orange.accentDarkerColor
         textColor = themes.orange.textColor
+
     } else if (theme === 'pink') {
         backgroundColor = themes.pink.backgroundColor
         primaryColor = themes.pink.primaryColor
@@ -47,6 +67,7 @@ function WhatsNewButton() {
         accentColor = themes.pink.accentColor
         accentDarkerColor = themes.pink.accentDarkerColor
         textColor = themes.pink.textColor
+
     } else if (theme === 'white') {
         backgroundColor = themes.white.backgroundColor
         primaryColor = themes.white.primaryColor
@@ -54,6 +75,7 @@ function WhatsNewButton() {
         accentColor = themes.white.accentColor
         accentDarkerColor = themes.white.accentDarkerColor
         textColor = themes.white.textColor
+
     } else if (theme === 'darkGreen') {
         backgroundColor = themes.darkGreen.backgroundColor
         primaryColor = themes.darkGreen.primaryColor
@@ -61,6 +83,7 @@ function WhatsNewButton() {
         accentColor = themes.darkGreen.accentColor
         accentDarkerColor = themes.darkGreen.accentDarkerColor
         textColor = themes.darkGreen.textColor
+
     } else if (theme === 'darkRed') {
         backgroundColor = themes.darkRed.backgroundColor
         primaryColor = themes.darkRed.primaryColor
@@ -68,6 +91,7 @@ function WhatsNewButton() {
         accentColor = themes.darkRed.accentColor
         accentDarkerColor = themes.darkRed.accentDarkerColor
         textColor = themes.darkRed.textColor
+
     } else if (theme === 'darkGrey') {
         backgroundColor = themes.darkGrey.backgroundColor
         primaryColor = themes.darkGrey.primaryColor
@@ -75,6 +99,7 @@ function WhatsNewButton() {
         accentColor = themes.darkGrey.accentColor
         accentDarkerColor = themes.darkGrey.accentDarkerColor
         textColor = themes.darkGrey.textColor
+
     } else if (theme === 'darkBlue') {
         backgroundColor = themes.darkBlue.backgroundColor
         primaryColor = themes.darkBlue.primaryColor
@@ -82,6 +107,7 @@ function WhatsNewButton() {
         accentColor = themes.darkBlue.accentColor
         accentDarkerColor = themes.darkBlue.accentDarkerColor
         textColor = themes.darkBlue.textColor
+
     } else if (theme === 'darkPink') {
         backgroundColor = themes.darkPink.backgroundColor
         primaryColor = themes.darkPink.primaryColor
@@ -89,77 +115,72 @@ function WhatsNewButton() {
         accentColor = themes.darkPink.accentColor
         accentDarkerColor = themes.darkPink.accentDarkerColor
         textColor = themes.darkPink.textColor
+
     }
 
-    function modalVisibility() {
-        setModalVisible(!modalVisible);
+
+
+    const storeSorting = async (value) => {
+        try {
+            await AsyncStorage.setItem('sort', value);
+        } catch (e) {
+            // saving error
+        }
     }
+
+    async function powerListSorting() {
+        setPowerListSorting();
+        setSorting('powerList');
+        storeSorting('powerList');
+    }
+
+    async function newestFirstSorting() {
+        setNewestFirstSorting();
+        setSorting('newestFirst');
+        storeSorting('newestFirst');
+    }
+
+    async function oldestFirstSorting() {
+        setOldestFirstSorting();
+        setSorting('oldestFirst');
+        storeSorting('oldestFirst');
+    }
+
+    async function customizedSorting() {
+        setCustomizedSorting();
+        setSorting('customized');
+        storeSorting('customized');
+    }
+
     return (
-        <>
-            <TouchableOpacity onPress={modalVisibility}>
-                <View style={[styles.container, { backgroundColor: accentColor }]}>
-                    <Ionicons name="md-newspaper-outline" size={24} color={textColor} />
-                    <Text style={[styles.buttonText, { color: textColor }]}>What's new ?</Text>
-                </View>
-            </TouchableOpacity>
-            <View>
-                <Modal
-                    isVisible={modalVisible}
-                    animationInTiming={800}
-                    animationOutTiming={800}
-                >
-                    <View style={[styles.modal, { backgroundColor: 'white' }]}>
-                        <View style={styles.titleRow}>
-                            <Text style={styles.title}>What's new ?</Text>
-                            <TouchableWithoutFeedback onPress={modalVisibility}>
-                                <AntDesign name="close" size={24} color={accentDarkerColor} />
-                            </TouchableWithoutFeedback>
-                        </View>
-                        <Text style={styles.text}>Poprawiono wygląd taska</Text>
-                        <Text style={styles.text}>Sortowanie zapisuje się po wyjściu z aplikacji</Text>
-                        <Text style={styles.text}>Poprawiono wygląd filtra sortowania</Text>
-
-
-                    </View>
-                </Modal>
-            </View>
-        </>
-
+        <View>
+            <Menu>
+                <MenuTrigger >
+                    <MaterialIcons name="sort" size={28} color={color} />
+                </MenuTrigger>
+                <MenuOptions optionsContainerStyle={
+                    {
+                        marginTop: -45,
+                        borderRadius: 10,
+                        width: 130,
+                        backgroundColor: backgroundColor
+                    }}>
+                    <MenuOption style={[{ flexDirection: 'row', alignItems: 'center' }, sorting === 'powerList' && { borderBottomWidth: 2, borderBottomColor: accentColor }]} onSelect={() => powerListSorting()} >
+                        <Text style={{ color: textColor }}>Power List</Text>
+                    </MenuOption>
+                    <MenuOption style={[{ flexDirection: 'row', alignItems: 'center' }, sorting === 'newestFirst' && { borderBottomWidth: 2, borderBottomColor: accentColor }]} onSelect={() => newestFirstSorting()} >
+                        <Text style={{ color: textColor }}>Newest First</Text>
+                    </MenuOption>
+                    <MenuOption style={[{ flexDirection: 'row', alignItems: 'center' }, sorting === 'oldestFirst' && { borderBottomWidth: 2, borderBottomColor: accentColor }]} onSelect={() => oldestFirstSorting()} >
+                        <Text style={{ color: textColor }}>Oldest First</Text>
+                    </MenuOption>
+                    <MenuOption style={[{ flexDirection: 'row', alignItems: 'center' }, sorting === 'customized' && { borderBottomWidth: 2, borderBottomColor: accentColor, borderRadius: 10, }]} onSelect={() => customizedSorting()} >
+                        <Text style={{ color: textColor }}>Customized</Text>
+                    </MenuOption>
+                </MenuOptions>
+            </Menu>
+        </View>
     );
 }
 
-export default WhatsNewButton;
-
-const styles = StyleSheet.create({
-    container: {
-        flexDirection: 'row',
-        justifyContent: 'flex-start',
-        borderWidth: 1,
-        borderRadius: 6,
-        marginHorizontal: 25,
-        marginTop: 25,
-        padding: 15,
-        justifyContent: "flex-start",
-        alignItems: 'center'
-    },
-    text: {
-        marginLeft: 10,
-    },
-    modal: {
-        justifyContent: 'center',
-        padding: 15,
-    },
-    title: {
-        fontWeight: 'bold',
-        fontSize: 20,
-    },
-    buttonText: {
-        fontSize: 15,
-        marginLeft: 15,
-    },
-    titleRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-between'
-    }
-
-});
+export default SortPopupMenu;

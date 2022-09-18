@@ -30,9 +30,9 @@ export function init() {
                     id INTEGER PRIMARY KEY NOT NULL,
                     title TEXT NOT NULL,
                     completed INTEGER DEFAULT 0,
-                    important INTEGER DEFAULT 3,
-                    urgent INTEGER DEFAULT 3,
-                    effort INTEGER DEFAULT 3,
+                    important INTEGER DEFAULT 0,
+                    urgent INTEGER DEFAULT 0,
+                    effort INTEGER DEFAULT 0,
                     notes TEXT
                 )`,
                 [],
@@ -76,6 +76,80 @@ export function fetchTasks() {
         database.transaction((tx) => {
             tx.executeSql(
                 `SELECT * FROM tasks WHERE completed = 0`,
+                [],
+                (_, result) => {
+                    const tasks = [];
+
+                    for (const dp of result.rows._array) {
+                        tasks.push(
+                            new Todo(
+                                dp.title,
+                                dp.id,
+                                dp.completed,
+                                dp.important,
+                                dp.urgent,
+                                dp.effort
+                            )
+                        );
+                    }
+                    resolve(tasks);
+
+                },
+                (_, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+    return promise;
+}
+
+export function fetchTasksInNewestFirstMode() {
+    const promise = new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `SELECT * FROM tasks 
+                WHERE completed = 0
+                ORDER BY id DESC`,
+                [],
+                (_, result) => {
+                    const tasks = [];
+
+                    for (const dp of result.rows._array) {
+                        tasks.push(
+                            new Todo(
+                                dp.title,
+                                dp.id,
+                                dp.completed,
+                                dp.important,
+                                dp.urgent,
+                                dp.effort
+                            )
+                        );
+                    }
+                    resolve(tasks);
+
+                },
+                (_, error) => {
+                    reject(error);
+                }
+            );
+        });
+    });
+    return promise;
+}
+
+export function fetchTasksInPowerMode() {
+    const promise = new Promise((resolve, reject) => {
+        database.transaction((tx) => {
+            tx.executeSql(
+                `SELECT * FROM tasks 
+                WHERE completed = 0 
+                ORDER BY 
+                    important DESC,
+                    urgent DESC,
+                    effort DESC
+                `,
                 [],
                 (_, result) => {
                     const tasks = [];
@@ -215,16 +289,19 @@ export function fetchTask(id) {
     return promise;
 }
 
-export function updateImportant(id, important) {
+export function updateTask(id, title, important, urgent, effort, notes) {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
                 `UPDATE tasks 
-                 SET important = ${important}
-                 WHERE id = ?`,
-                [id],
+                 SET title =  ?,
+                    important = ?,
+                    urgent = ?,
+                    effort = ?,
+                    notes = ?
+                    WHERE id = ?`,
+                [title, important, urgent, effort, notes, id],
                 (_, result) => {
-                    console.log(result)
                     resolve(result);
                 },
                 (_, error) => {

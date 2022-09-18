@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { deleteTable, init } from './util/database';
-import { StyleSheet, View, ActivityIndicator } from 'react-native'
+import { StyleSheet, View, ActivityIndicator, Keyboard } from 'react-native'
 import { ThemeContext } from './contexts/ThemeContext'
 import { themes } from './constants/themes.json';
 
@@ -111,6 +111,21 @@ function TasksOverview() {
     accentDarkerColor = themes.darkPink.accentDarkerColor
     textColor = themes.darkPink.textColor
   }
+  const [keyboardStatus, setKeyboardStatus] = useState(false);
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+      setKeyboardStatus(true);
+    });
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+      setKeyboardStatus(false);
+    });
+
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
+
 
 
   return (
@@ -123,6 +138,7 @@ function TasksOverview() {
           height: 65,
           backgroundColor: bottomTabsColor,
           borderTopWidth: 0,
+          display: keyboardStatus ? 'none' : 'flex'
         },
         headerStyle: {
           backgroundColor: backgroundColor,

@@ -1,32 +1,36 @@
-import { StyleSheet, Text, View, Keyboard, ScrollView } from "react-native";
+import { StyleSheet, Text, View, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native";
 import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useLayoutEffect } from "react";
 import { Todo } from "../models/todo";
 import {
     fetchTasks,
+    fetchTasksInPowerMode,
+    fetchTasksInNewestFirstMode,
     insertTask,
     deleteTask,
     updateCompletion,
     deleteAllCompletedTasks,
-    addToImportant,
     fetchCompletedTasks
 } from '../util/database';
 import CompletedLine from "../components/CompletedLine";
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
 import OutlinedButton from "../components/OutlinedButton";
-
-
-
+import { useIsFocused } from '@react-navigation/native'
+import { MenuProvider } from 'react-native-popup-menu';
+import SortPopupMenu from "../components/SortPopupMenu";
 
 function TasksScreen({ navigation }) {
     const [task, setTask] = useState();
     const [loadedData, setLoadedData] = useState([]);
     const [loadedCompletedData, setLoadedCompletedData] = useState([]);
     const [completedOpen, setCompletedOpen] = useState(false);
+    const [keyboardStatus, setKeyboardStatus] = useState(false);
     const themeCtx = useContext(ThemeContext)
-    const { theme } = themeCtx;
+    const { theme, sort } = themeCtx;
+    const isFocused = useIsFocused();
+    let fetchedTasks;
 
     let backgroundColor;
     let primaryColor;
@@ -106,8 +110,19 @@ function TasksScreen({ navigation }) {
         textColor = themes.darkPink.textColor
     }
 
+
+
     async function loadTasks() {
-        const fetchedTasks = await fetchTasks();
+        if (sort === 'powerList') {
+            fetchedTasks = await fetchTasksInPowerMode();
+        } else if (sort === 'newestFirst') {
+            fetchedTasks = await fetchTasksInNewestFirstMode();
+        } else if (sort === 'oldestFirst') {
+            fetchedTasks = await fetchTasks();
+        }
+        else {
+            fetchedTasks = await fetchTasks();
+        }
         setLoadedData(fetchedTasks);
 
     }
@@ -126,8 +141,7 @@ function TasksScreen({ navigation }) {
 
     useEffect(() => {
         fetch();
-    }, []);
-
+    }, [isFocused, sort]);
 
 
     async function handleAddTask() {
@@ -136,17 +150,6 @@ function TasksScreen({ navigation }) {
         fetch();
         Keyboard.dismiss();
         setTask(null);
-    }
-
-
-    async function toggleImportant(id, important) {
-        if (!important) {
-            important = 1;
-        } else if (important) {
-            important = 0;
-        }
-        await addToImportant(id, important);
-        fetch();
     }
 
     async function completeTaskHandler(id, completed) {
@@ -180,13 +183,28 @@ function TasksScreen({ navigation }) {
     }
 
 
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+            setKeyboardStatus(true);
+        });
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+            setKeyboardStatus(false);
+        });
+
+        return () => {
+            showSubscription.remove();
+            hideSubscription.remove();
+        };
+    }, []);
+
     if ((!loadedData.length) && (!loadedCompletedData.length)) {
         return (
             <View style={[styles.container, { backgroundColor: backgroundColor }]}>
-                <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
-
+                <View style={styles.navBar}>
+                    <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
+                </View>
                 <View style={styles.items}>
-                    <Text style={[styles.fallbackText, { color: textColor }]}>You don't have tasks yet, start by adding some!</Text>
+                    <Text style={[styles.fallbackText, { color: textColor }, keyboardStatus ? { marginBottom: '25%' } : { marginBottom: '72%' }]}>You don't have tasks yet, start by adding some!</Text>
                 </View>
                 <CustomTextInput
                     value={task}
@@ -194,71 +212,74 @@ function TasksScreen({ navigation }) {
                     addTask={handleAddTask}
                 />
             </View>
+
         );
     }
 
 
 
     return (
-
-        <View style={[styles.container, { backgroundColor: backgroundColor }]}>
-            <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
-            <ScrollView style={styles.items}>
-                <View>
-                    {loadedData.map((item) => {
-                        return (
-                            <Task
-                                key={item.id}
-                                task={item.title}
-                                done={item.completed}
-                                important={item.important}
-                                onDone={() => completeTaskHandler(item.id, item.completed)}
-                                onDelete={() => deleteTaskHandler(item.id)}
-                                toggleImportant={() => toggleImportant(item.id, item.important)}
-                                onPress={() => pressHandler(item.id)}
-                            />
-                        )
-                    })}
-
-                    {loadedCompletedData.length > 0 &&
-
-                        <View>
-                            <CompletedLine completedActive={completedOpen} toggleCompleted={onCompleteAvailable} />
-                            {completedOpen &&
-                                <View>
-                                    <OutlinedButton text='Delete All' color={accentDarkerColor} onPress={deleteCompletedTasks} />
-                                    {loadedCompletedData.map((item) => {
-                                        return (
-
-                                            <Task
-                                                key={item.id}
-                                                task={item.title}
-                                                done={item.completed}
-                                                important={item.important}
-                                                onDone={() => completeTaskHandler(item.id, item.completed)}
-                                                onDelete={() => deleteTaskHandler(item.id)}
-                                                toggleImportant={() => toggleImportant(item.id, item.important)}
-                                                onPress={() => pressHandler(item.id)}
-                                            />
-
-                                        )
-                                    })}
-
-                                </View>
-                            }
-                        </View>
-                    }
+        <MenuProvider>
+            <View style={[styles.container, { backgroundColor: backgroundColor }]}>
+                <View style={styles.navBar}>
+                    <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
+                    <SortPopupMenu color={textColor} />
                 </View>
-            </ScrollView>
+                <ScrollView style={styles.items}>
+                    <View>
+                        {loadedData.map((item) => {
+                            return (
+                                <Task
+                                    key={item.id}
+                                    id={item.id}
+                                    task={item.title}
+                                    done={item.completed}
+                                    onDone={() => completeTaskHandler(item.id, item.completed)}
+                                    onDelete={() => deleteTaskHandler(item.id)}
+                                    onPress={() => pressHandler(item.id)}
+                                />
+                            )
+                        })}
 
-            <CustomTextInput
-                value={task}
-                onChangeText={text => setTask(text)}
-                addTask={handleAddTask}
-            />
+                        {loadedCompletedData.length > 0 &&
+
+                            <View>
+                                <CompletedLine completedActive={completedOpen} toggleCompleted={onCompleteAvailable} />
+                                {completedOpen &&
+                                    <View>
+                                        <OutlinedButton text='Delete All' color={accentDarkerColor} onPress={deleteCompletedTasks} />
+                                        {loadedCompletedData.map((item) => {
+                                            return (
+
+                                                <Task
+                                                    key={item.id}
+                                                    id={item.id}
+                                                    task={item.title}
+                                                    done={item.completed}
+                                                    onDone={() => completeTaskHandler(item.id, item.completed)}
+                                                    onDelete={() => deleteTaskHandler(item.id)}
+                                                    onPress={() => pressHandler(item.id)}
+                                                />
+
+                                            )
+                                        })}
+
+                                    </View>
+                                }
+                            </View>
+                        }
+                    </View>
+                </ScrollView>
+
+                <CustomTextInput
+                    value={task}
+                    onChangeText={text => setTask(text)}
+                    addTask={handleAddTask}
+                />
 
 
-        </View >
+            </View >
+        </MenuProvider>
     );
 }
 
@@ -270,7 +291,7 @@ const styles = StyleSheet.create({
 
     },
     title: {
-        marginLeft: 25,
+
         fontWeight: 'bold',
         fontSize: 32,
 
@@ -285,6 +306,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         fontSize: 15,
         marginTop: '50%',
+    },
+    navBar: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginHorizontal: 25,
     },
 
 });

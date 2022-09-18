@@ -1,12 +1,15 @@
-import { KeyboardAvoidingView, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
+import { Dimensions, KeyboardAvoidingView, StyleSheet, TextInput, TouchableOpacity, View, Keyboard } from 'react-native'
 import { FontAwesome } from '@expo/vector-icons'
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
-import { useContext } from 'react';
+import { useContext, useState, useEffect } from 'react';
+import QuickActionButton from './QuickActionButton';
 
 function CustomTextInput({ value, onChangeText, addTask }) {
-    const themeCtx = useContext(ThemeContext)
+    const [keyboardStatus, setKeyboardStatus] = useState(false);
+    const themeCtx = useContext(ThemeContext);
     const { theme } = themeCtx;
+
 
     let backgroundColor;
     let primaryColor;
@@ -88,56 +91,82 @@ function CustomTextInput({ value, onChangeText, addTask }) {
         textColor = themes.darkPink.textColor
     }
 
+    useEffect(() => {
+        const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
+            setKeyboardStatus(true);
+        });
+        const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
+            setKeyboardStatus(false);
+        });
 
+        return () => {
+            showSubscription.remove();
+            hideSubscription.remove();
+        };
+    }, []);
+
+    const [selection, setSelection] = useState({ start: 0, end: 0 })
 
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-            style={[styles.inputContainer,
-            { backgroundColor: backgroundColor },
-            { borderColor: accentColor }
-            ]}
+
 
         >
-            <TextInput
-                style={[styles.input, { color: textColor }]}
-                placeholder='Add new task'
-                placeholderTextColor={textColor}
-                value={value}
-                onChangeText={onChangeText}
-                maxLength={120}
-            />
-            <TouchableOpacity onPress={addTask}>
-                <View style={[styles.button, { backgroundColor: accentColor }]}>
-                    <FontAwesome name='angle-up' size={24} color={textColor} />
+            <View style={styles.bottomButtons}>
+                {/* {keyboardStatus ?
+                    <View style={styles.quickActionButtons}>
+                        <QuickActionButton text='Remind' />
+                        <QuickActionButton text='Important' />
+                        <QuickActionButton text='Effort' />
+                        <QuickActionButton text='Urgent' />
+                    </View> : null} */}
+
+                <View style={[styles.inputContainer,
+                { backgroundColor: backgroundColor },
+                { borderColor: accentColor }
+                ]}>
+                    <TextInput
+                        style={[styles.input, { color: textColor }]}
+                        placeholder='Add new task'
+                        placeholderTextColor={textColor}
+                        value={value}
+                        onChangeText={onChangeText}
+                        maxLength={80}
+                    />
+                    <TouchableOpacity onPress={addTask}>
+                        <View style={[styles.button, { backgroundColor: accentColor }]}>
+                            <FontAwesome name='angle-up' size={24} color={textColor} />
+                        </View>
+                    </TouchableOpacity>
                 </View>
-            </TouchableOpacity>
+            </View>
         </KeyboardAvoidingView>
     );
 }
 
 export default CustomTextInput;
 
+const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
+    bottomButtons: {
+        position: 'absolute',
+        bottom: 20,
+    },
     inputContainer: {
         borderWidth: 2,
-        marginHorizontal: 20,
         borderRadius: 12,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
         paddingHorizontal: 10,
-        position: 'absolute',
-        bottom: 20,
-        minHeight: 50,
-        width: '90%'
+        width: windowWidth - 20,
+        marginHorizontal: 10,
     },
 
     input: {
-        width: '80%',
         height: 50,
-        flex: 1,
-        paddingHorizontal: 10,
+        width: '88%'
     },
 
     button: {
@@ -146,5 +175,9 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    quickActionButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
     },
 });

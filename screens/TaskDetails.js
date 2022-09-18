@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useRef, useState, useContext } from "react";
 import {
     Text,
     View,
@@ -8,8 +8,7 @@ import {
     ScrollView,
     TextInput
 } from "react-native";
-import { Ionicons, FontAwesom } from '@expo/vector-icons';
-import { useContext } from 'react';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import SelectList from 'react-native-dropdown-select-list'
 
 
@@ -19,38 +18,41 @@ import ReminderButton from "../components/ReminderButton";
 
 import {
     fetchTask,
-
+    updateTask
 } from '../util/database';
 
 
 function TaskDetails({ route, navigation }) {
     const taskId = route.params.taskId;
     const [title, setTitle] = useState('');
-    const [titleText, setTitleText] = useState(title);
     const [selectedImportant, setSelectedImportant] = useState(0);
     const [selectedUrgent, setSelectedUrgent] = useState(0);
     const [selectedEffort, setSelectedEffort] = useState(0);
-    const [notes, setNotes] = useState("");
+    const [notes, setNotes] = useState('');
+    const effectRan = useRef(false);
 
     const importantData = [
-        { key: '0', value: 'Life health or major property loss if not done' },
-        { key: '1', value: 'Major problem when not done' },
+        { key: '0', value: 'No entry' },
+        { key: '1', value: 'I can live without it being done' },
         { key: '2', value: 'Minor setback if not done' },
-        { key: '3', value: 'I can live without it being done' },
+        { key: '3', value: 'Major problem when not done' },
+        { key: '4', value: 'Life health or major property loss if not done' },
     ];
 
     const urgentData = [
-        { key: '0', value: 'Today' },
-        { key: '1', value: 'This week' },
+        { key: '0', value: 'No entry' },
+        { key: '1', value: 'This year' },
         { key: '2', value: 'This month' },
-        { key: '3', value: 'This year' },
+        { key: '3', value: 'This week' },
+        { key: '4', value: 'Today' },
     ];
 
     const effortData = [
-        { key: '0', value: 'Takes less than 10 minutes' },
-        { key: '1', value: 'Takes two hours' },
+        { key: '0', value: 'No entry' },
+        { key: '1', value: 'Needs breaking down' },
         { key: '2', value: 'Takes a day' },
-        { key: '3', value: 'Needs breaking down' },
+        { key: '3', value: 'Takes two hours' },
+        { key: '4', value: 'Takes less than 10 minutes' },
     ];
 
     const themeCtx = useContext(ThemeContext)
@@ -138,7 +140,12 @@ function TaskDetails({ route, navigation }) {
 
     function goBackButton() {
         navigation.goBack();
-        // updateImportant();
+
+    }
+
+    function saveButton() {
+        updateTaskData();
+        navigation.goBack();
     }
 
     async function loadTaskData(taskId) {
@@ -147,19 +154,30 @@ function TaskDetails({ route, navigation }) {
         setSelectedImportant(fetchedTask.important);
         setSelectedUrgent(fetchedTask.urgent);
         setSelectedEffort(fetchedTask.effort);
-        setNotes(fetchTask.notes);
+        setNotes(fetchedTask.notes);
     }
 
-    // console.log(importantData[selectedImportant].value)
+    async function updateTaskData() {
+        await updateTask(taskId, title, selectedImportant, selectedUrgent, selectedEffort, notes)
+    }
 
 
     useEffect(() => {
-        loadTaskData(taskId);
-    }, [taskId, loadTaskData])
+        if (effectRan.current === false) {
+            loadTaskData(taskId);
+            effectRan.current = true;
+        }
 
-    function onChangeText(title) {
-        setTitleText(title);
+    });
+
+    function onChangeTitleText(text) {
+        setTitle(text);
     }
+
+    function onChangeNotesText(text) {
+        setNotes(text);
+    }
+
 
     function onReminderButtonPress() {
         return (
@@ -167,19 +185,21 @@ function TaskDetails({ route, navigation }) {
         );
     }
 
-    async function onImportantSelect() {
-        // const updateImportant = await updateImportant(taskId, important);
-    }
-
 
     return (
         <View style={[styles.container, { backgroundColor: backgroundColor }]}>
             <View style={styles.navbar}>
-                <TouchableWithoutFeedback onPress={goBackButton}>
-                    <Ionicons name="arrow-back" size={24} color={textColor} />
+                <View style={styles.titleAndBack}>
+                    <TouchableWithoutFeedback onPress={goBackButton}>
+                        <Ionicons name="arrow-back" size={24} color={textColor} />
+                    </TouchableWithoutFeedback>
+
+                    <Text style={[styles.title, { color: textColor }]}>Task Details</Text>
+                </View>
+                <TouchableWithoutFeedback onPress={saveButton}>
+                    <MaterialIcons name="done" size={24} color={textColor} />
                 </TouchableWithoutFeedback>
 
-                <Text style={[styles.title, { color: textColor }]}>Task Details</Text>
             </View>
             <ScrollView>
                 <View style={styles.content}>
@@ -190,7 +210,7 @@ function TaskDetails({ route, navigation }) {
 
                         <TextInput
                             value={title}
-                            onChangeText={onChangeText}
+                            onChangeText={text => onChangeTitleText(text)}
                             style={[
                                 styles.input,
                                 {
@@ -210,7 +230,6 @@ function TaskDetails({ route, navigation }) {
                         <SelectList
                             setSelected={setSelectedImportant}
                             data={importantData}
-                            onSelect={onImportantSelect}
                             search={false}
                             boxStyles={[styles.boxStyles, { borderColor: accentColor }]}
                             dropdownStyles={[styles.dropdownStyles, { borderColor: accentColor }]}
@@ -223,7 +242,6 @@ function TaskDetails({ route, navigation }) {
                         <SelectList
                             setSelected={setSelectedUrgent}
                             data={urgentData}
-                            onSelect={() => alert(selectedUrgent)}
                             search={false}
                             boxStyles={[styles.boxStyles, { borderColor: accentColor }]}
                             dropdownStyles={[styles.dropdownStyles, { borderColor: accentColor }]}
@@ -236,7 +254,7 @@ function TaskDetails({ route, navigation }) {
                         <SelectList
                             setSelected={setSelectedEffort}
                             data={effortData}
-                            onSelect={() => alert(selectedEffort)}
+                            // onSelect={() => alert(selectedEffort)}
                             search={false}
                             boxStyles={[styles.boxStyles, { borderColor: accentColor }]}
                             dropdownStyles={[styles.dropdownStyles, { borderColor: accentColor }]}
@@ -256,6 +274,7 @@ function TaskDetails({ route, navigation }) {
                                 }
                             ]}
                             value={notes}
+                            onChangeText={text => onChangeNotesText(text)}
                             placeholder="Add notes"
                             placeholderTextColor={textColor}
                         />
@@ -275,12 +294,16 @@ const styles = StyleSheet.create({
     },
     navbar: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         marginTop: 40,
         marginBottom: 20,
         marginHorizontal: 25,
         alignItems: 'center'
 
+    },
+    titleAndBack: {
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     title: {
         marginLeft: 20,

@@ -106,7 +106,7 @@ function SettingsScreen() {
 
     const storeTheme = async (value) => {
         try {
-            await AsyncStorage.setItem('theme', value)
+            await AsyncStorage.setItem('theme', value);
         } catch (e) {
             // saving error
         }
@@ -229,13 +229,13 @@ function SettingsScreen() {
                         />
 
                         <ColorButton
-                            color={themes.darkBlue.primaryColor}
+                            color={themes.darkBlue.accentColor}
                             onSelect={onDarkBlueColorSelectHandler}
                             selected={themeName === 'darkBlue'}
                         />
 
                         <ColorButton
-                            color={themes.darkRed.primaryColor}
+                            color={themes.darkRed.accentColor}
                             onSelect={onDarkRedColorSelectHandler}
                             selected={themeName === 'darkRed'}
                         />
@@ -247,7 +247,7 @@ function SettingsScreen() {
                         />
 
                         <ColorButton
-                            color={themes.darkGrey.primaryColor}
+                            color={themes.darkGrey.accentColor}
                             onSelect={onDarkGreyColorSelectHandler}
                             selected={themeName === 'darkGrey'}
                         />

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "TodoApp",
-    "slug": "TodoApp",
-    "version": "1.0.1",
+    "name": "PowerList",
+    "slug": "PowerList",
+    "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -10,6 +10,9 @@
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
+    },
+    "notification": {
+      "icon": "./assets/adaptive-icon.png"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -26,11 +29,27 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
       },
+      "useNextNotificationsApi": true,
+      "permissions": [
+        "RECEIVE_BOOT_COMPLETED"
+      ],
       "userInterfaceStyle": "light",
       "package": "com.nogowicz.TodoApp"
     },
     "web": {
       "favicon": "./assets/icon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ffffff",
+          "sounds": [
+            "./assets/dzwonek.wav"
+          ]
+        }
+      ]
+    ]
   }
 }

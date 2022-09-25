@@ -21,7 +21,7 @@ import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler"
 
 function Task({ id, task, onDone, done, onDelete, onPress }) {
     const themeCtx = useContext(ThemeContext)
-    const { theme } = themeCtx;
+    const { theme, pointsVisibility } = themeCtx;
     const [important, setImportant] = useState(0);
     const [urgent, setUrgent] = useState(0);
     const [effort, setEffort] = useState(0);
@@ -94,13 +94,13 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
         accentDarkerColor = themes.darkRed.accentDarkerColor
         textColor = themes.darkRed.textColor
 
-    } else if (theme === 'darkGrey') {
-        backgroundColor = themes.darkGrey.backgroundColor
-        primaryColor = themes.darkGrey.primaryColor
-        bottomTabsColor = themes.darkGrey.bottomTabsColor
-        accentColor = themes.darkGrey.accentColor
-        accentDarkerColor = themes.darkGrey.accentDarkerColor
-        textColor = themes.darkGrey.textColor
+    } else if (theme === 'darkgray') {
+        backgroundColor = themes.darkgray.backgroundColor
+        primaryColor = themes.darkgray.primaryColor
+        bottomTabsColor = themes.darkgray.bottomTabsColor
+        accentColor = themes.darkgray.accentColor
+        accentDarkerColor = themes.darkgray.accentDarkerColor
+        textColor = themes.darkgray.textColor
 
     } else if (theme === 'darkBlue') {
         backgroundColor = themes.darkBlue.backgroundColor
@@ -219,7 +219,7 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
                         </TouchableOpacity>
                         <Text style={[styles.itemText, { color: textColor }, done && styles.pressedText]}>{task}</Text>
 
-                        {taskPower !== 0 && loaded ?
+                        {taskPower !== 0 && loaded && pointsVisibility ?
                             <View style={[styles.points, { backgroundColor: accentColor }]}>
                                 <Text style={[{ color: textColor, fontWeight: 'bold' }]}>{taskPower}</Text>
                             </View> : null}

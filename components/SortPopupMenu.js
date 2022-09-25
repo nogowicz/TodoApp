@@ -5,7 +5,7 @@ import {
     MenuTrigger,
 } from 'react-native-popup-menu';
 import { View, Text } from 'react-native'
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, Octicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { useState, useContext } from 'react';
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
@@ -92,13 +92,13 @@ function SortPopupMenu({ color }) {
         accentDarkerColor = themes.darkRed.accentDarkerColor
         textColor = themes.darkRed.textColor
 
-    } else if (theme === 'darkGrey') {
-        backgroundColor = themes.darkGrey.backgroundColor
-        primaryColor = themes.darkGrey.primaryColor
-        bottomTabsColor = themes.darkGrey.bottomTabsColor
-        accentColor = themes.darkGrey.accentColor
-        accentDarkerColor = themes.darkGrey.accentDarkerColor
-        textColor = themes.darkGrey.textColor
+    } else if (theme === 'darkgray') {
+        backgroundColor = themes.darkgray.backgroundColor
+        primaryColor = themes.darkgray.primaryColor
+        bottomTabsColor = themes.darkgray.bottomTabsColor
+        accentColor = themes.darkgray.accentColor
+        accentDarkerColor = themes.darkgray.accentDarkerColor
+        textColor = themes.darkgray.textColor
 
     } else if (theme === 'darkBlue') {
         backgroundColor = themes.darkBlue.backgroundColor
@@ -162,20 +162,25 @@ function SortPopupMenu({ color }) {
                     {
                         marginTop: -45,
                         borderRadius: 10,
-                        width: 130,
-                        backgroundColor: backgroundColor
+                        width: 150,
+                        backgroundColor: backgroundColor,
+                        padding: 5,
                     }}>
                     <MenuOption style={[{ flexDirection: 'row', alignItems: 'center' }, sorting === 'powerList' && { borderBottomWidth: 2, borderBottomColor: accentColor }]} onSelect={() => powerListSorting()} >
-                        <Text style={{ color: textColor }}>Power List</Text>
+                        <MaterialIcons name="bolt" size={24} color={accentColor} />
+                        <Text style={{ color: textColor, fontSize: 18, marginLeft: 5 }}>Power List</Text>
                     </MenuOption>
                     <MenuOption style={[{ flexDirection: 'row', alignItems: 'center' }, sorting === 'newestFirst' && { borderBottomWidth: 2, borderBottomColor: accentColor }]} onSelect={() => newestFirstSorting()} >
-                        <Text style={{ color: textColor }}>Newest First</Text>
+                        <Octicons name="sort-asc" size={24} color={accentColor} />
+                        <Text style={{ color: textColor, fontSize: 18, marginLeft: 5 }}>Newest First</Text>
                     </MenuOption>
                     <MenuOption style={[{ flexDirection: 'row', alignItems: 'center' }, sorting === 'oldestFirst' && { borderBottomWidth: 2, borderBottomColor: accentColor }]} onSelect={() => oldestFirstSorting()} >
-                        <Text style={{ color: textColor }}>Oldest First</Text>
+                        <Octicons name="sort-desc" size={24} color={accentColor} />
+                        <Text style={{ color: textColor, fontSize: 18, marginLeft: 5 }}>Oldest First</Text>
                     </MenuOption>
                     <MenuOption style={[{ flexDirection: 'row', alignItems: 'center' }, sorting === 'customized' && { borderBottomWidth: 2, borderBottomColor: accentColor, borderRadius: 10, }]} onSelect={() => customizedSorting()} >
-                        <Text style={{ color: textColor }}>Customized</Text>
+                        <MaterialCommunityIcons name="sort-variant-lock-open" size={24} color={accentColor} />
+                        <Text style={{ color: textColor, fontSize: 18, marginLeft: 5 }}>Customized</Text>
                     </MenuOption>
                 </MenuOptions>
             </Menu>

@@ -84,7 +84,7 @@
             "important": "#D43790",
             "notImportant": "#F2C5E0"
         },
-        "darkGrey": {
+        "darkgray": {
             "backgroundColor": "#000",
             "primaryColor": "#000",
             "bottomTabsColor": "#000",

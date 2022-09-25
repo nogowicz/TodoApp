@@ -3,9 +3,9 @@ import { useContext } from 'react';
 
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-function ReminderButton({ onPress }) {
+function ReminderButton({ onPress, notificationSet, date, time, removeNotification }) {
     const themeCtx = useContext(ThemeContext)
     const { theme } = themeCtx;
 
@@ -66,13 +66,13 @@ function ReminderButton({ onPress }) {
         accentColor = themes.darkRed.accentColor
         accentDarkerColor = themes.darkRed.accentDarkerColor
         textColor = themes.darkRed.textColor
-    } else if (theme === 'darkGrey') {
-        backgroundColor = themes.darkGrey.backgroundColor
-        primaryColor = themes.darkGrey.primaryColor
-        bottomTabsColor = themes.darkGrey.bottomTabsColor
-        accentColor = themes.darkGrey.accentColor
-        accentDarkerColor = themes.darkGrey.accentDarkerColor
-        textColor = themes.darkGrey.textColor
+    } else if (theme === 'darkgray') {
+        backgroundColor = themes.darkgray.backgroundColor
+        primaryColor = themes.darkgray.primaryColor
+        bottomTabsColor = themes.darkgray.bottomTabsColor
+        accentColor = themes.darkgray.accentColor
+        accentDarkerColor = themes.darkgray.accentDarkerColor
+        textColor = themes.darkgray.textColor
     } else if (theme === 'darkBlue') {
         backgroundColor = themes.darkBlue.backgroundColor
         primaryColor = themes.darkBlue.primaryColor
@@ -92,8 +92,18 @@ function ReminderButton({ onPress }) {
     return (
         <TouchableOpacity onPress={onPress}>
             <View style={[styles.container, { backgroundColor: accentColor }]}>
-                <Ionicons name="notifications-outline" size={24} color={textColor} />
-                <Text style={[styles.text, { color: textColor }]}>Remind me</Text>
+                <View style={styles.containerLeft}>
+                    {notificationSet ? <MaterialIcons name="notifications-active" size={24} color={textColor} /> :
+                        <Ionicons name="notifications-outline" size={24} color={textColor} />}
+
+                    <Text style={[styles.text, { color: textColor }]}>Remind me</Text>
+                    {notificationSet ?
+                        <Text style={[styles.text, { color: textColor }]}>at {date.toDateString()}  {time.toTimeString().slice(0, 5)}</Text> : null}
+                </View>
+                {notificationSet ? <TouchableOpacity onPress={removeNotification}>
+                    <Ionicons name="close" size={24} color={textColor} />
+                </TouchableOpacity> : null}
+
             </View>
         </TouchableOpacity >
     );
@@ -104,16 +114,21 @@ export default ReminderButton;
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        justifyContent: 'flex-start',
+        justifyContent: 'space-between',
         borderWidth: 1,
         borderRadius: 6,
         marginHorizontal: 25,
         marginTop: 25,
         padding: 15,
-        justifyContent: "flex-start",
+        alignItems: 'center'
+    },
+    containerLeft: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
         alignItems: 'center'
     },
     text: {
         marginLeft: 10,
+        marginRight: -5,
     },
 });

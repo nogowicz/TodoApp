@@ -143,12 +143,10 @@ export function fetchTasksInPowerMode() {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
-                `SELECT * FROM tasks 
+                `SELECT *, important + urgent + effort as POWER_SUM FROM tasks 
                 WHERE completed = 0 
                 ORDER BY 
-                    important DESC,
-                    urgent DESC,
-                    effort DESC
+                POWER_SUM DESC
                 `,
                 [],
                 (_, result) => {

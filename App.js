@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { deleteTable, init } from './util/database';
-import { StyleSheet, View, ActivityIndicator, Keyboard } from 'react-native'
+import { StyleSheet, View, ActivityIndicator, Keyboard, Platform } from 'react-native'
 import { ThemeContext } from './contexts/ThemeContext'
 import { themes } from './constants/themes.json';
 
@@ -13,6 +13,8 @@ import TaskDetails from './screens/TaskDetails';
 import SettingsScreen from './screens/SettingsScreen';
 import { useState, useEffect, useContext } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device'
 
 
 /**
@@ -23,7 +25,13 @@ import { ThemeProvider } from './contexts/ThemeContext';
  * -code cleanup
  */
 
-
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+  })
+});
 
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
@@ -31,6 +39,7 @@ const BottomTabs = createBottomTabNavigator();
 function TasksOverview() {
   const themeCtx = useContext(ThemeContext)
   const { theme } = themeCtx;
+  const [expoPushToken, setExpoPushToken] = useState('');
 
   let backgroundColor;
   let primaryColor;
@@ -89,13 +98,13 @@ function TasksOverview() {
     accentColor = themes.darkRed.accentColor
     accentDarkerColor = themes.darkRed.accentDarkerColor
     textColor = themes.darkRed.textColor
-  } else if (theme === 'darkGrey') {
-    backgroundColor = themes.darkGrey.backgroundColor
-    primaryColor = themes.darkGrey.primaryColor
-    bottomTabsColor = themes.darkGrey.bottomTabsColor
-    accentColor = themes.darkGrey.accentColor
-    accentDarkerColor = themes.darkGrey.accentDarkerColor
-    textColor = themes.darkGrey.textColor
+  } else if (theme === 'darkgray') {
+    backgroundColor = themes.darkgray.backgroundColor
+    primaryColor = themes.darkgray.primaryColor
+    bottomTabsColor = themes.darkgray.bottomTabsColor
+    accentColor = themes.darkgray.accentColor
+    accentDarkerColor = themes.darkgray.accentDarkerColor
+    textColor = themes.darkgray.textColor
   } else if (theme === 'darkBlue') {
     backgroundColor = themes.darkBlue.backgroundColor
     primaryColor = themes.darkBlue.primaryColor
@@ -113,6 +122,7 @@ function TasksOverview() {
   }
   const [keyboardStatus, setKeyboardStatus] = useState(false);
   useEffect(() => {
+    registerForPushNotificationaAsync().then(token => setExpoPushToken(token));
     const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setKeyboardStatus(true);
     });
@@ -126,6 +136,33 @@ function TasksOverview() {
     };
   }, []);
 
+  const registerForPushNotificationaAsync = async () => {
+    let token;
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else { return; }
+
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      })
+    }
+    return token;
+  }
 
 
   return (
@@ -214,7 +251,7 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <StatusBar style={'dark'} />
+      <StatusBar style='auto' />
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen

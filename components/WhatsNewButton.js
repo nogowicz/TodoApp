@@ -68,13 +68,13 @@ function WhatsNewButton() {
         accentColor = themes.darkRed.accentColor
         accentDarkerColor = themes.darkRed.accentDarkerColor
         textColor = themes.darkRed.textColor
-    } else if (theme === 'darkGrey') {
-        backgroundColor = themes.darkGrey.backgroundColor
-        primaryColor = themes.darkGrey.primaryColor
-        bottomTabsColor = themes.darkGrey.bottomTabsColor
-        accentColor = themes.darkGrey.accentColor
-        accentDarkerColor = themes.darkGrey.accentDarkerColor
-        textColor = themes.darkGrey.textColor
+    } else if (theme === 'darkgray') {
+        backgroundColor = themes.darkgray.backgroundColor
+        primaryColor = themes.darkgray.primaryColor
+        bottomTabsColor = themes.darkgray.bottomTabsColor
+        accentColor = themes.darkgray.accentColor
+        accentDarkerColor = themes.darkgray.accentDarkerColor
+        textColor = themes.darkgray.textColor
     } else if (theme === 'darkBlue') {
         backgroundColor = themes.darkBlue.backgroundColor
         primaryColor = themes.darkBlue.primaryColor
@@ -97,7 +97,7 @@ function WhatsNewButton() {
     return (
         <>
             <TouchableOpacity onPress={modalVisibility}>
-                <View style={[styles.container, { backgroundColor: accentColor }]}>
+                <View style={[styles.container, { backgroundColor: backgroundColor }]}>
                     <Ionicons name="md-newspaper-outline" size={24} color={textColor} />
                     <Text style={[styles.buttonText, { color: textColor }]}>What's new ?</Text>
                 </View>
@@ -134,13 +134,12 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'flex-start',
-        borderWidth: 1,
-        borderRadius: 6,
         marginHorizontal: 25,
-        marginTop: 25,
         padding: 15,
         justifyContent: "flex-start",
-        alignItems: 'center'
+        alignItems: 'center',
+        borderBottomWidth: 2,
+        borderColor: '#454545',
     },
     text: {
         marginLeft: 10,

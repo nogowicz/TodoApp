@@ -1,28 +1,16 @@
 import { useContext, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
 
-import ColorButton from "../components/ColorButton";
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import WhatsNewButton from "../components/WhatsNewButton";
+import ThemePicker from "../components/ThemePicker";
+import PowerPointsVisibilityButton from "../components/PowerPointsVisibilityButton";
 
 function SettingsScreen() {
     const themeCtx = useContext(ThemeContext)
-    const {
-        theme,
-        setGreenTheme,
-        setBlueTheme,
-        setOrangeTheme,
-        setPinkTheme,
-        setWhiteTheme,
-        setDarkGreenTheme,
-        setDarkRedTheme,
-        setDarkGreyTheme,
-        setDarkBlueTheme,
-        setDarkPinkTheme
-    } = themeCtx;
-    const [themeName, setThemeName] = useState(theme);
+    const { theme } = themeCtx;
+
 
     let backgroundColor;
     let primaryColor;
@@ -81,13 +69,13 @@ function SettingsScreen() {
         accentColor = themes.darkRed.accentColor
         accentDarkerColor = themes.darkRed.accentDarkerColor
         textColor = themes.darkRed.textColor
-    } else if (theme === 'darkGrey') {
-        backgroundColor = themes.darkGrey.backgroundColor
-        primaryColor = themes.darkGrey.primaryColor
-        bottomTabsColor = themes.darkGrey.bottomTabsColor
-        accentColor = themes.darkGrey.accentColor
-        accentDarkerColor = themes.darkGrey.accentDarkerColor
-        textColor = themes.darkGrey.textColor
+    } else if (theme === 'darkgray') {
+        backgroundColor = themes.darkgray.backgroundColor
+        primaryColor = themes.darkgray.primaryColor
+        bottomTabsColor = themes.darkgray.bottomTabsColor
+        accentColor = themes.darkgray.accentColor
+        accentDarkerColor = themes.darkgray.accentDarkerColor
+        textColor = themes.darkgray.textColor
     } else if (theme === 'darkBlue') {
         backgroundColor = themes.darkBlue.backgroundColor
         primaryColor = themes.darkBlue.primaryColor
@@ -104,74 +92,6 @@ function SettingsScreen() {
         textColor = themes.darkPink.textColor
     }
 
-    const storeTheme = async (value) => {
-        try {
-            await AsyncStorage.setItem('theme', value);
-        } catch (e) {
-            // saving error
-        }
-    }
-
-
-    async function onGreenColorSelectHandler() {
-        setGreenTheme();
-        setThemeName('green');
-        storeTheme('green');
-    }
-
-    async function onBlueColorSelectHandler() {
-        setBlueTheme();
-        setThemeName('blue');
-        storeTheme('blue');
-    }
-
-    async function onOrangeColorSelectHandler() {
-        setOrangeTheme();
-        setThemeName('orange');
-        storeTheme('orange');
-    }
-
-    async function onPinkColorSelectHandler() {
-        setPinkTheme();
-        setThemeName('pink');
-        storeTheme('pink');
-    }
-
-    async function onWhiteColorSelectHandler() {
-        setWhiteTheme();
-        setThemeName('white');
-        storeTheme('white');
-    }
-
-    async function onDarkGreenColorSelectHandler() {
-        setDarkGreenTheme();
-        setThemeName('darkGreen');
-        storeTheme('darkGreen');
-    }
-
-    async function onDarkRedColorSelectHandler() {
-        setDarkRedTheme();
-        setThemeName('darkRed');
-        storeTheme('darkRed');
-    }
-
-    async function onDarkGreyColorSelectHandler() {
-        setDarkGreyTheme();
-        setThemeName('darkGrey');
-        storeTheme('darkGrey');
-    }
-
-    async function onDarkBlueColorSelectHandler() {
-        setDarkBlueTheme();
-        setThemeName('darkBlue');
-        storeTheme('darkBlue');
-    }
-
-    async function onDarkPinkColorSelectHandler() {
-        setDarkPinkTheme();
-        setThemeName('darkPink');
-        storeTheme('darkPink');
-    }
 
 
 
@@ -179,82 +99,12 @@ function SettingsScreen() {
         <View style={[styles.container, { backgroundColor: backgroundColor }]}>
             <Text style={[styles.title, { color: textColor }]}>Settings</Text>
             <View style={styles.settingsList}>
-
-                <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, { color: textColor }]}>Light Colors</Text>
-                    <View style={styles.sectionInnerContainer}>
-
-                        <ColorButton
-                            color={themes.green.accentColor}
-                            onSelect={onGreenColorSelectHandler}
-                            selected={themeName === 'green'}
-                        />
-
-                        <ColorButton
-                            color={themes.blue.accentColor}
-                            onSelect={onBlueColorSelectHandler}
-                            selected={themeName === 'blue'}
-                        />
-
-                        <ColorButton
-                            color={themes.orange.accentColor}
-                            onSelect={onOrangeColorSelectHandler}
-                            selected={themeName === 'orange'}
-                        />
-
-                        <ColorButton
-                            color={themes.pink.accentColor}
-                            onSelect={onPinkColorSelectHandler}
-                            selected={themeName === 'pink'}
-                        />
-
-                        <ColorButton
-                            color={themes.white.accentColor}
-                            onSelect={onWhiteColorSelectHandler}
-                            selected={themeName === 'white'}
-                        />
-
-
-                    </View>
-                </View>
-                <View style={styles.section}>
-                    <Text style={[styles.sectionTitle, { color: textColor }]}>Dark Colors</Text>
-                    <View style={styles.sectionInnerContainer}>
-
-
-                        <ColorButton
-                            color={themes.darkGreen.accentColor}
-                            onSelect={onDarkGreenColorSelectHandler}
-                            selected={themeName === 'darkGreen'}
-                        />
-
-                        <ColorButton
-                            color={themes.darkBlue.accentColor}
-                            onSelect={onDarkBlueColorSelectHandler}
-                            selected={themeName === 'darkBlue'}
-                        />
-
-                        <ColorButton
-                            color={themes.darkRed.accentColor}
-                            onSelect={onDarkRedColorSelectHandler}
-                            selected={themeName === 'darkRed'}
-                        />
-
-                        <ColorButton
-                            color={themes.darkPink.accentColor}
-                            onSelect={onDarkPinkColorSelectHandler}
-                            selected={themeName === 'darkPink'}
-                        />
-
-                        <ColorButton
-                            color={themes.darkGrey.accentColor}
-                            onSelect={onDarkGreyColorSelectHandler}
-                            selected={themeName === 'darkGrey'}
-                        />
-
-
-                    </View>
-                </View>
+                <ThemePicker />
+                <PowerPointsVisibilityButton
+                    color={backgroundColor}
+                    textColor={textColor}
+                    accentColor={accentColor}
+                />
                 <WhatsNewButton />
             </View>
         </View>
@@ -281,13 +131,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         marginBottom: 10
     },
-    sectionInnerContainer: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: "space-around",
-        marginBottom: 30,
 
-    }
 })
 
 

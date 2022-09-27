@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeContext } from '../contexts/ThemeContext'
 import { useContext, useState } from 'react';
 
-function PowerPointsVisibilityButton({ color, textColor, accentColor }) {
+function PowerPointsVisibilityButton({ color, textColor, primaryColor }) {
     const themeCtx = useContext(ThemeContext)
     const {
         pointsVisibility,
@@ -21,12 +21,20 @@ function PowerPointsVisibilityButton({ color, textColor, accentColor }) {
     }
 
     async function onToggle() {
-        storePointsVisibility((!pointsVisibility).toString())
+        storePointsVisibility((!isOn).toString())
         togglePointsVisibility();
         setIsOn(!isOn)
     }
-    console.log(pointsVisibility)
+    console.log(isOn)
 
+    AsyncStorage.getAllKeys((err, keys) => {
+        AsyncStorage.multiGet(keys, (error, stores) => {
+            stores.map((result, i, store) => {
+                console.log({ [store[i][0]]: store[i][1] });
+                return true;
+            });
+        });
+    });
 
     return (
         <View style={styles.container}>
@@ -38,7 +46,7 @@ function PowerPointsVisibilityButton({ color, textColor, accentColor }) {
             </View>
             <ToggleSwitch
                 isOn={isOn}
-                onColor={accentColor}
+                onColor={primaryColor}
                 offColor="#ccc"
                 size="medium"
                 onToggle={onToggle}

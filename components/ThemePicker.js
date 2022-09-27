@@ -19,8 +19,8 @@ function ThemePicker() {
         setPinkTheme,
         setWhiteTheme,
         setDarkGreenTheme,
-        setDarkRedTheme,
-        setDarkgrayTheme,
+        setdarkOrangeTheme,
+        setdarkGrayTheme,
         setDarkBlueTheme,
         setDarkPinkTheme
     } = themeCtx;
@@ -29,81 +29,48 @@ function ThemePicker() {
 
     let backgroundColor;
     let primaryColor;
-    let bottomTabsColor;
-    let accentColor;
-    let accentDarkerColor;
     let textColor;
     if (theme === 'green') {
 
         backgroundColor = themes.green.backgroundColor
         primaryColor = themes.green.primaryColor
-        bottomTabsColor = themes.green.bottomTabsColor
-        accentColor = themes.green.accentColor
-        accentDarkerColor = themes.green.accentDarkerColor
         textColor = themes.green.textColor
 
     } else if (theme === 'blue') {
         backgroundColor = themes.blue.backgroundColor
         primaryColor = themes.blue.primaryColor
-        bottomTabsColor = themes.blue.bottomTabsColor
-        accentColor = themes.blue.accentColor
-        accentDarkerColor = themes.blue.accentDarkerColor
         textColor = themes.blue.textColor
     } else if (theme === 'orange') {
         backgroundColor = themes.orange.backgroundColor
         primaryColor = themes.orange.primaryColor
-        bottomTabsColor = themes.orange.bottomTabsColor
-        accentColor = themes.orange.accentColor
-        accentDarkerColor = themes.orange.accentDarkerColor
         textColor = themes.orange.textColor
     } else if (theme === 'pink') {
         backgroundColor = themes.pink.backgroundColor
         primaryColor = themes.pink.primaryColor
-        bottomTabsColor = themes.pink.bottomTabsColor
-        accentColor = themes.pink.accentColor
-        accentDarkerColor = themes.pink.accentDarkerColor
         textColor = themes.pink.textColor
     } else if (theme === 'white') {
         backgroundColor = themes.white.backgroundColor
         primaryColor = themes.white.primaryColor
-        bottomTabsColor = themes.white.bottomTabsColor
-        accentColor = themes.white.accentColor
-        accentDarkerColor = themes.white.accentDarkerColor
         textColor = themes.white.textColor
     } else if (theme === 'darkGreen') {
         backgroundColor = themes.darkGreen.backgroundColor
         primaryColor = themes.darkGreen.primaryColor
-        bottomTabsColor = themes.darkGreen.bottomTabsColor
-        accentColor = themes.darkGreen.accentColor
-        accentDarkerColor = themes.darkGreen.accentDarkerColor
         textColor = themes.darkGreen.textColor
-    } else if (theme === 'darkRed') {
-        backgroundColor = themes.darkRed.backgroundColor
-        primaryColor = themes.darkRed.primaryColor
-        bottomTabsColor = themes.darkRed.bottomTabsColor
-        accentColor = themes.darkRed.accentColor
-        accentDarkerColor = themes.darkRed.accentDarkerColor
-        textColor = themes.darkRed.textColor
-    } else if (theme === 'darkgray') {
-        backgroundColor = themes.darkgray.backgroundColor
-        primaryColor = themes.darkgray.primaryColor
-        bottomTabsColor = themes.darkgray.bottomTabsColor
-        accentColor = themes.darkgray.accentColor
-        accentDarkerColor = themes.darkgray.accentDarkerColor
-        textColor = themes.darkgray.textColor
+    } else if (theme === 'darkOrange') {
+        backgroundColor = themes.darkOrange.backgroundColor
+        primaryColor = themes.darkOrange.primaryColor
+        textColor = themes.darkOrange.textColor
+    } else if (theme === 'darkGray') {
+        backgroundColor = themes.darkGray.backgroundColor
+        primaryColor = themes.darkGray.primaryColor
+        textColor = themes.darkGray.textColor
     } else if (theme === 'darkBlue') {
         backgroundColor = themes.darkBlue.backgroundColor
         primaryColor = themes.darkBlue.primaryColor
-        bottomTabsColor = themes.darkBlue.bottomTabsColor
-        accentColor = themes.darkBlue.accentColor
-        accentDarkerColor = themes.darkBlue.accentDarkerColor
         textColor = themes.darkBlue.textColor
     } else if (theme === 'darkPink') {
         backgroundColor = themes.darkPink.backgroundColor
         primaryColor = themes.darkPink.primaryColor
-        bottomTabsColor = themes.darkPink.bottomTabsColor
-        accentColor = themes.darkPink.accentColor
-        accentDarkerColor = themes.darkPink.accentDarkerColor
         textColor = themes.darkPink.textColor
     }
 
@@ -152,16 +119,16 @@ function ThemePicker() {
         storeTheme('darkGreen');
     }
 
-    async function onDarkRedColorSelectHandler() {
-        setDarkRedTheme();
-        setThemeName('darkRed');
-        storeTheme('darkRed');
+    async function ondarkOrangeColorSelectHandler() {
+        setdarkOrangeTheme();
+        setThemeName('darkOrange');
+        storeTheme('darkOrange');
     }
 
-    async function onDarkgrayColorSelectHandler() {
-        setDarkgrayTheme();
-        setThemeName('darkgray');
-        storeTheme('darkgray');
+    async function ondarkGrayColorSelectHandler() {
+        setdarkGrayTheme();
+        setThemeName('darkGray');
+        storeTheme('darkGray');
     }
 
     async function onDarkBlueColorSelectHandler() {
@@ -198,14 +165,14 @@ function ThemePicker() {
                         <View style={styles.titleRow}>
                             <Text style={[styles.title, { color: textColor }]}>Change Theme</Text>
                             <TouchableWithoutFeedback onPress={modalVisibility}>
-                                <AntDesign name="close" size={24} color={accentDarkerColor} />
+                                <AntDesign name="close" size={24} color={primaryColor} />
                             </TouchableWithoutFeedback>
                         </View>
                         <View style={styles.section}>
                             <View style={styles.sectionInnerContainer}>
 
                                 <ColorButton
-                                    color={themes.green.accentColor}
+                                    color={themes.green.primaryColor}
                                     textColor={themes.green.textColor}
                                     backgroundColor={themes.green.backgroundColor}
                                     onSelect={onGreenColorSelectHandler}
@@ -213,7 +180,7 @@ function ThemePicker() {
                                 />
 
                                 <ColorButton
-                                    color={themes.blue.accentColor}
+                                    color={themes.blue.primaryColor}
                                     textColor={themes.blue.textColor}
                                     backgroundColor={themes.blue.backgroundColor}
                                     onSelect={onBlueColorSelectHandler}
@@ -221,7 +188,7 @@ function ThemePicker() {
                                 />
 
                                 <ColorButton
-                                    color={themes.orange.accentColor}
+                                    color={themes.orange.primaryColor}
                                     textColor={themes.orange.textColor}
                                     backgroundColor={themes.orange.backgroundColor}
                                     onSelect={onOrangeColorSelectHandler}
@@ -229,7 +196,7 @@ function ThemePicker() {
                                 />
 
                                 <ColorButton
-                                    color={themes.pink.accentColor}
+                                    color={themes.pink.primaryColor}
                                     textColor={themes.pink.textColor}
                                     backgroundColor={themes.pink.backgroundColor}
                                     onSelect={onPinkColorSelectHandler}
@@ -237,7 +204,7 @@ function ThemePicker() {
                                 />
 
                                 <ColorButton
-                                    color={themes.white.accentColor}
+                                    color={themes.white.primaryColor}
                                     textColor={themes.white.textColor}
                                     backgroundColor={themes.white.backgroundColor}
                                     onSelect={onWhiteColorSelectHandler}
@@ -252,7 +219,7 @@ function ThemePicker() {
 
 
                                 <ColorButton
-                                    color={themes.darkGreen.accentColor}
+                                    color={themes.darkGreen.primaryColor}
                                     textColor={themes.darkGreen.textColor}
                                     backgroundColor={themes.darkGreen.backgroundColor}
                                     onSelect={onDarkGreenColorSelectHandler}
@@ -260,7 +227,7 @@ function ThemePicker() {
                                 />
 
                                 <ColorButton
-                                    color={themes.darkBlue.accentColor}
+                                    color={themes.darkBlue.primaryColor}
                                     textColor={themes.darkBlue.textColor}
                                     backgroundColor={themes.darkBlue.backgroundColor}
                                     onSelect={onDarkBlueColorSelectHandler}
@@ -268,15 +235,15 @@ function ThemePicker() {
                                 />
 
                                 <ColorButton
-                                    color={themes.darkRed.accentColor}
-                                    textColor={themes.darkRed.textColor}
-                                    backgroundColor={themes.darkRed.backgroundColor}
-                                    onSelect={onDarkRedColorSelectHandler}
-                                    selected={themeName === 'darkRed'}
+                                    color={themes.darkOrange.primaryColor}
+                                    textColor={themes.darkOrange.textColor}
+                                    backgroundColor={themes.darkOrange.backgroundColor}
+                                    onSelect={ondarkOrangeColorSelectHandler}
+                                    selected={themeName === 'darkOrange'}
                                 />
 
                                 <ColorButton
-                                    color={themes.darkPink.accentColor}
+                                    color={themes.darkPink.primaryColor}
                                     textColor={themes.darkPink.textColor}
                                     backgroundColor={themes.darkPink.backgroundColor}
                                     onSelect={onDarkPinkColorSelectHandler}
@@ -284,11 +251,11 @@ function ThemePicker() {
                                 />
 
                                 <ColorButton
-                                    color={themes.darkgray.accentColor}
-                                    textColor={themes.darkgray.textColor}
-                                    backgroundColor={themes.darkgray.backgroundColor}
-                                    onSelect={onDarkgrayColorSelectHandler}
-                                    selected={themeName === 'darkgray'}
+                                    color={themes.darkGray.primaryColor}
+                                    textColor={themes.darkGray.textColor}
+                                    backgroundColor={themes.darkGray.backgroundColor}
+                                    onSelect={ondarkGrayColorSelectHandler}
+                                    selected={themeName === 'darkGray'}
                                 />
 
 
@@ -324,8 +291,8 @@ const styles = StyleSheet.create({
     modal: {
         justifyContent: 'center',
         padding: 15,
-        borderWidth: 1,
-        borderRadius: 10,
+        borderWidth: 2,
+        borderRadius: 6,
     },
     title: {
         fontWeight: 'bold',

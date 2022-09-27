@@ -9,9 +9,7 @@ import {
 import {
     FontAwesome,
     FontAwesome5,
-    Ionicons,
-    MaterialCommunityIcons,
-    Fontisto
+    Ionicons
 } from '@expo/vector-icons'
 import { fetchTask } from "../util/database";
 import { useContext, useEffect, useState } from 'react';
@@ -30,94 +28,49 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
 
     let backgroundColor;
     let primaryColor;
-    let bottomTabsColor;
-    let accentColor;
-    let accentDarkerColor;
     let textColor;
-    let theMostImportantColor;
-    let moreImportantColor;
-    let importantColors;
-    let notImportantColor;
     if (theme === 'green') {
+
         backgroundColor = themes.green.backgroundColor
         primaryColor = themes.green.primaryColor
-        bottomTabsColor = themes.green.bottomTabsColor
-        accentColor = themes.green.accentColor
-        accentDarkerColor = themes.green.accentDarkerColor
-        textColor = themes.green.textColors
+        textColor = themes.green.textColor
 
     } else if (theme === 'blue') {
         backgroundColor = themes.blue.backgroundColor
         primaryColor = themes.blue.primaryColor
-        bottomTabsColor = themes.blue.bottomTabsColor
-        accentColor = themes.blue.accentColor
-        accentDarkerColor = themes.blue.accentDarkerColor
         textColor = themes.blue.textColor
-
     } else if (theme === 'orange') {
         backgroundColor = themes.orange.backgroundColor
         primaryColor = themes.orange.primaryColor
-        bottomTabsColor = themes.orange.bottomTabsColor
-        accentColor = themes.orange.accentColor
-        accentDarkerColor = themes.orange.accentDarkerColor
         textColor = themes.orange.textColor
-
     } else if (theme === 'pink') {
         backgroundColor = themes.pink.backgroundColor
         primaryColor = themes.pink.primaryColor
-        bottomTabsColor = themes.pink.bottomTabsColor
-        accentColor = themes.pink.accentColor
-        accentDarkerColor = themes.pink.accentDarkerColor
         textColor = themes.pink.textColor
-
     } else if (theme === 'white') {
         backgroundColor = themes.white.backgroundColor
         primaryColor = themes.white.primaryColor
-        bottomTabsColor = themes.white.bottomTabsColor
-        accentColor = themes.white.accentColor
-        accentDarkerColor = themes.white.accentDarkerColor
         textColor = themes.white.textColor
-
     } else if (theme === 'darkGreen') {
         backgroundColor = themes.darkGreen.backgroundColor
         primaryColor = themes.darkGreen.primaryColor
-        bottomTabsColor = themes.darkGreen.bottomTabsColor
-        accentColor = themes.darkGreen.accentColor
-        accentDarkerColor = themes.darkGreen.accentDarkerColor
         textColor = themes.darkGreen.textColor
-
-    } else if (theme === 'darkRed') {
-        backgroundColor = themes.darkRed.backgroundColor
-        primaryColor = themes.darkRed.primaryColor
-        bottomTabsColor = themes.darkRed.bottomTabsColor
-        accentColor = themes.darkRed.accentColor
-        accentDarkerColor = themes.darkRed.accentDarkerColor
-        textColor = themes.darkRed.textColor
-
-    } else if (theme === 'darkgray') {
-        backgroundColor = themes.darkgray.backgroundColor
-        primaryColor = themes.darkgray.primaryColor
-        bottomTabsColor = themes.darkgray.bottomTabsColor
-        accentColor = themes.darkgray.accentColor
-        accentDarkerColor = themes.darkgray.accentDarkerColor
-        textColor = themes.darkgray.textColor
-
+    } else if (theme === 'darkOrange') {
+        backgroundColor = themes.darkOrange.backgroundColor
+        primaryColor = themes.darkOrange.primaryColor
+        textColor = themes.darkOrange.textColor
+    } else if (theme === 'darkGray') {
+        backgroundColor = themes.darkGray.backgroundColor
+        primaryColor = themes.darkGray.primaryColor
+        textColor = themes.darkGray.textColor
     } else if (theme === 'darkBlue') {
         backgroundColor = themes.darkBlue.backgroundColor
         primaryColor = themes.darkBlue.primaryColor
-        bottomTabsColor = themes.darkBlue.bottomTabsColor
-        accentColor = themes.darkBlue.accentColor
-        accentDarkerColor = themes.darkBlue.accentDarkerColor
         textColor = themes.darkBlue.textColor
-
     } else if (theme === 'darkPink') {
         backgroundColor = themes.darkPink.backgroundColor
         primaryColor = themes.darkPink.primaryColor
-        bottomTabsColor = themes.darkPink.bottomTabsColor
-        accentColor = themes.darkPink.accentColor
-        accentDarkerColor = themes.darkPink.accentDarkerColor
         textColor = themes.darkPink.textColor
-
     }
 
 
@@ -127,6 +80,7 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
         setLoaded(true);
 
     });
+
 
 
 
@@ -156,7 +110,7 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
         }
 
         return (
-            <View style={[styles.hiddenItemLeftContainer, { backgroundColor: accentDarkerColor }]}>
+            <View style={[styles.hiddenItemLeftContainer, { backgroundColor: primaryColor }]}>
                 <Animated.View style={[Style]}>
                     <Ionicons name="checkmark-done-outline" size={25} color='#fff' />
                     {!done ? <Text style={{ color: '#fff' }}>Done</Text> :
@@ -210,17 +164,17 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
                     onSwipeableLeftOpen={onDone}
 
                 >
-                    <View style={[styles.item, { backgroundColor: primaryColor },
+                    <View style={[styles.item, { backgroundColor: backgroundColor },
                     done && styles.pressed]}>
                         <TouchableOpacity style={{ height: 40, width: 40 }} onPress={onDone}>
-                            <View style={[styles.circle, { backgroundColor: accentDarkerColor }]}>
+                            <View style={[styles.circle, { backgroundColor: primaryColor }]}>
                                 {done ? <FontAwesome style={{ marginLeft: 1 }} name='check' size={21} color={textColor} /> : null}
                             </View>
                         </TouchableOpacity>
                         <Text style={[styles.itemText, { color: textColor }, done && styles.pressedText]}>{task}</Text>
 
                         {taskPower !== 0 && loaded && pointsVisibility ?
-                            <View style={[styles.points, { backgroundColor: accentColor }]}>
+                            <View style={[styles.points, { backgroundColor: primaryColor }]}>
                                 <Text style={[{ color: textColor, fontWeight: 'bold' }]}>{taskPower}</Text>
                             </View> : null}
                     </View>

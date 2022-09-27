@@ -30,7 +30,7 @@ export function ThemeProvider({ children }) {
 
 
         }
-        fetchTheme();
+        fetchTheme()
     }, []);
 
     function togglePointsVisibility() {
@@ -72,17 +72,18 @@ export function ThemeProvider({ children }) {
     function setThemesDarkGreenMode() {
         setColor('darkGreen')
     }
-    function setThemesDarkRedMode() {
-        setColor('darkRed')
+    function setThemesdarkOrangeMode() {
+        setColor('darkOrange')
     }
-    function setThemesDarkgrayMode() {
-        setColor('darkgray')
+    function setThemesdarkGrayMode() {
+        setColor('darkGray')
     }
     function setThemesDarkBlueMode() {
         setColor('darkBlue')
     }
     function setThemesDarkPinkMode() {
         setColor('darkPink')
+        //#AE375D
     }
 
     return (
@@ -102,8 +103,8 @@ export function ThemeProvider({ children }) {
                 setPinkTheme: setThemesPinkMode,
                 setWhiteTheme: setThemesWhiteMode,
                 setDarkGreenTheme: setThemesDarkGreenMode,
-                setDarkRedTheme: setThemesDarkRedMode,
-                setDarkgrayTheme: setThemesDarkgrayMode,
+                setdarkOrangeTheme: setThemesdarkOrangeMode,
+                setdarkGrayTheme: setThemesdarkGrayMode,
                 setDarkBlueTheme: setThemesDarkBlueMode,
                 setDarkPinkTheme: setThemesDarkPinkMode
             }}>

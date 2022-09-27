@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Keyboard, ScrollView, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, Text, View, Keyboard, ScrollView, ActivityIndicator, TouchableWithoutFeedback } from "react-native";
 import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
 import { useEffect, useState, useContext, useLayoutEffect } from "react";
@@ -30,83 +30,53 @@ function TasksScreen({ navigation }) {
     const themeCtx = useContext(ThemeContext)
     const { theme, sort } = themeCtx;
     const isFocused = useIsFocused();
+    const [initialized, setInitialized] = useState(false);
     let fetchedTasks;
 
     let backgroundColor;
     let primaryColor;
-    let bottomTabsColor;
-    let accentColor;
-    let accentDarkerColor;
     let textColor;
+
+
     if (theme === 'green') {
         backgroundColor = themes.green.backgroundColor
         primaryColor = themes.green.primaryColor
-        bottomTabsColor = themes.green.bottomTabsColor
-        accentColor = themes.green.accentColor
-        accentDarkerColor = themes.green.accentDarkerColor
         textColor = themes.green.textColor
     } else if (theme === 'blue') {
         backgroundColor = themes.blue.backgroundColor
         primaryColor = themes.blue.primaryColor
-        bottomTabsColor = themes.blue.bottomTabsColor
-        accentColor = themes.blue.accentColor
-        accentDarkerColor = themes.blue.accentDarkerColor
         textColor = themes.blue.textColor
     } else if (theme === 'orange') {
         backgroundColor = themes.orange.backgroundColor
         primaryColor = themes.orange.primaryColor
-        bottomTabsColor = themes.orange.bottomTabsColor
-        accentColor = themes.orange.accentColor
-        accentDarkerColor = themes.orange.accentDarkerColor
         textColor = themes.orange.textColor
     } else if (theme === 'pink') {
         backgroundColor = themes.pink.backgroundColor
         primaryColor = themes.pink.primaryColor
-        bottomTabsColor = themes.pink.bottomTabsColor
-        accentColor = themes.pink.accentColor
-        accentDarkerColor = themes.pink.accentDarkerColor
         textColor = themes.pink.textColor
     } else if (theme === 'white') {
         backgroundColor = themes.white.backgroundColor
         primaryColor = themes.white.primaryColor
-        bottomTabsColor = themes.white.bottomTabsColor
-        accentColor = themes.white.accentColor
-        accentDarkerColor = themes.white.accentDarkerColor
         textColor = themes.white.textColor
     } else if (theme === 'darkGreen') {
         backgroundColor = themes.darkGreen.backgroundColor
         primaryColor = themes.darkGreen.primaryColor
-        bottomTabsColor = themes.darkGreen.bottomTabsColor
-        accentColor = themes.darkGreen.accentColor
-        accentDarkerColor = themes.darkGreen.accentDarkerColor
         textColor = themes.darkGreen.textColor
-    } else if (theme === 'darkRed') {
-        backgroundColor = themes.darkRed.backgroundColor
-        primaryColor = themes.darkRed.primaryColor
-        bottomTabsColor = themes.darkRed.bottomTabsColor
-        accentColor = themes.darkRed.accentColor
-        accentDarkerColor = themes.darkRed.accentDarkerColor
-        textColor = themes.darkRed.textColor
-    } else if (theme === 'darkgray') {
-        backgroundColor = themes.darkgray.backgroundColor
-        primaryColor = themes.darkgray.primaryColor
-        bottomTabsColor = themes.darkgray.bottomTabsColor
-        accentColor = themes.darkgray.accentColor
-        accentDarkerColor = themes.darkgray.accentDarkerColor
-        textColor = themes.darkgray.textColor
+    } else if (theme === 'darkOrange') {
+        backgroundColor = themes.darkOrange.backgroundColor
+        primaryColor = themes.darkOrange.primaryColor
+        textColor = themes.darkOrange.textColor
+    } else if (theme === 'darkGray') {
+        backgroundColor = themes.darkGray.backgroundColor
+        primaryColor = themes.darkGray.primaryColor
+        textColor = themes.darkGray.textColor
     } else if (theme === 'darkBlue') {
         backgroundColor = themes.darkBlue.backgroundColor
         primaryColor = themes.darkBlue.primaryColor
-        bottomTabsColor = themes.darkBlue.bottomTabsColor
-        accentColor = themes.darkBlue.accentColor
-        accentDarkerColor = themes.darkBlue.accentDarkerColor
         textColor = themes.darkBlue.textColor
     } else if (theme === 'darkPink') {
         backgroundColor = themes.darkPink.backgroundColor
         primaryColor = themes.darkPink.primaryColor
-        bottomTabsColor = themes.darkPink.bottomTabsColor
-        accentColor = themes.darkPink.accentColor
-        accentDarkerColor = themes.darkPink.accentDarkerColor
         textColor = themes.darkPink.textColor
     }
 
@@ -119,8 +89,7 @@ function TasksScreen({ navigation }) {
             fetchedTasks = await fetchTasksInNewestFirstMode();
         } else if (sort === 'oldestFirst') {
             fetchedTasks = await fetchTasks();
-        }
-        else {
+        } else {
             fetchedTasks = await fetchTasks();
         }
         setLoadedData(fetchedTasks);
@@ -132,15 +101,15 @@ function TasksScreen({ navigation }) {
         setLoadedCompletedData(fetchedCompletedTasks);
     }
 
-    function fetch() {
-        loadTasks();
+    async function fetch() {
+        loadTasks()
         loadCompletedTasks();
     }
 
 
 
     useEffect(() => {
-        fetch();
+        fetch().then(() => { setInitialized(true) })
     }, [isFocused, sort]);
 
 
@@ -216,72 +185,79 @@ function TasksScreen({ navigation }) {
         );
     }
 
-
-
-    return (
-        <MenuProvider>
-            <View style={[styles.container, { backgroundColor: backgroundColor }]}>
-                <View style={styles.navBar}>
-                    <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
-                    <SortPopupMenu color={textColor} />
-                </View>
-                <ScrollView style={styles.items}>
-                    <View>
-                        {loadedData.map((item) => {
-                            return (
-                                <Task
-                                    key={item.id}
-                                    id={item.id}
-                                    task={item.title}
-                                    done={item.completed}
-                                    onDone={() => completeTaskHandler(item.id, item.completed)}
-                                    onDelete={() => deleteTaskHandler(item.id)}
-                                    onPress={() => pressHandler(item.id)}
-                                />
-                            )
-                        })}
-
-                        {loadedCompletedData.length > 0 &&
-
-                            <View>
-                                <CompletedLine completedActive={completedOpen} toggleCompleted={onCompleteAvailable} />
-                                {completedOpen &&
-                                    <View>
-                                        <OutlinedButton text='Delete All' color={accentDarkerColor} onPress={deleteCompletedTasks} />
-                                        {loadedCompletedData.map((item) => {
-                                            return (
-
-                                                <Task
-                                                    key={item.id}
-                                                    id={item.id}
-                                                    task={item.title}
-                                                    done={item.completed}
-                                                    onDone={() => completeTaskHandler(item.id, item.completed)}
-                                                    onDelete={() => deleteTaskHandler(item.id)}
-                                                    onPress={() => pressHandler(item.id)}
-                                                />
-
-                                            )
-                                        })}
-
-                                    </View>
-                                }
-                            </View>
-                        }
+    if (!initialized) {
+        return (
+            <View style={[styles.loaderContainer, { backgroundColor: backgroundColor }]}>
+                <ActivityIndicator style={styles.activityLoader} size='large' color='#487db9' />
+            </View>
+        );
+    } else {
+        return (
+            <MenuProvider>
+                <View style={[styles.container, { backgroundColor: backgroundColor }]}>
+                    <View style={styles.navBar}>
+                        <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
+                        <SortPopupMenu color={textColor} />
                     </View>
-                </ScrollView>
+                    <ScrollView style={styles.items}>
+                        <View>
+                            {loadedData.map((item) => {
+                                return (
+                                    <Task
+                                        key={item.id}
+                                        id={item.id}
+                                        task={item.title}
+                                        done={item.completed}
+                                        onDone={() => completeTaskHandler(item.id, item.completed)}
+                                        onDelete={() => deleteTaskHandler(item.id)}
+                                        onPress={() => pressHandler(item.id)}
+                                    />
+                                )
+                            })}
 
-                <CustomTextInput
-                    value={task}
-                    onChangeText={text => setTask(text)}
-                    addTask={handleAddTask}
-                />
+                            {loadedCompletedData.length > 0 &&
+
+                                <View>
+                                    <CompletedLine completedActive={completedOpen} toggleCompleted={onCompleteAvailable} />
+                                    {completedOpen &&
+                                        <View>
+                                            <OutlinedButton text='Delete All' color={primaryColor} onPress={deleteCompletedTasks} />
+                                            {loadedCompletedData.map((item) => {
+                                                return (
+
+                                                    <Task
+                                                        key={item.id}
+                                                        id={item.id}
+                                                        task={item.title}
+                                                        done={item.completed}
+                                                        onDone={() => completeTaskHandler(item.id, item.completed)}
+                                                        onDelete={() => deleteTaskHandler(item.id)}
+                                                        onPress={() => pressHandler(item.id)}
+                                                    />
+
+                                                )
+                                            })}
+
+                                        </View>
+                                    }
+                                </View>
+                            }
+                        </View>
+                    </ScrollView>
+
+                    <CustomTextInput
+                        value={task}
+                        onChangeText={text => setTask(text)}
+                        addTask={handleAddTask}
+                    />
 
 
-            </View >
-        </MenuProvider>
-    );
+                </View >
+            </MenuProvider>
+        );
+    }
 }
+
 
 export default TasksScreen;
 
@@ -313,5 +289,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginHorizontal: 25,
     },
+    loaderContainer: {
+        flex: 1,
+        justifyContent: 'center'
+    },
+    activityLoader: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
 
 });

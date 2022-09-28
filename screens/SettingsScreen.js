@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
 import { Text, View, StyleSheet } from "react-native";
-
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
 import WhatsNewButton from "../components/WhatsNewButton";
 import ThemePicker from "../components/ThemePicker";
 import PowerPointsVisibilityButton from "../components/PowerPointsVisibilityButton";
+
 
 function SettingsScreen() {
     const themeCtx = useContext(ThemeContext)
@@ -58,7 +58,6 @@ function SettingsScreen() {
         primaryColor = themes.darkPink.primaryColor
         textColor = themes.darkPink.textColor
     }
-
 
 
 

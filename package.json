@@ -27,7 +27,7 @@
     "expo-updates": "~0.14.6",
     "moment": "^2.29.4",
     "react": "18.0.0",
-    "react-native": "0.69.5",
+    "react-native": "0.69.6",
     "react-native-appearance": "^0.3.4",
     "react-native-dropdown-select-list": "^1.0.21",
     "react-native-gesture-handler": "~2.5.0",

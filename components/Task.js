@@ -25,16 +25,21 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
     const [effort, setEffort] = useState(0);
     const [loaded, setLoaded] = useState(false);
     const taskPower = important + urgent + effort;
+    const [isOn, setIsOn] = useState(() => {
+        if (pointsVisibility === 'visible') {
+            return true;
+        } else {
+            return false;
+        }
+    });
 
     let backgroundColor;
     let primaryColor;
     let textColor;
     if (theme === 'green') {
-
         backgroundColor = themes.green.backgroundColor
         primaryColor = themes.green.primaryColor
         textColor = themes.green.textColor
-
     } else if (theme === 'blue') {
         backgroundColor = themes.blue.backgroundColor
         primaryColor = themes.blue.primaryColor
@@ -78,8 +83,15 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
     useEffect(() => {
         fetchTaskDetails();
         setLoaded(true);
-
     });
+
+    useEffect(() => {
+        if (pointsVisibility === 'nonvisible') {
+            setIsOn(false);
+        } else if (pointsVisibility === 'visible') {
+            setIsOn(true);
+        }
+    }, [pointsVisibility])
 
 
 
@@ -173,7 +185,7 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
                         </TouchableOpacity>
                         <Text style={[styles.itemText, { color: textColor }, done && styles.pressedText]}>{task}</Text>
 
-                        {taskPower !== 0 && loaded && pointsVisibility ?
+                        {taskPower !== 0 && loaded && isOn ?
                             <View style={[styles.points, { backgroundColor: primaryColor }]}>
                                 <Text style={[{ color: textColor, fontWeight: 'bold' }]}>{taskPower}</Text>
                             </View> : null}

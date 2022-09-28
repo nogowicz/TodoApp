@@ -253,7 +253,7 @@ function TaskDetails({ route, navigation }) {
                                 }]}
                             placeholder='Edit task title'
                             placeholderTextColor={textColor}
-                            multiline={true}
+                            multiline={false}
                             maxLength={120}
 
                         />

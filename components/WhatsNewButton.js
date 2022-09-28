@@ -83,9 +83,9 @@ function WhatsNewButton() {
                                 <AntDesign name="close" size={24} color={primaryColor} />
                             </TouchableWithoutFeedback>
                         </View>
-                        <Text style={[styles.text, { color: textColor }]}>Poprawiono wygląd taska</Text>
-                        <Text style={[styles.text, { color: textColor }]}>Sortowanie zapisuje się po wyjściu z aplikacji</Text>
-                        <Text style={[styles.text, { color: textColor }]}>Poprawiono wygląd filtra sortowania</Text>
+                        <Text style={[styles.text, { color: textColor }]}>Power Task Visibility Zapisuje stan po wyjściu z aplikacji</Text>
+                        <Text style={[styles.text, { color: textColor }]}>Nowe menu</Text>
+
 
 
                     </View>

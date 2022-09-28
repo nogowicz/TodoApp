@@ -6,16 +6,16 @@ export const ThemeContext = createContext();
 export function ThemeProvider({ children }) {
     const [color, setColor] = useState('green');
     const [sorting, setSorting] = useState();
-    const [pointsVisibility, setPointsVisibility] = useState();
+    const [pointsVisibility, setPointsVisibility] = useState('visible');
 
     useEffect(() => {
         async function fetchTheme() {
             const storedTheme = await AsyncStorage.getItem('theme');
             const storedSorting = await AsyncStorage.getItem('sort');
             const storedVisibility = await AsyncStorage.getItem('pointsVisibility');
+
             if (storedTheme) {
                 setColor(storedTheme);
-
             }
 
             if (storedSorting) {
@@ -27,14 +27,16 @@ export function ThemeProvider({ children }) {
             }
 
 
-
-
         }
         fetchTheme()
     }, []);
 
     function togglePointsVisibility() {
-        setPointsVisibility(!pointsVisibility);
+        if (pointsVisibility === 'visible') {
+            setPointsVisibility('nonvisible');
+        } else if (pointsVisibility === 'nonvisible') {
+            setPointsVisibility('visible');
+        }
     }
 
     function setPowerListSorting() {

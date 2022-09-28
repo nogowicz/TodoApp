@@ -73,8 +73,6 @@ function CustomTextInput({ value, onChangeText, addTask }) {
         };
     }, []);
 
-    const [selection, setSelection] = useState({ start: 0, end: 0 })
-
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -95,14 +93,17 @@ function CustomTextInput({ value, onChangeText, addTask }) {
                 { borderColor: primaryColor }
                 ]}>
                     <TextInput
+                        value={value}
+                        onChangeText={onChangeText}
                         style={[styles.input, { color: textColor }]}
                         placeholder='Add new task'
                         placeholderTextColor={textColor}
-                        value={value}
-                        onChangeText={onChangeText}
                         onSubmitEditing={addTask}
-                        maxLength={80}
+                        maxLength={120}
                     />
+
+
+
                     <TouchableOpacity onPress={addTask}>
                         <View style={[styles.button, { backgroundColor: primaryColor }]}>
                             <FontAwesome name='angle-up' size={24} color={textColor} />

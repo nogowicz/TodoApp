@@ -8,6 +8,7 @@ import { StyleSheet, View, ActivityIndicator, Keyboard, Platform } from 'react-n
 import { ThemeContext } from './contexts/ThemeContext'
 import { themes } from './constants/themes.json';
 
+
 import TasksScreen from './screens/TasksScreen';
 import TaskDetails from './screens/TaskDetails';
 import SettingsScreen from './screens/SettingsScreen';
@@ -16,11 +17,6 @@ import { ThemeProvider } from './contexts/ThemeContext';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device'
 
-
-/**
- * TODO
- * -code cleanup
- */
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -114,7 +110,7 @@ function TasksOverview() {
         return;
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
-      console.log(token);
+      // console.log(token);
     } else { return; }
 
     if (Platform.OS === 'android') {
@@ -203,6 +199,8 @@ export default function App() {
         console.log(err);
       });
   }, []);
+
+
   if (!dbInitialized) {
     return (
       <ThemeProvider>

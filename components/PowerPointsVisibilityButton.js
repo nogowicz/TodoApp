@@ -1,17 +1,23 @@
 import { StyleSheet, View, Text } from "react-native";
 import ToggleSwitch from 'toggle-switch-react-native'
+import { useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { ThemeContext } from '../contexts/ThemeContext'
-import { useContext, useState } from 'react';
 
-function PowerPointsVisibilityButton({ color, textColor, primaryColor }) {
+
+function PowerPointsVisibilityButton({ color, textColor, primaryColor }
+) {
     const themeCtx = useContext(ThemeContext)
-    const {
+    const { theme,
         pointsVisibility,
-        togglePointsVisibility
-    } = themeCtx;
-    const [isOn, setIsOn] = useState(Boolean(pointsVisibility));
-
+        togglePointsVisibility } = themeCtx;
+    const [isOn, setIsOn] = useState(() => {
+        if (pointsVisibility === 'visible') {
+            return true;
+        } else {
+            return false;
+        }
+    });
     const storePointsVisibility = async (value) => {
         try {
             await AsyncStorage.setItem('pointsVisibility', value);
@@ -20,22 +26,34 @@ function PowerPointsVisibilityButton({ color, textColor, primaryColor }) {
         }
     }
 
+    // useEffect(() => {
+
+    // }, [pointsVisibility])
+
     async function onToggle() {
-        storePointsVisibility((!isOn).toString())
+        if (pointsVisibility === 'nonvisible') {
+            storePointsVisibility('visible');
+            setIsOn(true);
+        } else if (pointsVisibility === 'visible') {
+            storePointsVisibility('nonvisible');
+            setIsOn(false);
+        }
         togglePointsVisibility();
-        setIsOn(!isOn)
+
     }
-    console.log(isOn)
 
-    AsyncStorage.getAllKeys((err, keys) => {
-        AsyncStorage.multiGet(keys, (error, stores) => {
-            stores.map((result, i, store) => {
-                console.log({ [store[i][0]]: store[i][1] });
-                return true;
-            });
-        });
-    });
 
+
+    // AsyncStorage.getAllKeys().then((keyArray) => {
+    //     AsyncStorage.multiGet(keyArray).then((keyValArray) => {
+    //         let myStorage: any = {};
+    //         for (let keyVal of keyValArray) {
+    //             myStorage[keyVal[0]] = keyVal[1]
+    //         }
+
+    //         console.log('CURRENT STORAGE: ', myStorage);
+    //     })
+    // });
     return (
         <View style={styles.container}>
             <View style={styles.innerContainer}>

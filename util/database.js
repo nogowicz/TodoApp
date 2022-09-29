@@ -33,7 +33,11 @@ export function init() {
                     important INTEGER DEFAULT 0,
                     urgent INTEGER DEFAULT 0,
                     effort INTEGER DEFAULT 0,
-                    notes TEXT
+                    notes TEXT,
+                    notificationIdentifier TEXT DEFAULT notAssigned,
+                    date TEXT,
+                    hour INTEGER,
+                    minute INTEGER
                 )`,
                 [],
                 () => {
@@ -88,7 +92,7 @@ export function fetchTasks() {
                                 dp.completed,
                                 dp.important,
                                 dp.urgent,
-                                dp.effort
+                                dp.effort,
                             )
                         );
                     }
@@ -276,7 +280,7 @@ export function fetchTask(id) {
                 (_, result) => {
                     const task = result.rows._array[0];
                     resolve(task);
-
+                    // console.log(task)
                 },
                 (_, error) => {
                     reject(error);
@@ -287,7 +291,7 @@ export function fetchTask(id) {
     return promise;
 }
 
-export function updateTask(id, title, important, urgent, effort, notes) {
+export function updateTask(id, title, important, urgent, effort, notes, notificationIdentifier, date, hour, minute) {
     const promise = new Promise((resolve, reject) => {
         database.transaction((tx) => {
             tx.executeSql(
@@ -296,9 +300,14 @@ export function updateTask(id, title, important, urgent, effort, notes) {
                     important = ?,
                     urgent = ?,
                     effort = ?,
-                    notes = ?
+                    notes = ?,
+                    notificationIdentifier = ?,
+                    date = ?,
+                    hour = ?,
+                    minute = ?
                     WHERE id = ?`,
-                [title, important, urgent, effort, notes, id],
+
+                [title, important, urgent, effort, notes, notificationIdentifier, date, hour, minute, id],
                 (_, result) => {
                     resolve(result);
                 },
@@ -310,3 +319,8 @@ export function updateTask(id, title, important, urgent, effort, notes) {
     });
     return promise;
 }
+
+
+
+// //  ,date = ?
+// 

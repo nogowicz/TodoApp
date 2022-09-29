@@ -5,7 +5,7 @@ import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 
-function ReminderButton({ onPress, notificationSet, date, time, removeNotification }) {
+function ReminderButton({ onPress, notificationSet, date, hour, minute, removeNotification }) {
     const themeCtx = useContext(ThemeContext)
     const { theme } = themeCtx;
 
@@ -56,6 +56,8 @@ function ReminderButton({ onPress, notificationSet, date, time, removeNotificati
         textColor = themes.darkPink.textColor
     }
 
+    const dateFormmat = new Date(date);
+
 
     return (
         <TouchableOpacity onPress={onPress}>
@@ -66,7 +68,7 @@ function ReminderButton({ onPress, notificationSet, date, time, removeNotificati
 
                     <Text style={[styles.text, { color: textColor }]}>Remind me</Text>
                     {notificationSet ?
-                        <Text style={[styles.text, { color: textColor }]}>at {date.toDateString()}  {time.toTimeString().slice(0, 5)}</Text> : null}
+                        <Text style={[styles.text, { color: textColor }]}>at {dateFormmat.toDateString()} {hour}:{minute < 10 && '0'}{parseInt(minute)}</Text> : null}
                 </View>
                 {notificationSet ? <TouchableOpacity onPress={removeNotification}>
                     <Ionicons name="close" size={24} color={textColor} />

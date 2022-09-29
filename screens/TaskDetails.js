@@ -32,12 +32,13 @@ function TaskDetails({ route, navigation }) {
     const [selectedEffort, setSelectedEffort] = useState(0);
     const [notes, setNotes] = useState('');
     const [date, setDate] = useState(new Date());
+    const [hour, setHour] = useState(0);
+    const [minute, setMinute] = useState(0);
     const [time, setTime] = useState(new Date());
     const [showDate, setShowDate] = useState(false);
     const [showTime, setShowTime] = useState(false);
     const [notificationSet, setNotificationSet] = useState(false);
     const effectRan = useRef(false);
-    const [identifier, setIdentifier] = useState();
 
     const importantData = [
         { key: '0', value: 'No entry' },
@@ -70,11 +71,9 @@ function TaskDetails({ route, navigation }) {
     let primaryColor;
     let textColor;
     if (theme === 'green') {
-
         backgroundColor = themes.green.backgroundColor
         primaryColor = themes.green.primaryColor
         textColor = themes.green.textColor
-
     } else if (theme === 'blue') {
         backgroundColor = themes.blue.backgroundColor
         primaryColor = themes.blue.primaryColor
@@ -123,6 +122,7 @@ function TaskDetails({ route, navigation }) {
         navigation.goBack();
     }
 
+    let identifier;
     async function loadTaskData(taskId) {
         const fetchedTask = await fetchTask(taskId);
         setTitle(fetchedTask.title);
@@ -130,26 +130,40 @@ function TaskDetails({ route, navigation }) {
         setSelectedUrgent(fetchedTask.urgent);
         setSelectedEffort(fetchedTask.effort);
         setNotes(fetchedTask.notes);
+        identifier = fetchedTask.notificationIdentifier;
+        console.log("Identifier:" + identifier)
+        setDate(fetchedTask.date ? fetchedTask.date : date);
+        setHour(fetchedTask.hour ? fetchedTask.hour : hour);
+        setMinute(fetchedTask.minute ? fetchedTask.minute : minute);
     }
+
 
     async function updateTaskData() {
-        await updateTask(taskId, title, selectedImportant, selectedUrgent, selectedEffort, notes)
+        await updateTask(taskId, title, selectedImportant, selectedUrgent, selectedEffort, notes, identifier, new Date(date).toISOString(), hour, minute)
     }
 
+    function runAfterLoadTaskData() {
+        console.log('running command');
+        if (identifier !== 'notAssigned') {
+            setNotificationSet(true);
+        }
+        effectRan.current = true;
+    }
 
     useEffect(() => {
         if (effectRan.current === false) {
-            loadTaskData(taskId);
-            effectRan.current = true;
+            loadTaskData(taskId).then(() => runAfterLoadTaskData());
+
         }
 
-    });
+    }, []);
 
     useEffect(() => {
         async function schedule() {
             if (notificationSet) {
                 try {
                     await scheduleNotification();
+                    console.log("Identifier:" + identifier)
                 }
                 catch (e) {
                     console.log(e);
@@ -167,31 +181,23 @@ function TaskDetails({ route, navigation }) {
         setNotes(text);
     }
 
-    // let notificationTime = `${date.toISOString().slice(0, 10)}${time.toISOString().slice(10, 24)}`;
-    // let notificationTimeInMilliseconds = (new Date(notificationTime).getTime() + (2 * 60 * 60 * 1000)) - (new Date().getTime() + (2 * 60 * 60 * 1000));
-
-    let notificationHour = time.toISOString().slice(11, 13);
-    let notificationMinute = time.toISOString().slice(14, 16);
-    // console.log(notificationMinute)
 
     const trigger = new Date(date);
-    trigger.setHours(notificationHour);
-    trigger.setMinutes(notificationMinute);
+    trigger.setHours(hour);
+    trigger.setMinutes(minute);
     trigger.setSeconds(0);
-    console.log(trigger)
+    // console.log(trigger);
     async function scheduleNotification() {
         try {
-            setIdentifier(await Notifications.scheduleNotificationAsync({
+            identifier = await Notifications.scheduleNotificationAsync({
                 content: {
                     title: 'New Task To Do!',
                     body: title,
                     sound: 'web_whatsapp.mp3'
                 },
                 trigger,
-                // trigger: {
-                //     seconds: notificationTimeInMilliseconds / 1000
-                // }
-            }));
+
+            });
             console.log('Notification was schedule');
         } catch (e) {
             alert('The notification failed to schedule, make sure the hour is valid')
@@ -213,22 +219,28 @@ function TaskDetails({ route, navigation }) {
             setTime(currentTime);
             setShowTime(false);
             setNotificationSet(true);
-
-
+            setHour(currentTime.toLocaleTimeString().slice(0, 2));
+            setMinute(currentTime.toLocaleTimeString().slice(3, 5));
 
         }
     };
 
-    console.log(identifier)
+    // console.log(identifier)
 
     function onReminderButtonPress() {
         setShowDate(true);
     }
 
     async function removeNotification() {
-        setNotificationSet(false);
+
         await Notifications.cancelScheduledNotificationAsync(identifier);
+        identifier = 'notAssigned';
+        setNotificationSet(false);
+
+
+        console.log('Notification canceled');
     }
+
 
 
     return (
@@ -249,7 +261,7 @@ function TaskDetails({ route, navigation }) {
             <ScrollView>
                 <View style={styles.content}>
                     <View>
-                        <ReminderButton onPress={onReminderButtonPress} notificationSet={notificationSet} date={date} time={time} removeNotification={removeNotification} />
+                        <ReminderButton onPress={onReminderButtonPress} notificationSet={notificationSet} date={date} hour={hour} minute={minute} removeNotification={removeNotification} />
                         <Text style={[styles.text, { color: textColor }]}>Title</Text>
 
 
@@ -331,7 +343,7 @@ function TaskDetails({ route, navigation }) {
             {showDate && (
                 <DateTimePicker
                     testID="dateTimePicker"
-                    value={date}
+                    value={new Date(date)}
                     mode='date'
                     is24Hour={true}
                     onChange={onDateChange}

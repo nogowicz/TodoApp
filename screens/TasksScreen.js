@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, Keyboard, ScrollView, ActivityIndicator, TouchableWithoutFeedback } from "react-native";
+import { StyleSheet, Text, View, Keyboard, ScrollView, ActivityIndicator } from "react-native";
 import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
-import { useEffect, useState, useContext, useLayoutEffect } from "react";
+import { useEffect, useState, useContext } from "react";
 import { Todo } from "../models/todo";
 import {
     fetchTasks,

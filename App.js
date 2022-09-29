@@ -15,8 +15,7 @@ import SettingsScreen from './screens/SettingsScreen';
 import { useState, useEffect, useContext } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import * as Notifications from 'expo-notifications';
-import * as Device from 'expo-device'
-
+import * as Device from 'expo-device';
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({

@@ -37,6 +37,7 @@ function TaskDetails({ route, navigation }) {
     const [showTime, setShowTime] = useState(false);
     const [notificationSet, setNotificationSet] = useState(false);
     const effectRan = useRef(false);
+    const [identifier, setIdentifier] = useState();
 
     const importantData = [
         { key: '0', value: 'No entry' },
@@ -166,21 +167,31 @@ function TaskDetails({ route, navigation }) {
         setNotes(text);
     }
 
-    let notificationTime = `${date.toISOString().slice(0, 10)}${time.toISOString().slice(10, 24)}`;
-    let notificationTimeInMilliseconds = (new Date(notificationTime).getTime() + (2 * 60 * 60 * 1000)) - (new Date().getTime() + (2 * 60 * 60 * 1000));
+    // let notificationTime = `${date.toISOString().slice(0, 10)}${time.toISOString().slice(10, 24)}`;
+    // let notificationTimeInMilliseconds = (new Date(notificationTime).getTime() + (2 * 60 * 60 * 1000)) - (new Date().getTime() + (2 * 60 * 60 * 1000));
 
+    let notificationHour = time.toISOString().slice(11, 13);
+    let notificationMinute = time.toISOString().slice(14, 16);
+    // console.log(notificationMinute)
+
+    const trigger = new Date(date);
+    trigger.setHours(notificationHour);
+    trigger.setMinutes(notificationMinute);
+    trigger.setSeconds(0);
+    console.log(trigger)
     async function scheduleNotification() {
         try {
-            await Notifications.scheduleNotificationAsync({
+            setIdentifier(await Notifications.scheduleNotificationAsync({
                 content: {
                     title: 'New Task To Do!',
                     body: title,
-                    sound: 'dzwonek.wav'
+                    sound: 'web_whatsapp.mp3'
                 },
-                trigger: {
-                    seconds: notificationTimeInMilliseconds / 1000
-                }
-            });
+                trigger,
+                // trigger: {
+                //     seconds: notificationTimeInMilliseconds / 1000
+                // }
+            }));
             console.log('Notification was schedule');
         } catch (e) {
             alert('The notification failed to schedule, make sure the hour is valid')
@@ -208,13 +219,15 @@ function TaskDetails({ route, navigation }) {
         }
     };
 
+    console.log(identifier)
 
     function onReminderButtonPress() {
         setShowDate(true);
     }
 
-    function removeNotification() {
+    async function removeNotification() {
         setNotificationSet(false);
+        await Notifications.cancelScheduledNotificationAsync(identifier);
     }
 
 

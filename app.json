@@ -46,6 +46,7 @@
           "icon": "./assets/icon.png",
           "color": "#ffffff",
           "sounds": [
+            "./assets/web_whatsapp.mp3",
             "./assets/dzwonek.wav"
           ]
         }

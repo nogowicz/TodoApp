@@ -103,12 +103,17 @@ function CustomTextInput({ value, onChangeText, addTask }) {
                     />
 
 
+                    {value ?
+                        <TouchableOpacity onPress={addTask}>
+                            <View style={[styles.button, { backgroundColor: primaryColor }]}>
+                                <FontAwesome name='angle-up' size={24} color={textColor} />
+                            </View>
+                        </TouchableOpacity> :
 
-                    <TouchableOpacity onPress={addTask}>
-                        <View style={[styles.button, { backgroundColor: primaryColor }]}>
+                        <View style={[styles.button, { backgroundColor: primaryColor }, !value && { opacity: 0.4 }]}>
                             <FontAwesome name='angle-up' size={24} color={textColor} />
                         </View>
-                    </TouchableOpacity>
+                    }
                 </View>
             </View>
         </KeyboardAvoidingView>

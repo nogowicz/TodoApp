@@ -173,7 +173,7 @@ function TasksScreen({ navigation }) {
                     <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
                 </View>
                 <View style={styles.items}>
-                    <Text style={[styles.fallbackText, { color: textColor }, keyboardStatus ? { marginBottom: '25%' } : { marginBottom: '72%' }]}>You don't have tasks yet, start by adding some!</Text>
+                    <Text style={[styles.fallbackText, { color: textColor }, keyboardStatus ? { marginBottom: '20%' } : { marginBottom: '77%' }]}>You don't have tasks yet, start by adding some!</Text>
                 </View>
                 <CustomTextInput
                     value={task}

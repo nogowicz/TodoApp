@@ -3,7 +3,7 @@ import {
     Text,
     View,
     StyleSheet,
-    TouchableWithoutFeedback,
+    TouchableOpacity,
     ScrollView,
     TextInput,
 } from "react-native";
@@ -131,7 +131,7 @@ function TaskDetails({ route, navigation }) {
         setSelectedEffort(fetchedTask.effort);
         setNotes(fetchedTask.notes);
         identifier = fetchedTask.notificationIdentifier;
-        console.log("Identifier:" + identifier)
+        console.log("Identifier1:" + identifier)
         setDate(fetchedTask.date ? fetchedTask.date : date);
         setHour(fetchedTask.hour ? fetchedTask.hour : hour);
         setMinute(fetchedTask.minute ? fetchedTask.minute : minute);
@@ -144,7 +144,7 @@ function TaskDetails({ route, navigation }) {
 
     function runAfterLoadTaskData() {
         console.log('running command');
-        if (identifier !== 'notAssigned') {
+        if (identifier !== 'notAssigned' && identifier !== null) {
             setNotificationSet(true);
         }
         effectRan.current = true;
@@ -157,20 +157,23 @@ function TaskDetails({ route, navigation }) {
         }
 
     }, []);
-
+    //Notyfikacja po każdym wejsciu w task details dostaje nowy idenifier przez co nie można anulować taska
     useEffect(() => {
         async function schedule() {
+            console.log("Notification status: " + notificationSet)
             if (notificationSet) {
                 try {
                     await scheduleNotification();
-                    console.log("Identifier:" + identifier)
+                    console.log("Identifier2:" + identifier)
                 }
                 catch (e) {
                     console.log(e);
                 }
             }
         }
-        schedule();
+        if (identifier !== null) {
+            schedule();
+        }
     }, [notificationSet]);
 
     function onChangeTitleText(text) {
@@ -186,18 +189,18 @@ function TaskDetails({ route, navigation }) {
     trigger.setHours(hour);
     trigger.setMinutes(minute);
     trigger.setSeconds(0);
-    // console.log(trigger);
     async function scheduleNotification() {
         try {
             identifier = await Notifications.scheduleNotificationAsync({
                 content: {
                     title: 'New Task To Do!',
                     body: title,
-                    sound: 'web_whatsapp.mp3'
+                    sound: 'default'
                 },
                 trigger,
 
             });
+            console.log("Notification scheduled: ", trigger)
             console.log('Notification was schedule');
         } catch (e) {
             alert('The notification failed to schedule, make sure the hour is valid')
@@ -218,9 +221,9 @@ function TaskDetails({ route, navigation }) {
             const currentTime = selectedTime;
             setTime(currentTime);
             setShowTime(false);
-            setNotificationSet(true);
             setHour(currentTime.toLocaleTimeString().slice(0, 2));
             setMinute(currentTime.toLocaleTimeString().slice(3, 5));
+            setNotificationSet(true);
 
         }
     };
@@ -233,12 +236,15 @@ function TaskDetails({ route, navigation }) {
 
     async function removeNotification() {
 
-        await Notifications.cancelScheduledNotificationAsync(identifier);
-        identifier = 'notAssigned';
-        setNotificationSet(false);
+        await Notifications.cancelScheduledNotificationAsync(identifier).then(() => {
+            identifier = 'notAssigned';
+            setNotificationSet(false);
+            updateTaskData();
 
 
-        console.log('Notification canceled');
+            console.log('Notification canceled');
+        });
+
     }
 
 
@@ -247,15 +253,19 @@ function TaskDetails({ route, navigation }) {
         <View style={[styles.container, { backgroundColor: backgroundColor }]}>
             <View style={styles.navbar}>
                 <View style={styles.titleAndBack}>
-                    <TouchableWithoutFeedback onPress={goBackButton}>
-                        <Ionicons name="arrow-back" size={24} color={textColor} />
-                    </TouchableWithoutFeedback>
+                    <TouchableOpacity onPress={goBackButton}>
+                        <View style={{ width: 26, height: 26 }}>
+                            <Ionicons name="arrow-back" size={24} color={textColor} />
+                        </View>
+                    </TouchableOpacity>
 
                     <Text style={[styles.title, { color: textColor }]}>Task Details</Text>
                 </View>
-                <TouchableWithoutFeedback onPress={saveButton}>
-                    <MaterialIcons name="done" size={24} color={textColor} />
-                </TouchableWithoutFeedback>
+                <TouchableOpacity onPress={saveButton}>
+                    <View style={{ width: 26, height: 26 }}>
+                        <MaterialIcons name="done" size={24} color={textColor} />
+                    </View>
+                </TouchableOpacity>
 
             </View>
             <ScrollView>

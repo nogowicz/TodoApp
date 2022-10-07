@@ -71,7 +71,9 @@ function ReminderButton({ onPress, notificationSet, date, hour, minute, removeNo
                         <Text style={[styles.text, { color: textColor }]}>at {dateFormmat.toDateString()} {hour}:{minute < 10 && '0'}{parseInt(minute)}</Text> : null}
                 </View>
                 {notificationSet ? <TouchableOpacity onPress={removeNotification}>
-                    <Ionicons name="close" size={24} color={textColor} />
+                    <View style={{ width: 26, height: 26 }} >
+                        <Ionicons name="close" size={24} color={textColor} />
+                    </View>
                 </TouchableOpacity> : null}
 
             </View>

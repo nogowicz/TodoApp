@@ -111,7 +111,7 @@ function SortPopupMenu({ color }) {
     return (
         <View>
             <Menu>
-                <MenuTrigger >
+                <MenuTrigger>
                     <MaterialIcons name="sort" size={28} color={color} />
                 </MenuTrigger>
                 <MenuOptions optionsContainerStyle={

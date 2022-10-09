@@ -38,6 +38,8 @@ function TaskDetails({ route, navigation }) {
     const [showDate, setShowDate] = useState(false);
     const [showTime, setShowTime] = useState(false);
     const [notificationSet, setNotificationSet] = useState(false);
+    const [activateSchedule, setActivateSchedule] = useState(false);
+    let identifier;
     const effectRan = useRef(false);
 
     const importantData = [
@@ -122,7 +124,7 @@ function TaskDetails({ route, navigation }) {
         navigation.goBack();
     }
 
-    let identifier;
+
     async function loadTaskData(taskId) {
         const fetchedTask = await fetchTask(taskId);
         setTitle(fetchedTask.title);
@@ -131,7 +133,7 @@ function TaskDetails({ route, navigation }) {
         setSelectedEffort(fetchedTask.effort);
         setNotes(fetchedTask.notes);
         identifier = fetchedTask.notificationIdentifier;
-        console.log("Identifier1:" + identifier)
+        console.log("Identifier1: " + identifier)
         setDate(fetchedTask.date ? fetchedTask.date : date);
         setHour(fetchedTask.hour ? fetchedTask.hour : hour);
         setMinute(fetchedTask.minute ? fetchedTask.minute : minute);
@@ -139,11 +141,15 @@ function TaskDetails({ route, navigation }) {
 
 
     async function updateTaskData() {
-        await updateTask(taskId, title, selectedImportant, selectedUrgent, selectedEffort, notes, identifier, new Date(date).toISOString(), hour, minute)
+        if (!identifier) {
+            const fetchedTask = await fetchTask(taskId);
+            identifier = fetchedTask.notificationIdentifier;
+        }
+        console.log("Identifier4:", identifier);
+        await updateTask(taskId, title, selectedImportant, selectedUrgent, selectedEffort, notes, identifier, new Date(date).toISOString(), hour, minute).then(() => console.log("UPDATING TASK DATA"))
     }
 
     function runAfterLoadTaskData() {
-        console.log('running command');
         if (identifier !== 'notAssigned' && identifier !== null) {
             setNotificationSet(true);
         }
@@ -157,14 +163,14 @@ function TaskDetails({ route, navigation }) {
         }
 
     }, []);
-    //Notyfikacja po każdym wejsciu w task details dostaje nowy idenifier przez co nie można anulować taska
+
     useEffect(() => {
         async function schedule() {
             console.log("Notification status: " + notificationSet)
             if (notificationSet) {
                 try {
                     await scheduleNotification();
-                    console.log("Identifier2:" + identifier)
+                    console.log("Identifier2: " + identifier)
                 }
                 catch (e) {
                     console.log(e);
@@ -173,8 +179,9 @@ function TaskDetails({ route, navigation }) {
         }
         if (identifier !== null) {
             schedule();
+
         }
-    }, [notificationSet]);
+    }, [activateSchedule]);
 
     function onChangeTitleText(text) {
         setTitle(text);
@@ -193,15 +200,18 @@ function TaskDetails({ route, navigation }) {
         try {
             identifier = await Notifications.scheduleNotificationAsync({
                 content: {
-                    title: 'New Task To Do!',
+                    title: 'New Task To Do! 📣',
                     body: title,
-                    sound: 'default'
+                    data: { data: "goes here" },
+                    sound: 'default',
+                    vibrate: false
                 },
                 trigger,
 
             });
             console.log("Notification scheduled: ", trigger)
             console.log('Notification was schedule');
+            updateTaskData();
         } catch (e) {
             alert('The notification failed to schedule, make sure the hour is valid')
         }
@@ -213,6 +223,8 @@ function TaskDetails({ route, navigation }) {
             setShowDate(false);
             setDate(currentDate);
             setShowTime(true);
+        } else {
+            setShowDate(false);
         }
     };
 
@@ -224,24 +236,26 @@ function TaskDetails({ route, navigation }) {
             setHour(currentTime.toLocaleTimeString().slice(0, 2));
             setMinute(currentTime.toLocaleTimeString().slice(3, 5));
             setNotificationSet(true);
-
+            setActivateSchedule(true);
+        } else {
+            setShowTime(false);
         }
     };
 
-    // console.log(identifier)
 
     function onReminderButtonPress() {
         setShowDate(true);
     }
 
     async function removeNotification() {
-
+        const fetchedTask = await fetchTask(taskId);
+        identifier = fetchedTask.notificationIdentifier;
+        console.log("Identifier3: ", identifier)
         await Notifications.cancelScheduledNotificationAsync(identifier).then(() => {
             identifier = 'notAssigned';
             setNotificationSet(false);
+            setActivateSchedule(false);
             updateTaskData();
-
-
             console.log('Notification canceled');
         });
 
@@ -321,7 +335,6 @@ function TaskDetails({ route, navigation }) {
                         <SelectList
                             setSelected={setSelectedEffort}
                             data={effortData}
-                            // onSelect={() => alert(selectedEffort)}
                             search={false}
                             boxStyles={[styles.boxStyles, { borderColor: primaryColor }]}
                             dropdownStyles={[styles.dropdownStyles, { borderColor: primaryColor }]}

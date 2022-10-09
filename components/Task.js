@@ -9,7 +9,8 @@ import {
 import {
     FontAwesome,
     FontAwesome5,
-    Ionicons
+    Ionicons,
+    MaterialIcons
 } from '@expo/vector-icons'
 import { fetchTask } from "../util/database";
 import { useContext, useEffect, useState } from 'react';
@@ -24,6 +25,8 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
     const [urgent, setUrgent] = useState(0);
     const [effort, setEffort] = useState(0);
     const [loaded, setLoaded] = useState(false);
+    const [identifier, setIdentifier] = useState('notAssigned');
+    const [notificationSet, setNotificationSet] = useState(false);
     const taskPower = important + urgent + effort;
     const [isOn, setIsOn] = useState(() => {
         if (pointsVisibility === 'visible') {
@@ -95,12 +98,13 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
 
 
 
-
     async function fetchTaskDetails() {
         const fetchedTask = await fetchTask(id);
+        setIdentifier(fetchedTask.notificationIdentifier);
         setImportant(fetchedTask.important);
         setUrgent(fetchedTask.urgent);
         setEffort(fetchedTask.effort);
+        console.log(identifier);
     }
 
 
@@ -184,6 +188,8 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
                             </View>
                         </TouchableOpacity>
                         <Text style={[styles.itemText, { color: textColor }, done && styles.pressedText]}>{task}</Text>
+
+                        {(identifier !== null && identifier !== 'notAssigned' && identifier !== undefined) ? <MaterialIcons name="notifications-active" size={14} color={textColor} /> : null}
 
                         {taskPower !== 0 && loaded && isOn ?
                             <View style={[styles.points, { backgroundColor: primaryColor }]}>

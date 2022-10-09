@@ -3,7 +3,6 @@ import { FontAwesome } from '@expo/vector-icons'
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
 import { useContext, useState, useEffect } from 'react';
-import QuickActionButton from './QuickActionButton';
 
 function CustomTextInput({ value, onChangeText, addTask }) {
     const [keyboardStatus, setKeyboardStatus] = useState(false);
@@ -15,11 +14,9 @@ function CustomTextInput({ value, onChangeText, addTask }) {
     let primaryColor;
     let textColor;
     if (theme === 'green') {
-
         backgroundColor = themes.green.backgroundColor
         primaryColor = themes.green.primaryColor
         textColor = themes.green.textColor
-
     } else if (theme === 'blue') {
         backgroundColor = themes.blue.backgroundColor
         primaryColor = themes.blue.primaryColor
@@ -110,7 +107,7 @@ function CustomTextInput({ value, onChangeText, addTask }) {
                             </View>
                         </TouchableOpacity> :
 
-                        <View style={[styles.button, { backgroundColor: primaryColor }, !value && { opacity: 0.4 }]}>
+                        <View style={[styles.button, { backgroundColor: primaryColor }, !value && { opacity: 0.5 }]}>
                             <FontAwesome name='angle-up' size={24} color={textColor} />
                         </View>
                     }

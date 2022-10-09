@@ -11,7 +11,7 @@ import {
     deleteTask,
     updateCompletion,
     deleteAllCompletedTasks,
-    fetchCompletedTasks
+    fetchCompletedTasks,
 } from '../util/database';
 import CompletedLine from "../components/CompletedLine";
 import { ThemeContext } from '../contexts/ThemeContext'
@@ -79,6 +79,7 @@ function TasksScreen({ navigation }) {
         primaryColor = themes.darkPink.primaryColor
         textColor = themes.darkPink.textColor
     }
+
 
 
 

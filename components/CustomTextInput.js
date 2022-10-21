@@ -56,6 +56,7 @@ function CustomTextInput({ value, onChangeText, addTask }) {
     }
 
 
+
     useEffect(() => {
         const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
             setKeyboardStatus(true);
@@ -63,12 +64,12 @@ function CustomTextInput({ value, onChangeText, addTask }) {
         const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
             setKeyboardStatus(false);
         });
-
         return () => {
             showSubscription.remove();
             hideSubscription.remove();
         };
     }, []);
+
 
     return (
         <KeyboardAvoidingView

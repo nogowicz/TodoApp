@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Keyboard, ScrollView, ActivityIndicator } from "react-native";
+import { StyleSheet, Text, View, Keyboard, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
 import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
 import { useEffect, useState, useContext } from "react";
@@ -20,6 +20,7 @@ import OutlinedButton from "../components/OutlinedButton";
 import { useIsFocused } from '@react-navigation/native'
 import { MenuProvider } from 'react-native-popup-menu';
 import SortPopupMenu from "../components/SortPopupMenu";
+import { Root, Popup } from 'react-native-popup-confirm-toast'
 
 function TasksScreen({ navigation }) {
     const [task, setTask] = useState();
@@ -193,6 +194,7 @@ function TasksScreen({ navigation }) {
             </View>
         );
     } else {
+
         return (
             <MenuProvider>
                 <View style={[styles.container, { backgroundColor: backgroundColor }]}>
@@ -253,8 +255,9 @@ function TasksScreen({ navigation }) {
                     />
 
 
+
                 </View >
-            </MenuProvider>
+            </MenuProvider >
         );
     }
 }

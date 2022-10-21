@@ -203,7 +203,7 @@ function TaskDetails({ route, navigation }) {
                     title: 'New Task To Do! 📣',
                     body: title,
                     data: { data: "goes here" },
-                    sound: 'default',
+                    sound: 'dzwonek.wav',
                     vibrate: false
                 },
                 trigger,
@@ -314,7 +314,7 @@ function TaskDetails({ route, navigation }) {
                             search={false}
                             boxStyles={[styles.boxStyles, { borderColor: primaryColor }]}
                             dropdownStyles={[styles.dropdownStyles, { borderColor: primaryColor }]}
-                            dropdownTextStyles={{ color: textColor }}
+                            dropdownTextStyles={{ color: textColor, fontSize: 13 }}
                             inputStyles={{ color: textColor }}
                             placeholder={importantData[selectedImportant].value}
 
@@ -326,7 +326,7 @@ function TaskDetails({ route, navigation }) {
                             search={false}
                             boxStyles={[styles.boxStyles, { borderColor: primaryColor }]}
                             dropdownStyles={[styles.dropdownStyles, { borderColor: primaryColor }]}
-                            dropdownTextStyles={{ color: textColor }}
+                            dropdownTextStyles={{ color: textColor, fontSize: 13 }}
                             inputStyles={{ color: textColor }}
                             placeholder={urgentData[selectedUrgent].value}
 
@@ -338,7 +338,7 @@ function TaskDetails({ route, navigation }) {
                             search={false}
                             boxStyles={[styles.boxStyles, { borderColor: primaryColor }]}
                             dropdownStyles={[styles.dropdownStyles, { borderColor: primaryColor }]}
-                            dropdownTextStyles={{ color: textColor }}
+                            dropdownTextStyles={{ color: textColor, fontSize: 13 }}
                             inputStyles={{ color: textColor }}
                             placeholder={effortData[selectedEffort].value}
 

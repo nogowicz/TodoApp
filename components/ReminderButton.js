@@ -60,7 +60,7 @@ function ReminderButton({ onPress, notificationSet, date, hour, minute, removeNo
 
 
     return (
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={!notificationSet ? onPress : null}>
             <View style={[styles.container, { backgroundColor: primaryColor }]}>
                 <View style={styles.containerLeft}>
                     {notificationSet ? <MaterialIcons name="notifications-active" size={24} color={textColor} /> :

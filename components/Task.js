@@ -26,7 +26,10 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
     const [effort, setEffort] = useState(0);
     const [loaded, setLoaded] = useState(false);
     const [identifier, setIdentifier] = useState('notAssigned');
-    const [notificationSet, setNotificationSet] = useState(false);
+    const [date, setDate] = useState();
+    const [hour, setHour] = useState();
+    const [minute, setMinute] = useState();
+    const [isDateInPast, setIsDateInPast] = useState(false);
     const taskPower = important + urgent + effort;
     const [isOn, setIsOn] = useState(() => {
         if (pointsVisibility === 'visible') {
@@ -105,6 +108,16 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
         setUrgent(fetchedTask.urgent);
         setEffort(fetchedTask.effort);
         console.log(identifier);
+        setDate(fetchedTask.date);
+        let newDate = new Date(date);
+        setHour(fetchedTask.hour);
+        setMinute(fetchedTask.minute);
+        newDate.setHours(hour);
+        newDate.setMinutes(minute);
+        if (newDate > new Date()) {
+            setIsDateInPast(true);
+        }
+        // console.log(newDate)
     }
 
 
@@ -189,7 +202,7 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
                         </TouchableOpacity>
                         <Text style={[styles.itemText, { color: textColor }, done && styles.pressedText]}>{task}</Text>
 
-                        {(identifier !== null && identifier !== 'notAssigned' && identifier !== undefined) ? <MaterialIcons name="notifications-active" size={14} color={textColor} /> : null}
+                        {(identifier !== null && identifier !== 'notAssigned' && identifier !== undefined && isDateInPast) ? <MaterialIcons name="notifications-active" size={14} color={textColor} /> : null}
 
                         {taskPower !== 0 && loaded && isOn ?
                             <View style={[styles.points, { backgroundColor: primaryColor }]}>

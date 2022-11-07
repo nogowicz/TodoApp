@@ -28,10 +28,12 @@ Notifications.setNotificationHandler({
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
+
 function TasksOverview() {
+  const [expoPushToken, setExpoPushToken] = useState('');
   const themeCtx = useContext(ThemeContext)
   const { theme } = themeCtx;
-  const [expoPushToken, setExpoPushToken] = useState('');
+
   let backgroundColor;
   let primaryColor;
   let textColor;
@@ -40,7 +42,6 @@ function TasksOverview() {
     backgroundColor = themes.green.backgroundColor
     primaryColor = themes.green.primaryColor
     textColor = themes.green.textColor
-
   } else if (theme === 'blue') {
     backgroundColor = themes.blue.backgroundColor
     primaryColor = themes.blue.primaryColor

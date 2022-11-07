@@ -4,7 +4,10 @@ import {
     View,
     Text,
     TouchableWithoutFeedback,
-    Animated
+    Animated,
+    UIManager,
+    LayoutAnimation,
+    Dimensions
 } from "react-native";
 import {
     FontAwesome,
@@ -17,6 +20,11 @@ import { useContext, useEffect, useState } from 'react';
 import { ThemeContext } from '../contexts/ThemeContext'
 import { themes } from '../constants/themes.json';
 import { GestureHandlerRootView, Swipeable } from "react-native-gesture-handler";
+const width = Dimensions.get('window').width;
+const swipeThreshold = 0.25 * width;
+
+
+
 
 function Task({ id, task, onDone, done, onDelete, onPress }) {
     const themeCtx = useContext(ThemeContext)
@@ -107,7 +115,7 @@ function Task({ id, task, onDone, done, onDelete, onPress }) {
         setImportant(fetchedTask.important);
         setUrgent(fetchedTask.urgent);
         setEffort(fetchedTask.effort);
-        console.log(identifier);
+        // console.log(identifier);
         setDate(fetchedTask.date);
         let newDate = new Date(date);
         setHour(fetchedTask.hour);

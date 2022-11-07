@@ -133,7 +133,7 @@ function TaskDetails({ route, navigation }) {
         setSelectedEffort(fetchedTask.effort);
         setNotes(fetchedTask.notes);
         identifier = fetchedTask.notificationIdentifier;
-        console.log("Identifier1: " + identifier)
+        // console.log("Identifier1: " + identifier)
         setDate(fetchedTask.date ? fetchedTask.date : date);
         setHour(fetchedTask.hour ? fetchedTask.hour : hour);
         setMinute(fetchedTask.minute ? fetchedTask.minute : minute);
@@ -145,7 +145,7 @@ function TaskDetails({ route, navigation }) {
             const fetchedTask = await fetchTask(taskId);
             identifier = fetchedTask.notificationIdentifier;
         }
-        console.log("Identifier4:", identifier);
+        // console.log("Identifier4:", identifier);
         await updateTask(taskId, title, selectedImportant, selectedUrgent, selectedEffort, notes, identifier, new Date(date).toISOString(), hour, minute).then(() => console.log("UPDATING TASK DATA"))
     }
 
@@ -166,11 +166,11 @@ function TaskDetails({ route, navigation }) {
 
     useEffect(() => {
         async function schedule() {
-            console.log("Notification status: " + notificationSet)
+            // console.log("Notification status: " + notificationSet)
             if (notificationSet) {
                 try {
                     await scheduleNotification();
-                    console.log("Identifier2: " + identifier)
+                    // console.log("Identifier2: " + identifier)
                 }
                 catch (e) {
                     console.log(e);
@@ -209,8 +209,8 @@ function TaskDetails({ route, navigation }) {
                 trigger,
 
             });
-            console.log("Notification scheduled: ", trigger)
-            console.log('Notification was schedule');
+            // console.log("Notification scheduled: ", trigger)
+            // console.log('Notification was schedule');
             updateTaskData();
         } catch (e) {
             alert('The notification failed to schedule, make sure the hour is valid')
@@ -250,13 +250,13 @@ function TaskDetails({ route, navigation }) {
     async function removeNotification() {
         const fetchedTask = await fetchTask(taskId);
         identifier = fetchedTask.notificationIdentifier;
-        console.log("Identifier3: ", identifier)
+        // console.log("Identifier3: ", identifier)
         await Notifications.cancelScheduledNotificationAsync(identifier).then(() => {
             identifier = 'notAssigned';
             setNotificationSet(false);
             setActivateSchedule(false);
             updateTaskData();
-            console.log('Notification canceled');
+            // console.log('Notification canceled');
         });
 
     }

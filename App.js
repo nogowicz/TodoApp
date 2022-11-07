@@ -37,47 +37,57 @@ function TasksOverview() {
   let backgroundColor;
   let primaryColor;
   let textColor;
+  let barStyle;
   if (theme === 'green') {
-
     backgroundColor = themes.green.backgroundColor
     primaryColor = themes.green.primaryColor
     textColor = themes.green.textColor
+    barStyle = 'dark'
   } else if (theme === 'blue') {
     backgroundColor = themes.blue.backgroundColor
     primaryColor = themes.blue.primaryColor
     textColor = themes.blue.textColor
+    barStyle = 'dark'
   } else if (theme === 'orange') {
     backgroundColor = themes.orange.backgroundColor
     primaryColor = themes.orange.primaryColor
     textColor = themes.orange.textColor
+    barStyle = 'dark'
   } else if (theme === 'pink') {
     backgroundColor = themes.pink.backgroundColor
     primaryColor = themes.pink.primaryColor
     textColor = themes.pink.textColor
+    barStyle = 'dark'
   } else if (theme === 'white') {
     backgroundColor = themes.white.backgroundColor
     primaryColor = themes.white.primaryColor
     textColor = themes.white.textColor
+    barStyle = 'dark'
   } else if (theme === 'darkGreen') {
     backgroundColor = themes.darkGreen.backgroundColor
     primaryColor = themes.darkGreen.primaryColor
     textColor = themes.darkGreen.textColor
+    barStyle = 'light'
   } else if (theme === 'darkOrange') {
     backgroundColor = themes.darkOrange.backgroundColor
     primaryColor = themes.darkOrange.primaryColor
     textColor = themes.darkOrange.textColor
+    barStyle = 'light'
   } else if (theme === 'darkGray') {
     backgroundColor = themes.darkGray.backgroundColor
     primaryColor = themes.darkGray.primaryColor
     textColor = themes.darkGray.textColor
+    barStyle = 'light'
   } else if (theme === 'darkBlue') {
     backgroundColor = themes.darkBlue.backgroundColor
     primaryColor = themes.darkBlue.primaryColor
     textColor = themes.darkBlue.textColor
+    barStyle = 'light'
   } else if (theme === 'darkPink') {
     backgroundColor = themes.darkPink.backgroundColor
     primaryColor = themes.darkPink.primaryColor
     textColor = themes.darkPink.textColor
+    barStyle = 'light'
   }
 
   const [keyboardStatus, setKeyboardStatus] = useState(false);
@@ -127,60 +137,64 @@ function TasksOverview() {
 
 
   return (
-    <BottomTabs.Navigator
-      screenOptions={{
-        headerShown: true,
-        tabBarActiveTintColor: textColor,
-        tabBarInactiveTintColor: textColor,
-        tabBarStyle: {
-          height: 65,
-          backgroundColor: backgroundColor,
-          borderTopWidth: 0,
-          display: keyboardStatus ? 'none' : 'flex'
-        },
-        headerStyle: {
-          backgroundColor: backgroundColor,
-          elevation: 0, // remove shadow on Android
-          shadowOpacity: 0, // remove shadow on iOS
-          borderBottomWidth: 0,
-        },
-        title: null,
-      }
+    <>
+      <StatusBar style={barStyle} />
 
-      }>
-      <BottomTabs.Screen
-        name='Tasks'
-        component={TasksScreen}
-        options={{
-          tabBarLabel: 'Tasks',
-          tabBarIcon: ({ focused }) => (
-            <View style={focused && [styles.activeBackground, { backgroundColor: primaryColor }]}>
-              <MaterialCommunityIcons name="checkbox-marked-outline" size={28} color={textColor} />
-            </View>
-          ),
-          tabBarLabelStyle: {
-            fontSize: 13,
+      <BottomTabs.Navigator
+        screenOptions={{
+          headerShown: true,
+          tabBarActiveTintColor: textColor,
+          tabBarInactiveTintColor: textColor,
+          tabBarStyle: {
+            height: 65,
+            backgroundColor: backgroundColor,
+            borderTopWidth: 0,
+            display: keyboardStatus ? 'none' : 'flex'
           },
-
-        }}
-      />
-
-      <BottomTabs.Screen
-        name='Settings'
-        component={SettingsScreen}
-        options={{
-          tabBarLabel: 'Settings',
-          tabBarIcon: ({ focused }) => (
-            <View style={focused && [styles.activeBackground, { backgroundColor: primaryColor }]}>
-              <MaterialCommunityIcons name="cog-outline" size={28} color={textColor} />
-            </View>
-          ),
-          tabBarLabelStyle: {
-            fontSize: 13,
+          headerStyle: {
+            backgroundColor: backgroundColor,
+            elevation: 0, // remove shadow on Android
+            shadowOpacity: 0, // remove shadow on iOS
+            borderBottomWidth: 0,
           },
-        }}
-      />
-    </BottomTabs.Navigator >
+          title: null,
+        }
+
+        }>
+        <BottomTabs.Screen
+          name='Tasks'
+          component={TasksScreen}
+          options={{
+            tabBarLabel: 'Tasks',
+            tabBarIcon: ({ focused }) => (
+              <View style={focused && [styles.activeBackground, { backgroundColor: primaryColor }]}>
+                <MaterialCommunityIcons name="checkbox-marked-outline" size={28} color={textColor} />
+              </View>
+            ),
+            tabBarLabelStyle: {
+              fontSize: 13,
+            },
+
+          }}
+        />
+
+        <BottomTabs.Screen
+          name='Settings'
+          component={SettingsScreen}
+          options={{
+            tabBarLabel: 'Settings',
+            tabBarIcon: ({ focused }) => (
+              <View style={focused && [styles.activeBackground, { backgroundColor: primaryColor }]}>
+                <MaterialCommunityIcons name="cog-outline" size={28} color={textColor} />
+              </View>
+            ),
+            tabBarLabelStyle: {
+              fontSize: 13,
+            },
+          }}
+        />
+      </BottomTabs.Navigator >
+    </>
   );
 }
 
@@ -214,7 +228,6 @@ export default function App() {
 
   return (
     <ThemeProvider>
-      <StatusBar style='auto' />
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen

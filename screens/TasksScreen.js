@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Keyboard, ScrollView, ActivityIndicator, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Keyboard, ScrollView, ActivityIndicator } from "react-native";
 import Task from "../components/Task";
 import CustomTextInput from "../components/CustomTextInput";
 import { useEffect, useState, useContext } from "react";
@@ -20,7 +20,6 @@ import OutlinedButton from "../components/OutlinedButton";
 import { useIsFocused } from '@react-navigation/native'
 import { MenuProvider } from 'react-native-popup-menu';
 import SortPopupMenu from "../components/SortPopupMenu";
-import { Root, Popup } from 'react-native-popup-confirm-toast'
 
 function TasksScreen({ navigation }) {
     const [task, setTask] = useState();
@@ -29,9 +28,10 @@ function TasksScreen({ navigation }) {
     const [completedOpen, setCompletedOpen] = useState(false);
     const [keyboardStatus, setKeyboardStatus] = useState(false);
     const themeCtx = useContext(ThemeContext)
-    const { theme, sort } = themeCtx;
+    const { theme, sort, funnyQuotes } = themeCtx;
     const isFocused = useIsFocused();
     const [initialized, setInitialized] = useState(false);
+    const [randomQuote, setRandomQuote] = useState(0);
     let fetchedTasks;
 
     let backgroundColor;
@@ -111,7 +111,9 @@ function TasksScreen({ navigation }) {
 
 
     useEffect(() => {
-        fetch().then(() => { setInitialized(true) })
+        fetch().then(() => {
+            setInitialized(true)
+        })
     }, [isFocused, sort]);
 
 
@@ -153,8 +155,36 @@ function TasksScreen({ navigation }) {
         });
     }
 
+    const quotes = [
+        { key: 0, value: "" },
+        { key: 1, value: "People say nothing is impossible, but I do nothing every day." },
+        { key: 2, value: "You can’t have everything. Where would you put it?" },
+        { key: 3, value: "When life gives you lemons, squirt someone in the eye." },
+        { key: 4, value: "A clear conscience is a sure sign of a bad memory." },
+        { key: 5, value: "Age is of no importance unless you’re a cheese." },
+        { key: 6, value: "Trying is the first step toward failure." },
+        { key: 7, value: "What are you going to do tomorrow, do... whatever." }
+    ];
+
+    function rand(min, max) {
+        min = parseInt(min, 10)
+        max = parseInt(max, 10)
+
+        if (min > max) {
+            var tmp = min;
+            min = max;
+            max = tmp;
+        }
+
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+
 
     useEffect(() => {
+        console.log(funnyQuotes)
+        if (randomQuote === 0) {
+            setRandomQuote(rand(1, quotes.length))
+        }
         const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
             setKeyboardStatus(true);
         });
@@ -172,7 +202,11 @@ function TasksScreen({ navigation }) {
         return (
             <View style={[styles.container, { backgroundColor: backgroundColor }]}>
                 <View style={styles.navBar}>
-                    <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
+                    <View>
+                        <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
+                        {funnyQuotes === 'visible' ?
+                            <Text style={{ color: textColor }}>{quotes[randomQuote].value}</Text> : null}
+                    </View>
                 </View>
                 <View style={styles.items}>
                     <Text style={[styles.fallbackText, { color: textColor }, keyboardStatus ? { marginBottom: '20%' } : { marginBottom: '77%' }]}>You don't have tasks yet, start by adding some!</Text>
@@ -199,8 +233,12 @@ function TasksScreen({ navigation }) {
             <MenuProvider>
                 <View style={[styles.container, { backgroundColor: backgroundColor }]}>
                     <View style={styles.navBar}>
-                        <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
-                        <SortPopupMenu color={textColor} />
+                        <View style={{ flex: 1 }}>
+                            <Text style={[styles.title, { color: textColor }]}>Your Tasks</Text>
+                            {funnyQuotes === 'visible' ?
+                                <Text style={{ color: textColor }}>{quotes[randomQuote].value}</Text> : null}
+                        </View>
+                        <SortPopupMenu style={{ flex: 1 }} color={textColor} />
                     </View>
                     <ScrollView style={styles.items}>
                         <View>
@@ -300,6 +338,13 @@ const styles = StyleSheet.create({
     activityLoader: {
         justifyContent: 'center',
         alignItems: 'center',
-    }
+    },
+    button: {
+        height: 30,
+        width: 30,
+        borderRadius: 6,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
 
 });

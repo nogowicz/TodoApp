@@ -7,12 +7,14 @@ export function ThemeProvider({ children }) {
     const [color, setColor] = useState('green');
     const [sorting, setSorting] = useState();
     const [pointsVisibility, setPointsVisibility] = useState('visible');
+    const [funnyQuotesVisibility, setFunnyQuotesVisibility] = useState('visible');
 
     useEffect(() => {
         async function fetchTheme() {
             const storedTheme = await AsyncStorage.getItem('theme');
             const storedSorting = await AsyncStorage.getItem('sort');
             const storedVisibility = await AsyncStorage.getItem('pointsVisibility');
+            const storedFunnyQuotes = await AsyncStorage.getItem('funnyQuotes');
 
             if (storedTheme) {
                 setColor(storedTheme);
@@ -26,6 +28,11 @@ export function ThemeProvider({ children }) {
                 setPointsVisibility(storedVisibility);
             }
 
+            if (storedFunnyQuotes) {
+                setFunnyQuotesVisibility(storedFunnyQuotes)
+            }
+
+
 
         }
         fetchTheme()
@@ -38,6 +45,15 @@ export function ThemeProvider({ children }) {
             setPointsVisibility('visible');
         }
     }
+
+    function toggleQuotesVisibility() {
+        if (funnyQuotesVisibility === 'visible') {
+            setFunnyQuotesVisibility('nonvisible');
+        } else if (funnyQuotesVisibility === 'nonvisible') {
+            setFunnyQuotesVisibility('visible');
+        }
+    }
+
 
     function setPowerListSorting() {
         setSorting('powerList');
@@ -85,7 +101,6 @@ export function ThemeProvider({ children }) {
     }
     function setThemesDarkPinkMode() {
         setColor('darkPink')
-        //#AE375D
     }
 
     return (
@@ -93,6 +108,8 @@ export function ThemeProvider({ children }) {
             value={{
                 pointsVisibility: pointsVisibility,
                 togglePointsVisibility: togglePointsVisibility,
+                funnyQuotes: funnyQuotesVisibility,
+                toggleQuotesVisibility: toggleQuotesVisibility,
                 sort: sorting,
                 setPowerListSorting: setPowerListSorting,
                 setNewestFirstSorting: setNewestFirstSorting,

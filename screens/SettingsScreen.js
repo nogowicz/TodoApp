@@ -5,6 +5,7 @@ import { themes } from '../constants/themes.json';
 import WhatsNewButton from "../components/WhatsNewButton";
 import ThemePicker from "../components/ThemePicker";
 import PowerPointsVisibilityButton from "../components/PowerPointsVisibilityButton";
+import QuotesVisibilityButton from "../components/QuotesVisibilityButton";
 
 
 function SettingsScreen() {
@@ -67,6 +68,11 @@ function SettingsScreen() {
             <View style={styles.settingsList}>
                 <ThemePicker />
                 <PowerPointsVisibilityButton
+                    color={backgroundColor}
+                    textColor={textColor}
+                    primaryColor={primaryColor}
+                />
+                <QuotesVisibilityButton
                     color={backgroundColor}
                     textColor={textColor}
                     primaryColor={primaryColor}

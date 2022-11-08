@@ -74,45 +74,37 @@ function CustomTextInput({ value, onChangeText, addTask }) {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-
-
         >
-            <View style={styles.bottomButtons}>
-                {/* {keyboardStatus ?
-                    <View style={styles.quickActionButtons}>
-                        <QuickActionButton text='Remind' />
-                        <QuickActionButton text='Important' />
-                        <QuickActionButton text='Effort' />
-                        <QuickActionButton text='Urgent' />
-                    </View> : null} */}
 
-                <View style={[styles.inputContainer,
-                { backgroundColor: backgroundColor },
-                { borderColor: primaryColor }
-                ]}>
-                    <TextInput
-                        value={value}
-                        onChangeText={onChangeText}
-                        style={[styles.input, { color: textColor }]}
-                        placeholder='Add new task'
-                        placeholderTextColor={textColor}
-                        onSubmitEditing={addTask}
-                        maxLength={120}
-                    />
+            <View style={[styles.inputContainer, {
+                borderColor: primaryColor
+            }]}>
+                <TextInput
+                    style={{
+                        backgroundColor: backgroundColor,
+                        height: 50,
+                        width: windowWidth - 80,
+                        color: '#fff'
+                    }}
+                    value={value}
+                    onChangeText={onChangeText}
+                    placeholder='Add new task'
+                    placeholderTextColor={textColor}
+                    onSubmitEditing={addTask}
+                    maxLength={120}
 
-
-                    {value ?
-                        <TouchableOpacity onPress={addTask}>
-                            <View style={[styles.button, { backgroundColor: primaryColor }]}>
-                                <FontAwesome name='angle-up' size={24} color={textColor} />
-                            </View>
-                        </TouchableOpacity> :
-
-                        <View style={[styles.button, { backgroundColor: primaryColor }, !value && { opacity: 0.5 }]}>
+                />
+                {value ?
+                    <TouchableOpacity onPress={addTask}>
+                        <View style={[styles.button, { backgroundColor: primaryColor }]}>
                             <FontAwesome name='angle-up' size={24} color={textColor} />
                         </View>
-                    }
-                </View>
+                    </TouchableOpacity> :
+
+                    <View style={[styles.button, { backgroundColor: primaryColor }, !value && { opacity: 0.5 }]}>
+                        <FontAwesome name='angle-up' size={24} color={textColor} />
+                    </View>
+                }
             </View>
         </KeyboardAvoidingView>
     );
@@ -135,11 +127,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         width: windowWidth - 20,
         marginHorizontal: 10,
-    },
-
-    input: {
-        height: 50,
-        width: '88%'
+        marginBottom: 10,
     },
 
     button: {
@@ -149,8 +137,5 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    quickActionButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-    },
+
 });

@@ -1,41 +1,43 @@
 import { StyleSheet, View, Text } from "react-native";
 import ToggleSwitch from 'toggle-switch-react-native'
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Foundation } from '@expo/vector-icons';
 import { ThemeContext } from '../contexts/ThemeContext'
 
 
-function PowerPointsVisibilityButton({ color, textColor, primaryColor }
-) {
+function QuotesVisibilityButton({ color, textColor, primaryColor }) {
     const themeCtx = useContext(ThemeContext)
     const {
-        pointsVisibility,
-        togglePointsVisibility
+        funnyQuotes,
+        toggleQuotesVisibility
     } = themeCtx;
+
+    console.log(funnyQuotes)
     const [isOn, setIsOn] = useState(() => {
-        if (pointsVisibility === 'visible') {
+        if (funnyQuotes === 'visible') {
             return true;
         } else {
             return false;
         }
     });
-    const storePointsVisibility = async (value) => {
+    const storeQuotesVisibility = async (value) => {
         try {
-            await AsyncStorage.setItem('pointsVisibility', value);
+            await AsyncStorage.setItem('funnyQuotes', value);
         } catch (e) {
             // saving error
         }
     }
 
     async function onToggle() {
-        if (pointsVisibility === 'nonvisible') {
-            storePointsVisibility('visible');
+        if (funnyQuotes === 'nonvisible') {
+            storeQuotesVisibility('visible');
             setIsOn(true);
-        } else if (pointsVisibility === 'visible') {
-            storePointsVisibility('nonvisible');
+        } else if (funnyQuotes === 'visible') {
+            storeQuotesVisibility('nonvisible');
             setIsOn(false);
         }
-        togglePointsVisibility();
+        toggleQuotesVisibility();
 
     }
 
@@ -43,10 +45,8 @@ function PowerPointsVisibilityButton({ color, textColor, primaryColor }
     return (
         <View style={styles.container}>
             <View style={styles.innerContainer}>
-                <View style={[styles.points, { backgroundColor: textColor }]}>
-                    <Text style={[{ color: color, fontWeight: 'bold' }]}>12</Text>
-                </View>
-                <Text style={[styles.buttonText, { color: textColor }]}>Power Task Visibility</Text>
+                <Foundation name="comment-quotes" size={24} color={textColor} />
+                <Text style={[styles.buttonText, { color: textColor }]}>Funny Quotes Visibility</Text>
             </View>
             <ToggleSwitch
                 isOn={isOn}
@@ -59,7 +59,7 @@ function PowerPointsVisibilityButton({ color, textColor, primaryColor }
     );
 }
 
-export default PowerPointsVisibilityButton;
+export default QuotesVisibilityButton;
 
 const styles = StyleSheet.create({
     container: {
@@ -70,13 +70,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderBottomWidth: 2,
         borderColor: '#454545',
-    },
-    points: {
-        height: 24,
-        width: 24,
-        borderRadius: 6,
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     buttonText: {
         fontSize: 15,

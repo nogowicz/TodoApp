@@ -74,11 +74,16 @@ function CustomTextInput({ value, onChangeText, addTask }) {
     return (
         <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
+
         >
 
-            <View style={[styles.inputContainer, {
-                borderColor: primaryColor
-            }]}>
+            <View style={
+                [
+                    styles.inputContainer,
+                    {
+                        borderColor: primaryColor
+                    }
+                ]}>
                 <TextInput
                     style={{
                         backgroundColor: backgroundColor,
@@ -114,10 +119,6 @@ export default CustomTextInput;
 
 const windowWidth = Dimensions.get('window').width;
 const styles = StyleSheet.create({
-    bottomButtons: {
-        position: 'absolute',
-        bottom: 20,
-    },
     inputContainer: {
         borderWidth: 2,
         borderRadius: 12,
@@ -127,7 +128,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
         width: windowWidth - 20,
         marginHorizontal: 10,
-        marginBottom: 10,
+        marginBottom: 20,
     },
 
     button: {

@@ -181,7 +181,6 @@ function TasksScreen({ navigation }) {
 
 
     useEffect(() => {
-        console.log(funnyQuotes)
         if (randomQuote === 0) {
             setRandomQuote(rand(1, quotes.length))
         }
@@ -208,14 +207,19 @@ function TasksScreen({ navigation }) {
                             <Text style={{ color: textColor }}>{quotes[randomQuote].value}</Text> : null}
                     </View>
                 </View>
-                <View style={styles.items}>
+                <View style={[styles.items]}>
                     <Text style={[styles.fallbackText, { color: textColor }, keyboardStatus ? { marginBottom: '20%' } : { marginBottom: '77%' }]}>You don't have tasks yet, start by adding some!</Text>
                 </View>
-                <CustomTextInput
-                    value={task}
-                    onChangeText={text => setTask(text)}
-                    addTask={handleAddTask}
-                />
+                <View style={{
+                    position: 'absolute',
+                    bottom: 0
+                }}>
+                    <CustomTextInput
+                        value={task}
+                        onChangeText={text => setTask(text)}
+                        addTask={handleAddTask}
+                    />
+                </View>
             </View>
 
         );
@@ -320,8 +324,6 @@ const styles = StyleSheet.create({
     },
     fallbackText: {
         textAlign: 'center',
-        justifyContent: 'center',
-        alignItems: 'center',
         fontSize: 15,
         marginTop: '50%',
     },

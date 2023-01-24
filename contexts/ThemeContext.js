@@ -1,5 +1,5 @@
 import { createContext, useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import orage from "@react-native-async-storage/async-storage";
 import { useEffect } from "react";
 export const ThemeContext = createContext();
 

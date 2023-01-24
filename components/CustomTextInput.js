@@ -89,7 +89,7 @@ function CustomTextInput({ value, onChangeText, addTask }) {
                         backgroundColor: backgroundColor,
                         height: 50,
                         width: windowWidth - 80,
-                        color: '#fff'
+                        color: textColor
                     }}
                     value={value}
                     onChangeText={onChangeText}

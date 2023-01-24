@@ -20,6 +20,7 @@ import OutlinedButton from "../components/OutlinedButton";
 import { useIsFocused } from '@react-navigation/native'
 import { MenuProvider } from 'react-native-popup-menu';
 import SortPopupMenu from "../components/SortPopupMenu";
+import { Snackbar } from "react-native-paper";
 
 function TasksScreen({ navigation }) {
     const [task, setTask] = useState();
@@ -155,6 +156,12 @@ function TasksScreen({ navigation }) {
         });
     }
 
+
+    const [visible, setVisible] = useState(false);
+
+    const showSnackBar = () => setVisible(true);
+
+    const onDismissSnackBar = () => setVisible(false);
     const quotes = [
         { key: 0, value: "" },
         { key: 1, value: "People say nothing is impossible, but I do nothing every day." },
@@ -289,7 +296,25 @@ function TasksScreen({ navigation }) {
                             }
                         </View>
                     </ScrollView>
-
+                    <Snackbar
+                        style={
+                            {
+                                backgroundColor: textColor, 
+                                zIndex: 10,
+                            }}
+                        visible={visible}
+                        action={{
+                            label: 'Undo',
+                            onPress: () => {
+                              console.log('Undo pressed')
+                            },
+                            color: primaryColor,
+                          }}
+                          onDismiss={onDismissSnackBar}
+                          theme={{ colors: backgroundColor}}
+                          >
+                          Hey there! I'm a Snackbar.
+                          </Snackbar>
                     <CustomTextInput
                         value={task}
                         onChangeText={text => setTask(text)}
@@ -320,7 +345,7 @@ const styles = StyleSheet.create({
     },
     items: {
         marginTop: 30,
-        marginBottom: 100,
+        marginBottom: 10,
     },
     fallbackText: {
         textAlign: 'center',
